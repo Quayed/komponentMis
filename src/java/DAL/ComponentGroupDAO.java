@@ -1,0 +1,187 @@
+package DAL;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * Created by mathias on 21/03/16.
+ */
+public class ComponentGroupDAO implements IComponentGroupDAO {
+    private final Connection CONN;
+    private final String DATABASE_NAME = "ComponentGroup";
+    
+    public ComponentGroupDAO(Connection conn) {
+        this.CONN = conn;
+    }
+
+    @Override
+    public int createComponentGroup(ComponentGroupDTO componentGroup) {
+        if (componentGroup.getNavn() == null && componentGroup.getStandardLoanDuration() == null)
+            return -1;
+
+        String sql = "INSERT INTO " + DATABASE_NAME + "(";
+        String sqlValues = "";
+        if (componentGroup.getNavn() != null) {
+            sql += "name";
+            sqlValues += "?";
+        }
+
+        if (componentGroup.getStandardLoanDuration() != null) {
+            if (!sqlValues.equals("")) {
+                sql += ", standardLoanDuration";
+                sqlValues += ", ?";
+            }else{
+                sql += "standardLoanDuration";
+                sqlValues += "?";
+            }
+        }
+        
+        if(componentGroup.getStatus() != 0){
+            if (!sqlValues.equals("")){
+                sql += ", status";
+                sqlValues += ", ?";
+            } else{
+                sql += "status";
+                sqlValues += ", ?";
+            }
+        }
+
+        sql += ") VALUES(";
+        sql += sqlValues + ")";
+
+        try {
+            int param = 1;
+            PreparedStatement stm = CONN.prepareStatement(sql);
+            if (componentGroup.getNavn() != null)
+                stm.setString(param++, componentGroup.getNavn());
+            if (componentGroup.getStandardLoanDuration() != null)
+                stm.setString(param++, componentGroup.getStandardLoanDuration());
+            if (componentGroup.getStatus() != 0)
+                stm.setInt(param++, componentGroup.getStatus());
+
+            stm.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+
+
+        /* TODO Det her skal gøres på en bedre måde - hvis det skal gøres! */
+        try {
+            Statement stm = CONN.createStatement();
+            ResultSet result = stm.executeQuery("SELECT  * FROM " + DATABASE_NAME + " ORDER by componentGroupId DESC LIMIT 1");
+            while (result.next()) {
+                componentGroup.setId(result.getInt("componentGroupId"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 1;
+    }
+
+    @Override
+    public ComponentGroupDTO getComponentGroup(int componentGroupId) {
+        try {
+            PreparedStatement stm = CONN.prepareStatement("SELECT * FROM " + DATABASE_NAME + " WHERE id = ?");
+            stm.setInt(1, componentGroupId);
+            ResultSet result = stm.executeQuery();
+            while (result.next()) {
+                return new ComponentGroupDTO(result.getInt("componentGroupId"), result.getString("name"), result.getString("standardLoanDuration"), result.getInt("status"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public ComponentGroupDTO[] getComponentGroups() {
+        ResultSet result = null;
+        ArrayList<ComponentGroupDTO> componentGroups = new ArrayList();
+        try {
+            result = CONN.createStatement().executeQuery("SELECT * FROM " + DATABASE_NAME);
+            while (result.next()) {
+                componentGroups.add(new ComponentGroupDTO(result.getInt("componentGroupId"), result.getString("name"), result.getString("standardLoanDuration"), result.getInt("status")));
+            }
+            return componentGroups.toArray(new ComponentGroupDTO[componentGroups.size()]);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    public int updateComponentGroups(ComponentGroupDTO componentGroup) {
+        String sql = "UPDATE " + DATABASE_NAME + " set ";
+        String sqlValues = "";
+        if (componentGroup.getId() == 0 || (componentGroup.getNavn() == null && componentGroup.getStandardLoanDuration() == null))
+            return -1;
+
+        
+        if (componentGroup.getNavn() != null)
+            sqlValues += " name = ?";
+
+        if (componentGroup.getStandardLoanDuration() != null) {
+            if (!sqlValues.equals(""))
+                sqlValues += ", standardLoanDuration = ?";
+            else
+                sqlValues += " standardLoanDuration = ?";
+        }
+        
+        if (componentGroup.getStatus() != 0){
+            if(!sqlValues.equals(""))
+                sqlValues += ", status = ?";
+            else
+                sqlValues += " status = ?";
+        }
+
+        sql += sqlValues;
+        sql += " WHERE componentGroupId = ?";
+           
+        try {
+            PreparedStatement stm = CONN.prepareStatement(sql);
+            int param = 1;
+            if (componentGroup.getNavn() != null)
+                stm.setString(param++, componentGroup.getNavn());
+            if (componentGroup.getStandardLoanDuration() != null)
+                stm.setString(param++, componentGroup.getStandardLoanDuration());
+            if (componentGroup.getStatus() != 0)
+                stm.setInt(param++, componentGroup.getStatus());
+
+            stm.setInt(param++, componentGroup.getId());
+            if (!stm.execute()) {
+                if (stm.getUpdateCount() == 0) {
+                    return -2;
+                } else {
+                    return 1;
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
+    public int deleteComponentGroup(int componentGroupId) {
+        try {
+            String sql = "DELETE FROM " + DATABASE_NAME + " WHERE componentGroupId = ?";
+            PreparedStatement stm = CONN.prepareStatement(sql);
+            stm.setInt(1, componentGroupId);
+            stm.execute();
+            if(stm.getUpdateCount() == 1){
+                return 1;
+            } else{
+                return -2;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+}
