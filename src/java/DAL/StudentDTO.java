@@ -10,5 +10,7 @@ package DAL;
  * @author mathias
  */
 public class StudentDTO {
-    
+    private int studentId;
+    private String name;
+    private int status;
 }
