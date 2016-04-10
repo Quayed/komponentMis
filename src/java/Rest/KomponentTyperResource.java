@@ -7,6 +7,7 @@ package Rest;
 
 import DAL.ComponentGroupDAO;
 import DAL.ComponentGroupDTO;
+import DAL.DatabaseConfig;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import javax.ws.rs.core.Context;
@@ -41,7 +42,7 @@ public class KomponentTyperResource {
      */
     public KomponentTyperResource() {
         try {
-            dao = new ComponentGroupDAO(DriverManager.getConnection("jdbc:mysql://localhost:3306/komponentMis?zeroDateTimeBehavior=convertToNull", "root", "root"));
+            dao = new ComponentGroupDAO(DriverManager.getConnection(DatabaseConfig.ENDPOINT, DatabaseConfig.USERNAME, DatabaseConfig.PASSWORD));
         } catch (SQLException e) {
             e.printStackTrace();
         }
