@@ -27,7 +27,7 @@ public class StudentDAO implements IStudentDAO {
 
     @Override
     public int createStudent(StudentDTO student) {
-        if (student.getStudentId() == 0 || student.getName() == null)
+        if (student.getStudentId() == null || student.getName() == null)
             return -1;
 
         String sql = "INSERT INTO " + DATABASE_NAME + "(studentId, name, status)"
@@ -38,11 +38,9 @@ public class StudentDAO implements IStudentDAO {
             PreparedStatement stm = CONN.prepareStatement(sql);
             int param = 1;
 
-            if (student.getStudentId() != 0)
-                stm.setInt(param++, student.getStudentId());
+            stm.setString(param++, student.getStudentId());
 
-            if (student.getName() != null)
-                stm.setString(param++, student.getName());
+            stm.setString(param++, student.getName());
 
             stm.setInt(param++, student.getStatus());
 
@@ -67,7 +65,7 @@ public class StudentDAO implements IStudentDAO {
             stm.setInt(1, studentId);
             ResultSet result = stm.executeQuery();
             while (result.next())
-                return new StudentDTO(result.getInt("studentId"), result.getString("name"), result.getInt("status"));
+                return new StudentDTO(result.getString("studentId"), result.getString("name"), result.getInt("status"));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -82,7 +80,7 @@ public class StudentDAO implements IStudentDAO {
             ArrayList<StudentDTO> students = new ArrayList<>();
             ResultSet result = stm.executeQuery();
             while (result.next())
-                students.add(new StudentDTO(result.getInt("studentId"), result.getString("name"), result.getInt("status")));
+                students.add(new StudentDTO(result.getString("studentId"), result.getString("name"), result.getInt("status")));
 
             return students.toArray(new StudentDTO[students.size()]);
         } catch (SQLException e) {
@@ -94,7 +92,7 @@ public class StudentDAO implements IStudentDAO {
 
     @Override
     public int updateStudent(StudentDTO student) {
-        if (student.getStudentId() == 0 || (student.getName() == null && student.getStatus() == 0))
+        if (student.getStudentId() == null || (student.getName() == null && student.getStatus() == 0))
             return -1;
 
         String sql = "UPDATE " + DATABASE_NAME + " SET ";
@@ -124,7 +122,7 @@ public class StudentDAO implements IStudentDAO {
             if (student.getStatus() != 0)
                 stm.setInt(param++, student.getStatus());
 
-            stm.setInt(param++, student.getStudentId());
+            stm.setString(param++, student.getStudentId());
 
             stm.execute();
 

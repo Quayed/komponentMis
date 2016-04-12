@@ -9,21 +9,21 @@ package DAL;
  * @author mathias
  */
 public class StudentDTO {
-    private int studentId;
+    private String studentId;
     private String name;
     private int status;
 
-    public StudentDTO(int studentId, String name, int status) {
+    public StudentDTO(String studentId, String name, int status) {
         this.studentId = studentId;
         this.name = name;
         this.status = status;
     }
 
-    public void setStudentId(int studentId) {
+    public void setStudentId(String studentId) {
         this.studentId = studentId;
     }
 
-    public int getStudentId() {
+    public String getStudentId() {
         return this.studentId;
     }
 

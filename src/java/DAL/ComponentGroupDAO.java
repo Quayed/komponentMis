@@ -16,35 +16,16 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
 
     @Override
     public int createComponentGroup(ComponentGroupDTO componentGroup) {
-        if (componentGroup.getName() == null && componentGroup.getStandardLoanDuration() == null)
+        if (componentGroup.getName() == null)
             return -1;
 
-        String sql = "INSERT INTO " + DATABASE_NAME + "(";
-        String sqlValues = "";
-        if (componentGroup.getName() != null) {
-            sql += "name";
-            sqlValues += "?";
-        }
+        String sql = "INSERT INTO " + DATABASE_NAME + "(name, status";
+        String sqlValues = "?, ?";
 
         if (componentGroup.getStandardLoanDuration() != null) {
-            if (!sqlValues.equals("")) {
                 sql += ", standardLoanDuration";
                 sqlValues += ", ?";
-            } else {
-                sql += "standardLoanDuration";
-                sqlValues += "?";
-            }
         }
-
-        
-        if (!sqlValues.equals("")) {
-            sql += ", status";
-            sqlValues += ", ?";
-        } else {
-            sql += "status";
-            sqlValues += ", ?";
-        }
-        
 
         sql += ") VALUES(";
         sql += sqlValues + ")";
@@ -52,30 +33,19 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
         try {
             int param = 1;
             PreparedStatement stm = CONN.prepareStatement(sql);
-            if (componentGroup.getName() != null)
-                stm.setString(param++, componentGroup.getName());
+
+            stm.setString(param++, componentGroup.getName());
+            
+            stm.setInt(param++, componentGroup.getStatus());
+            
             if (componentGroup.getStandardLoanDuration() != null)
                 stm.setString(param++, componentGroup.getStandardLoanDuration());
-
-            stm.setInt(param++, componentGroup.getStatus());
 
             stm.execute();
 
         } catch (SQLException e) {
             e.printStackTrace();
             return -1;
-        }
-
-
-        /* TODO Det her skal gøres på en bedre måde - hvis det skal gøres! */
-        try {
-            Statement stm = CONN.createStatement();
-            ResultSet result = stm.executeQuery("SELECT  * FROM " + DATABASE_NAME + " ORDER by componentGroupId DESC LIMIT 1");
-            while (result.next()) {
-                componentGroup.setComponentGroupId(result.getInt("componentGroupId"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         return 1;
     }

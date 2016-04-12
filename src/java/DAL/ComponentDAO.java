@@ -19,62 +19,22 @@ public class ComponentDAO implements IComponentDAO {
 
     @Override
     public int createComponent(ComponentDTO component) {
-        if (component.getComponentNumber() == 0 && component.getComponentGroupId() == 0 && component.getBarcode() == null)
+        if (component.getComponentNumber() == 0 || component.getComponentGroupId() == 0 || component.getBarcode() == null)
             return -1;
 
-        String sql = "INSERT INTO + " + DATABASE_NAME + "(";
-        String sqlValues = "";
-
-        if (component.getComponentGroupId() != 0) {
-            sql += "componentGroupId";
-            sqlValues += "?";
-        }
-
-        if (component.getComponentNumber() != 0) {
-            if (!sqlValues.equals("")) {
-                sql += ", componentNumber";
-                sqlValues += ", ?";
-            } else {
-                sql += "componentNumber";
-                sqlValues += "?";
-            }
-        }
-
-        if (component.getBarcode() != null) {
-            if (!sqlValues.equals("")) {
-                sql += ", barcode";
-                sqlValues += ", ?";
-            } else {
-                sql += "barcode";
-                sqlValues += "?";
-            }
-        }
-
-        
-        if (!sqlValues.equals("")) {
-            sql += ", status";
-            sqlValues += ", ?";
-        } else {
-            sql += "status";
-            sqlValues += "?";
-        }
-        
-
-        sql += ") VALUES(";
-        sql += sqlValues + ")";
+        String sql = "INSERT INTO + " + DATABASE_NAME + 
+                "(componentGroupId, componentNumber, barcode, status)"
+                + "VALUES(?, ?, ?, ?)";
 
         try {
             int param = 1;
             PreparedStatement stm = CONN.prepareStatement(sql);
 
-            if (component.getComponentGroupId() != 0)
-                stm.setInt(param++, component.getComponentGroupId());
+            stm.setInt(param++, component.getComponentGroupId());
 
-            if (component.getComponentNumber() != 0)
-                stm.setInt(param++, component.getComponentNumber());
+            stm.setInt(param++, component.getComponentNumber());
 
-            if (component.getBarcode() != null)
-                stm.setString(param++, component.getBarcode());
+            stm.setString(param++, component.getBarcode());
 
             stm.setInt(param++, component.getStatus());
 

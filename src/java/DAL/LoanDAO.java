@@ -19,66 +19,21 @@ public class LoanDAO implements ILoanDAO {
 
     @Override
     public int createLoan(LoanDTO loan) {
-        if (loan.getComponentId() == 0 && loan.getStudentId() == null && loan.getLoanDate() == null
-                && loan.getDueDate() == null && loan.getDeliveryDate() == null && loan.getDeliveredTo() == null)
+        if(loan.getComponentId() == 0 || loan.getStudentId() == null || loan.getLoanDate() == null || loan.getDueDate() == null)
             return -1;
+        
+        String sql = "INSERT INTO " + DATABASE_NAME + "(componentId, studentId, loanDate, dueDate";
+        String sqlValues = "?, ?, ?, ?";
 
-        String sql = "INSERT INTO " + DATABASE_NAME + "(";
-        String sqlValues = "";
-
-        if (loan.getComponentId() != 0) {
-            sql += "componentId";
-            sqlValues += "?";
-        }
-
-        if (loan.getStudentId() != null) {
-            if (sqlValues.equals("")) {
-                sql += "studentId";
-                sqlValues += "?";
-            } else {
-                sql += ", studentId";
-                sqlValues += ", ?";
-            }
-        }
-
-        if (loan.getLoanDate() != null) {
-            if (sqlValues.equals("")) {
-                sql += "loanDate";
-                sqlValues += "?";
-            } else {
-                sql += ", loanDate";
-                sqlValues += ", ?";
-            }
-        }
-
-        if (loan.getDueDate() != null) {
-            if (sqlValues.equals("")) {
-                sql += "dueDate";
-                sqlValues += "?";
-            } else {
-                sql += ", dueDate";
-                sqlValues += ", ?";
-            }
-        }
 
         if (loan.getDeliveryDate() != null) {
-            if (sqlValues.equals("")) {
-                sql += "deliveryDate";
-                sqlValues += "?";
-            } else {
-                sql += ", deliveryDate";
-                sqlValues = ", ?";
-            }
+            sql += ", deliveryDate";
+            sqlValues = ", ?";
         }
 
         if (loan.getDeliveredTo() != null) {
-            if (sqlValues.equals("")) {
-                sql += "deliveredTo";
-                sqlValues += "?";
-            } else {
-                sql += ", deliveredTo";
-                sqlValues += ", ?";
-            }
+            sql += ", deliveredTo";
+            sqlValues += ", ?";
         }
 
         sql += ") VALUES(" + sqlValues + ")";
@@ -87,19 +42,13 @@ public class LoanDAO implements ILoanDAO {
             int param = 1;
             PreparedStatement stm = CONN.prepareStatement(sql);
 
-            if (loan.getComponentId() != 0) {
-                stm.setInt(param++, loan.getComponentId());
-            }
+            stm.setInt(param++, loan.getComponentId());
 
-            if (loan.getStudentId() != null) {
-                stm.setString(param++, loan.getStudentId());
-            }
+            stm.setString(param++, loan.getStudentId());
 
-            if (loan.getLoanDate() != null)
-                stm.setDate(param++, new java.sql.Date(loan.getLoanDate().getTime()));
+            stm.setDate(param++, new java.sql.Date(loan.getLoanDate().getTime()));
 
-            if (loan.getDueDate() != null)
-                stm.setDate(param++, new java.sql.Date(loan.getDueDate().getTime()));
+            stm.setDate(param++, new java.sql.Date(loan.getDueDate().getTime()));
 
             if (loan.getDeliveryDate() != null)
                 stm.setDate(param++, new java.sql.Date(loan.getDeliveryDate().getTime()));
