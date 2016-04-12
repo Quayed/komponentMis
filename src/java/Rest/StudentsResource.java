@@ -56,7 +56,8 @@ public class StudentsResource {
         output.append("[");
         for(StudentDTO student : students){
             output.append("{");
-            output.append("\"studentId\": \"" + student.getStudentId() + "\"");
+            output.append("\"details\": \"/Students/" + student.getStudentId() + "\"");
+            output.append(", \"studentId\": \"" + student.getStudentId() + "\"");
             output.append(", \"name\": \"" + student.getName() + "\"");
             output.append(", \"status\": " + student.getStatus());
             output.append("}");
