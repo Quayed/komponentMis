@@ -13,4 +13,28 @@ public class StudentDTO {
     private int studentId;
     private String name;
     private int status;
+    
+    public void setStudentId(int studentId){
+        this.studentId = studentId;
+    }
+    
+    public int getStudentId(){
+        return this.studentId;
+    }
+    
+    public void setName(String name){
+        this.name = name;
+    }
+    
+    public String getName(){
+        return this.name;
+    }    
+    
+    public void setStatus(int status){
+        this.status = status;
+    }
+    
+    public int getStatus(){
+        return this.status;
+    }
 }
