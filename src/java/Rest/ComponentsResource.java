@@ -89,12 +89,14 @@ public class ComponentsResource {
         }        
         
         ComponentDTO component = dao.getComponent(Integer.parseInt(id));
+        
+        if(component == null)
+            throw new WebApplicationException(404);
+        
         ComponentGroupDTO componentGroup = null;
         if (component.getComponentGroupId() != 0)
             componentGroup = new ComponentGroupDAO(conn).getComponentGroup(component.getComponentGroupId());
         
-        if(component == null)
-            throw new WebApplicationException(404);
         
         
         
