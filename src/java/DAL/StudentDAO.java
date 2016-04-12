@@ -27,40 +27,13 @@ public class StudentDAO implements IStudentDAO {
 
     @Override
     public int createStudent(StudentDTO student) {
-        if (student.getStudentId() == 0 && student.getName() == null && student.getStatus() == 0)
+        if (student.getStudentId() == 0 || student.getName() == null)
             return -1;
 
-        String sql = "INSERT INTO " + DATABASE_NAME + "(";
+        String sql = "INSERT INTO " + DATABASE_NAME + "(studentId, name, status)"
+                + " VALUES (?, ?, ?)";
         String sqlValues = "";
-
-        if (student.getStudentId() != 0) {
-            sql += "studentId";
-            sqlValues += "?";
-        }
-
-        if (student.getName() != null) {
-            if (sqlValues.equals("")) {
-                sql += "name";
-                sqlValues += "?";
-            } else {
-                sql += ", name";
-                sqlValues += ", ?";
-            }
-        }
-
-        if (student.getStatus() != 0) {
-            if (sqlValues.equals("")) {
-                sql += "status";
-                sqlValues += "?";
-            } else {
-                sql += ", status";
-                sqlValues += ", ?";
-            }
-        }
-
-        sql += ") VALUES ( " + sqlValues + ")";
-
-
+        
         try {
             PreparedStatement stm = CONN.prepareStatement(sql);
             int param = 1;
@@ -71,8 +44,7 @@ public class StudentDAO implements IStudentDAO {
             if (student.getName() != null)
                 stm.setString(param++, student.getName());
 
-            if (student.getStatus() != 0)
-                stm.setInt(param++, student.getStatus());
+            stm.setInt(param++, student.getStatus());
 
             stm.execute();
 
