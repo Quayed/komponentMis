@@ -30,8 +30,8 @@ import javax.ws.rs.core.MediaType;
  *
  * @author mathias
  */
-@Path("KomponentTyper")
-public class KomponentTyperResource {
+@Path("ComponentGroups")
+public class ComponentGroupsResource {
 
     @Context
     private UriInfo context;
@@ -40,7 +40,7 @@ public class KomponentTyperResource {
     /**
      * Creates a new instance of KomponentTyperResource
      */
-    public KomponentTyperResource() {
+    public ComponentGroupsResource() {
         try {
             dao = new ComponentGroupDAO(DriverManager.getConnection(DatabaseConfig.ENDPOINT, DatabaseConfig.USERNAME, DatabaseConfig.PASSWORD));
         } catch (SQLException e) {
@@ -86,6 +86,10 @@ public class KomponentTyperResource {
         }
         
         ComponentGroupDTO komponentType = dao.getComponentGroup(Integer.parseInt(id));
+        
+        if(komponentType == null)
+            throw new WebApplicationException(404);
+        
         StringBuilder output = new StringBuilder();
         output.append("{");
         output.append("\"id\": " + komponentType.getId());
@@ -100,22 +104,29 @@ public class KomponentTyperResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public String createKomponentType(ComponentGroupDTO komponentType){
-        dao.createComponentGroup(komponentType);
-        return "All Ok";
+        int returnStatus = dao.createComponentGroup(komponentType);
+        if(returnStatus == 1)
+            return "All Ok";
+        else
+            throw new WebApplicationException(500);
     }
     
     @POST
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public String updateKomponentType(@PathParam("id") String id, ComponentGroupDTO komponentType){
+    public String updateKomponentType(@PathParam("id") String id, ComponentGroupDTO componentGroup){
         //Check that ID is actually a number
         if(!id.matches("^\\d+$")){
             throw new WebApplicationException(405);
         }
-        komponentType.setId(Integer.parseInt(id));
-        dao.updateComponentGroups(komponentType);
-        return "All Ok";
+        
+        componentGroup.setId(Integer.parseInt(id));
+        int returnStatus = dao.updateComponentGroups(componentGroup);
+        if(returnStatus == 1)
+            return "All Ok";
+        else
+            throw new WebApplicationException(500);
     }
     
     @DELETE
