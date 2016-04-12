@@ -19,7 +19,7 @@ public class ComponentDAO implements IComponentDAO {
 
     @Override
     public int createComponent(ComponentDTO component) {
-        if (component.getComponentNumber() == 0 && component.getComponentGroupId() == 0 && component.getBarcode() == null && component.getStatus() == 0)
+        if (component.getComponentNumber() == 0 && component.getComponentGroupId() == 0 && component.getBarcode() == null)
             return -1;
 
         String sql = "INSERT INTO + " + DATABASE_NAME + "(";
@@ -50,15 +50,15 @@ public class ComponentDAO implements IComponentDAO {
             }
         }
 
-        if (component.getStatus() != 0) {
-            if (!sqlValues.equals("")) {
-                sql += ", status";
-                sqlValues += ", ?";
-            } else {
-                sql += "status";
-                sqlValues += "?";
-            }
+        
+        if (!sqlValues.equals("")) {
+            sql += ", status";
+            sqlValues += ", ?";
+        } else {
+            sql += "status";
+            sqlValues += "?";
         }
+        
 
         sql += ") VALUES(";
         sql += sqlValues + ")";
@@ -76,8 +76,7 @@ public class ComponentDAO implements IComponentDAO {
             if (component.getBarcode() != null)
                 stm.setString(param++, component.getBarcode());
 
-            if (component.getStatus() != 0)
-                stm.setInt(param++, component.getStatus());
+            stm.setInt(param++, component.getStatus());
 
             stm.execute();
 
@@ -119,7 +118,7 @@ public class ComponentDAO implements IComponentDAO {
 
     @Override
     public int updateComponent(ComponentDTO component) {
-        if (component.getComponentId() == 0 || (component.getBarcode() == null && component.getComponentNumber() == 0 && component.getComponentGroupId() == 0 && component.getStatus() == 0))
+        if (component.getComponentId() == 0 || (component.getBarcode() == null && component.getComponentNumber() == 0 && component.getComponentGroupId() == 0))
             return -1;
 
         String sql = "UPDATE " + DATABASE_NAME + " set ";
@@ -144,12 +143,10 @@ public class ComponentDAO implements IComponentDAO {
             }
         }
 
-        if (component.getStatus() != 0) {
-            if (sqlValues.equals(""))
-                sqlValues += "status = ?";
-            else
-                sqlValues += ", status = ?";
-        }
+        if (sqlValues.equals(""))
+            sqlValues += "status = ?";
+        else
+            sqlValues += ", status = ?";
 
         sql += sqlValues + " WHERE componentId = ?";
 
@@ -162,8 +159,8 @@ public class ComponentDAO implements IComponentDAO {
                 stm.setInt(param++, component.getComponentGroupId());
             if (component.getBarcode() != null)
                 stm.setString(param++, component.getBarcode());
-            if (component.getStatus() != 0)
-                stm.setInt(param++, component.getStatus());
+
+            stm.setInt(param++, component.getStatus());
 
             stm.setInt(param++, component.getComponentId());
 

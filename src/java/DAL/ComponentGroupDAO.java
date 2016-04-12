@@ -36,15 +36,15 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
             }
         }
 
-        if (componentGroup.getStatus() != 0) {
-            if (!sqlValues.equals("")) {
-                sql += ", status";
-                sqlValues += ", ?";
-            } else {
-                sql += "status";
-                sqlValues += ", ?";
-            }
+        
+        if (!sqlValues.equals("")) {
+            sql += ", status";
+            sqlValues += ", ?";
+        } else {
+            sql += "status";
+            sqlValues += ", ?";
         }
+        
 
         sql += ") VALUES(";
         sql += sqlValues + ")";
@@ -56,8 +56,8 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
                 stm.setString(param++, componentGroup.getName());
             if (componentGroup.getStandardLoanDuration() != null)
                 stm.setString(param++, componentGroup.getStandardLoanDuration());
-            if (componentGroup.getStatus() != 0)
-                stm.setInt(param++, componentGroup.getStatus());
+
+            stm.setInt(param++, componentGroup.getStatus());
 
             stm.execute();
 
@@ -130,12 +130,10 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
                 sqlValues += " standardLoanDuration = ?";
         }
 
-        if (componentGroup.getStatus() != 0) {
-            if (!sqlValues.equals(""))
-                sqlValues += ", status = ?";
-            else
-                sqlValues += " status = ?";
-        }
+        if (!sqlValues.equals(""))
+            sqlValues += ", status = ?";
+        else
+            sqlValues += " status = ?";
 
         sql += sqlValues;
         sql += " WHERE componentGroupId = ?";
@@ -147,8 +145,8 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
                 stm.setString(param++, componentGroup.getName());
             if (componentGroup.getStandardLoanDuration() != null)
                 stm.setString(param++, componentGroup.getStandardLoanDuration());
-            if (componentGroup.getStatus() != 0)
-                stm.setInt(param++, componentGroup.getStatus());
+
+            stm.setInt(param++, componentGroup.getStatus());
 
             stm.setInt(param++, componentGroup.getComponentGroupId());
             if (!stm.execute()) {

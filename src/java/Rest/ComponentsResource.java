@@ -107,8 +107,8 @@ public class ComponentsResource {
         if(componentGroup != null){
             output.append("\"componentGroup\": { ");
             output.append("\"componentGroupId\": " + componentGroup.getComponentGroupId());
-            output.append("\"name\": " + (componentGroup.getName() == null ? "" : "\"" + componentGroup.getName() + "\""));
-            output.append("\"standardLoanDuration\": " + (componentGroup.getStandardLoanDuration() == null ? "" : "\"" + componentGroup.getStandardLoanDuration() + "\""));
+            output.append("\"name\": " + "\"" + (componentGroup.getName() == null ? "" : componentGroup.getName()) + "\"");
+            output.append("\"standardLoanDuration\": " + "\"" + (componentGroup.getStandardLoanDuration() == null ? "" : componentGroup.getStandardLoanDuration())  + "\"");
             output.append("\"standardLoanDuration\": " + componentGroup.getStatus());
             output.append("}");
         } else{
@@ -117,8 +117,8 @@ public class ComponentsResource {
             output.append("}");
         }
         
-        output.append("\"componentNumber\": " + component.getComponentNumber());
-        output.append("\"barcode\": \"" + component.getBarcode() + "\"");
+        output.append("\"componentNumber\": " + (component.getComponentNumber() == 0 ? "\"\"" : component.getComponentNumber()));
+        output.append("\"barcode\": \"" + (component.getBarcode() == null ? "" : component.getBarcode()) + "\"");
         output.append("\"status\":" + component.getStatus());
         output.append("}");
         
