@@ -107,6 +107,14 @@ public class LoanDAO implements ILoanDAO {
             if(loan.getDeliveredTo() != null)
                 stm.setString(param++, loan.getDeliveredTo());
             
+            stm.execute();
+            
+            if(stm.getUpdateCount() != 1){
+                return -2;
+            }else{
+                return 1;
+            }
+            
         } catch(SQLException e){
             e.printStackTrace();
         }

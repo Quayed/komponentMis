@@ -14,6 +14,12 @@ public class StudentDTO {
     private String name;
     private int status;
     
+    public StudentDTO(int studentId, String name, int status){
+        this.studentId = studentId;
+        this.name = name;
+        this.status = status;
+    }
+    
     public void setStudentId(int studentId){
         this.studentId = studentId;
     }

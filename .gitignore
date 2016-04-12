@@ -1,2 +1,4 @@
 /src/java/DAL/DatabaseConfig.java
 /build/web/WEB-INF/classes/DAL/DatabaseConfig.class
+/src/java/*.iml
+/src/java/.idea
