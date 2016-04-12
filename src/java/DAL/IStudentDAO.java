@@ -11,11 +11,11 @@ package DAL;
 public interface IStudentDAO {
     int createStudent(StudentDTO student);
 
-    StudentDTO getStudent(int studentId);
+    StudentDTO getStudent(String studentId);
 
     StudentDTO[] getStudents();
 
     int updateStudent(StudentDTO student);
 
-    int deleteStudent(int studentId);
+    int deleteStudent(String studentId);
 }

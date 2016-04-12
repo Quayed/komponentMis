@@ -59,10 +59,10 @@ public class StudentDAO implements IStudentDAO {
     }
 
     @Override
-    public StudentDTO getStudent(int studentId) {
+    public StudentDTO getStudent(String studentId) {
         try {
             PreparedStatement stm = CONN.prepareStatement("SELECT * FROM " + DATABASE_NAME + "WHERE id = ?");
-            stm.setInt(1, studentId);
+            stm.setString(1, studentId);
             ResultSet result = stm.executeQuery();
             while (result.next())
                 return new StudentDTO(result.getString("studentId"), result.getString("name"), result.getInt("status"));
@@ -139,13 +139,13 @@ public class StudentDAO implements IStudentDAO {
     }
 
     @Override
-    public int deleteStudent(int studentId) {
-        if (studentId == 0)
+    public int deleteStudent(String studentId) {
+        if (studentId == null ||studentId.equals(""))
             return -1;
 
         try {
             PreparedStatement stm = CONN.prepareStatement("DELETE FROM " + DATABASE_NAME + "WHERE studentId = ?");
-            stm.setInt(1, studentId);
+            stm.setString(1, studentId);
             stm.execute();
 
             if (stm.getUpdateCount() == 1) {
