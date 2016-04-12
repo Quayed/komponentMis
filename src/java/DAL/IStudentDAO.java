@@ -6,13 +6,16 @@
 package DAL;
 
 /**
- *
  * @author mathias
  */
 public interface IStudentDAO {
     int createStudent(StudentDTO student);
+
     StudentDTO getStudent(int studentId);
+
     StudentDTO[] getStudents();
+
     int updateStudent(StudentDTO student);
+
     int deleteStudent(int studentId);
 }

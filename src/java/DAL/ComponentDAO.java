@@ -12,49 +12,49 @@ import java.util.ArrayList;
 public class ComponentDAO implements IComponentDAO {
     private final Connection CONN;
     private final String DATABASE_NAME = "Component";
-    
-    public ComponentDAO(Connection conn){
+
+    public ComponentDAO(Connection conn) {
         this.CONN = conn;
     }
 
     @Override
     public int createComponent(ComponentDTO component) {
-        if( component.getComponentNumber() == 0 && component.getComponentGroupId() == 0 && component.getBarcode() == null && component.getStatus() == 0)
+        if (component.getComponentNumber() == 0 && component.getComponentGroupId() == 0 && component.getBarcode() == null && component.getStatus() == 0)
             return -1;
 
         String sql = "INSERT INTO + " + DATABASE_NAME + "(";
         String sqlValues = "";
 
-        if (component.getComponentGroupId() != 0){
+        if (component.getComponentGroupId() != 0) {
             sql += "componentGroupId";
             sqlValues += "?";
         }
 
-        if( component.getComponentNumber() != 0){
-            if (!sqlValues.equals("")){
+        if (component.getComponentNumber() != 0) {
+            if (!sqlValues.equals("")) {
                 sql += ", componentNumber";
                 sqlValues += ", ?";
-            } else{
+            } else {
                 sql += "componentNumber";
                 sqlValues += "?";
             }
         }
 
-        if (component.getBarcode() != null){
-            if(!sqlValues.equals("")){
+        if (component.getBarcode() != null) {
+            if (!sqlValues.equals("")) {
                 sql += ", barcode";
                 sqlValues += ", ?";
-            }else{
+            } else {
                 sql += "barcode";
                 sqlValues += "?";
             }
         }
-        
-        if(component.getStatus() != 0){
-            if(!sqlValues.equals("")){
+
+        if (component.getStatus() != 0) {
+            if (!sqlValues.equals("")) {
                 sql += ", status";
                 sqlValues += ", ?";
-            } else{
+            } else {
                 sql += "status";
                 sqlValues += "?";
             }
@@ -63,25 +63,25 @@ public class ComponentDAO implements IComponentDAO {
         sql += ") VALUES(";
         sql += sqlValues + ")";
 
-        try{
+        try {
             int param = 1;
             PreparedStatement stm = CONN.prepareStatement(sql);
 
-            if(component.getComponentGroupId() != 0)
+            if (component.getComponentGroupId() != 0)
                 stm.setInt(param++, component.getComponentGroupId());
 
-            if(component.getComponentNumber() != 0)
+            if (component.getComponentNumber() != 0)
                 stm.setInt(param++, component.getComponentNumber());
 
-            if(component.getBarcode() != null)
+            if (component.getBarcode() != null)
                 stm.setString(param++, component.getBarcode());
 
-            if(component.getStatus() != 0)
+            if (component.getStatus() != 0)
                 stm.setInt(param++, component.getStatus());
-            
+
             stm.execute();
 
-        }catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return -1;
         }
@@ -90,13 +90,13 @@ public class ComponentDAO implements IComponentDAO {
 
     @Override
     public ComponentDTO getComponent(int componentId) {
-        try{
+        try {
             PreparedStatement stm = CONN.prepareStatement("SELECT * FROM " + DATABASE_NAME + " WHERE componentId = ?");
             stm.setInt(1, componentId);
             ResultSet result = stm.executeQuery();
-            while(result.next())
+            while (result.next())
                 return new ComponentDTO(result.getInt("componentId"), result.getInt("componentGroupId"), result.getInt("componentNumber"), result.getString("barcode"), result.getInt("status"));
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -105,13 +105,13 @@ public class ComponentDAO implements IComponentDAO {
 
     @Override
     public ComponentDTO[] getComponents() {
-        try{
+        try {
             ResultSet result = CONN.createStatement().executeQuery("SELECT * FROM " + DATABASE_NAME);
             ArrayList<ComponentDTO> components = new ArrayList<>();
-            while(result.next())
+            while (result.next())
                 components.add(new ComponentDTO(result.getInt("componentId"), result.getInt("componentGroupId"), result.getInt("componentNumber"), result.getString("barcode"), result.getInt("status")));
             return components.toArray(new ComponentDTO[components.size()]);
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
@@ -119,33 +119,33 @@ public class ComponentDAO implements IComponentDAO {
 
     @Override
     public int updateComponent(ComponentDTO component) {
-        if(component.getComponentId() == 0 || (component.getBarcode() == null && component.getComponentNumber() == 0 && component.getComponentGroupId() == 0 && component.getStatus() == 0))
+        if (component.getComponentId() == 0 || (component.getBarcode() == null && component.getComponentNumber() == 0 && component.getComponentGroupId() == 0 && component.getStatus() == 0))
             return -1;
 
         String sql = "UPDATE " + DATABASE_NAME + " set ";
         String sqlValues = "";
 
-        if(component.getComponentGroupId() != 0)
+        if (component.getComponentGroupId() != 0)
             sqlValues += "componentGroupId = ?";
 
-        if(component.getComponentNumber() != 0){
-            if(sqlValues.equals("")){
+        if (component.getComponentNumber() != 0) {
+            if (sqlValues.equals("")) {
                 sqlValues += "componentNumber = ?";
-            }else{
+            } else {
                 sqlValues += ", componentNumber = ?";
             }
         }
 
-        if(component.getBarcode() != null){
-            if(sqlValues.equals("")){
+        if (component.getBarcode() != null) {
+            if (sqlValues.equals("")) {
                 sqlValues += "barcode = ?";
-            } else{
+            } else {
                 sqlValues += ", barcode = ?";
             }
         }
-        
-        if(component.getStatus() != 0){
-            if(sqlValues.equals(""))
+
+        if (component.getStatus() != 0) {
+            if (sqlValues.equals(""))
                 sqlValues += "status = ?";
             else
                 sqlValues += ", status = ?";
@@ -153,25 +153,25 @@ public class ComponentDAO implements IComponentDAO {
 
         sql += sqlValues + " WHERE componentId = ?";
 
-        try{
+        try {
             PreparedStatement stm = CONN.prepareStatement(sql);
             int param = 1;
-            if(component.getComponentNumber() != 0)
+            if (component.getComponentNumber() != 0)
                 stm.setInt(param++, component.getComponentNumber());
-            if(component.getComponentGroupId() != 0)
+            if (component.getComponentGroupId() != 0)
                 stm.setInt(param++, component.getComponentGroupId());
-            if(component.getBarcode() != null)
+            if (component.getBarcode() != null)
                 stm.setString(param++, component.getBarcode());
-            if(component.getStatus() != 0)
+            if (component.getStatus() != 0)
                 stm.setInt(param++, component.getStatus());
 
             stm.setInt(param++, component.getComponentId());
 
             stm.execute();
 
-            if(stm.getUpdateCount() == 1)
+            if (stm.getUpdateCount() == 1)
                 return 1;
-        } catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -180,21 +180,21 @@ public class ComponentDAO implements IComponentDAO {
 
     @Override
     public int deleteComponent(int componentId) {
-        
-        try{
+
+        try {
             String sql = "DELETE FROM " + DATABASE_NAME + "WHERE componentId = ?";
             PreparedStatement stm = CONN.prepareStatement(sql);
             stm.setInt(1, componentId);
-            if(stm.getUpdateCount() == 1){
+            if (stm.getUpdateCount() == 1) {
                 return 1;
-            } else{
+            } else {
                 return -2;
             }
-        } catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        
+
         return -1;
-        
+
     }
 }

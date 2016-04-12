@@ -8,12 +8,12 @@ public class ComponentGroupDTO {
     private String name;
     private String standardLoanDuration;
     private int status;
-    
+
     public ComponentGroupDTO() {
 
     }
 
-    public ComponentGroupDTO(int componentGroupId, String name, String standardLoanDuration, int status){
+    public ComponentGroupDTO(int componentGroupId, String name, String standardLoanDuration, int status) {
         this.componentGroupId = componentGroupId;
         this.name = name;
         this.standardLoanDuration = standardLoanDuration;
@@ -43,12 +43,12 @@ public class ComponentGroupDTO {
     public void setStandardLoanDuration(String standardLoanDuration) {
         this.standardLoanDuration = standardLoanDuration;
     }
-    
-    public int getStatus(){
+
+    public int getStatus() {
         return status;
     }
-    
-    public void setStatus(int status){
+
+    public void setStatus(int status) {
         this.status = status;
     }
 }

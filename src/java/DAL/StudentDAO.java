@@ -14,107 +14,106 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
  * @author mathias
  */
-public class StudentDAO implements IStudentDAO{
+public class StudentDAO implements IStudentDAO {
 
     private final Connection CONN;
     private final String DATABASE_NAME = "Student";
-    
-    public StudentDAO(Connection conn){
+
+    public StudentDAO(Connection conn) {
         this.CONN = conn;
     }
-    
+
     @Override
     public int createStudent(StudentDTO student) {
         if (student.getStudentId() == 0 && student.getName() == null && student.getStatus() == 0)
             return -1;
-        
+
         String sql = "INSERT INTO " + DATABASE_NAME + "(";
         String sqlValues = "";
-        
-        if(student.getStudentId() != 0){
+
+        if (student.getStudentId() != 0) {
             sql += "studentId";
             sqlValues += "?";
         }
-        
-        if(student.getName() != null){
-            if(sqlValues.equals("")){
+
+        if (student.getName() != null) {
+            if (sqlValues.equals("")) {
                 sql += "name";
                 sqlValues += "?";
-            }else{
+            } else {
                 sql += ", name";
                 sqlValues += ", ?";
             }
         }
-        
-        if(student.getStatus() != 0){
-            if(sqlValues.equals("")){
+
+        if (student.getStatus() != 0) {
+            if (sqlValues.equals("")) {
                 sql += "status";
                 sqlValues += "?";
-            }else{
-                sql+= ", status";
+            } else {
+                sql += ", status";
                 sqlValues += ", ?";
             }
         }
-        
+
         sql += ") VALUES ( " + sqlValues + ")";
-        
-     
+
+
         try {
             PreparedStatement stm = CONN.prepareStatement(sql);
             int param = 1;
-            
-            if(student.getStudentId() != 0)
+
+            if (student.getStudentId() != 0)
                 stm.setInt(param++, student.getStudentId());
-            
+
             if (student.getName() != null)
                 stm.setString(param++, student.getName());
-            
-            if(student.getStatus() != 0)
+
+            if (student.getStatus() != 0)
                 stm.setInt(param++, student.getStatus());
-            
+
             stm.execute();
-            
-            if(stm.getUpdateCount() != 1){
+
+            if (stm.getUpdateCount() != 1) {
                 return -2;
-            }else
+            } else
                 return 1;
-                
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-     
+
         return -3;
     }
 
     @Override
     public StudentDTO getStudent(int studentId) {
-        try{
+        try {
             PreparedStatement stm = CONN.prepareStatement("SELECT * FROM " + DATABASE_NAME + "WHERE id = ?");
             stm.setInt(1, studentId);
             ResultSet result = stm.executeQuery();
-            while(result.next())
+            while (result.next())
                 return new StudentDTO(result.getInt("studentId"), result.getString("name"), result.getInt("status"));
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
+
         return null;
     }
 
     @Override
     public StudentDTO[] getStudents() {
-        try{
+        try {
             PreparedStatement stm = CONN.prepareStatement("SELECT * FROM " + DATABASE_NAME);
             ArrayList<StudentDTO> students = new ArrayList<>();
             ResultSet result = stm.executeQuery();
-            while(result.next())
+            while (result.next())
                 students.add(new StudentDTO(result.getInt("studentId"), result.getString("name"), result.getInt("status")));
 
             return students.toArray(new StudentDTO[students.size()]);
-        }catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -123,7 +122,7 @@ public class StudentDAO implements IStudentDAO{
 
     @Override
     public int updateStudent(StudentDTO student) {
-        if(student.getStudentId() == 0 || (student.getName() == null && student.getStatus() == 0))
+        if (student.getStudentId() == 0 || (student.getName() == null && student.getStatus() == 0))
             return -1;
 
         String sql = "UPDATE " + DATABASE_NAME + " SET ";
@@ -133,36 +132,36 @@ public class StudentDAO implements IStudentDAO{
             sqlValues += "name = ?";
         }
 
-        if(student.getStatus() != 0){
-            if(sqlValues.equals("")){
+        if (student.getStatus() != 0) {
+            if (sqlValues.equals("")) {
                 sqlValues += "status = ?";
-            }else{
+            } else {
                 sqlValues += ", status = ?";
             }
         }
 
         sql += sqlValues + " WHERE studentId = ?";
 
-        try{
+        try {
             PreparedStatement stm = CONN.prepareStatement(sql);
             int param = 1;
 
-            if(student.getName() != null)
+            if (student.getName() != null)
                 stm.setString(param++, student.getName());
 
-            if(student.getStatus() != 0)
+            if (student.getStatus() != 0)
                 stm.setInt(param++, student.getStatus());
 
             stm.setInt(param++, student.getStudentId());
 
             stm.execute();
 
-            if(stm.getUpdateCount() != 1){
+            if (stm.getUpdateCount() != 1) {
                 return -2;
-            }else{
+            } else {
                 return 1;
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -171,17 +170,17 @@ public class StudentDAO implements IStudentDAO{
 
     @Override
     public int deleteStudent(int studentId) {
-        if(studentId == 0)
+        if (studentId == 0)
             return -1;
 
-        try{
+        try {
             PreparedStatement stm = CONN.prepareStatement("DELETE FROM " + DATABASE_NAME + "WHERE studentId = ?");
             stm.setInt(1, studentId);
             stm.execute();
 
-            if(stm.getUpdateCount() == 1){
+            if (stm.getUpdateCount() == 1) {
                 return 1;
-            }else{
+            } else {
                 return -2;
             }
         } catch (SQLException e) {
@@ -190,5 +189,5 @@ public class StudentDAO implements IStudentDAO{
 
         return -3;
     }
-    
+
 }

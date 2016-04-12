@@ -2,8 +2,6 @@ package DAL;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Created by mathias on 21/03/16.
@@ -11,7 +9,7 @@ import java.util.logging.Logger;
 public class ComponentGroupDAO implements IComponentGroupDAO {
     private final Connection CONN;
     private final String DATABASE_NAME = "ComponentGroup";
-    
+
     public ComponentGroupDAO(Connection conn) {
         this.CONN = conn;
     }
@@ -32,17 +30,17 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
             if (!sqlValues.equals("")) {
                 sql += ", standardLoanDuration";
                 sqlValues += ", ?";
-            }else{
+            } else {
                 sql += "standardLoanDuration";
                 sqlValues += "?";
             }
         }
-        
-        if(componentGroup.getStatus() != 0){
-            if (!sqlValues.equals("")){
+
+        if (componentGroup.getStatus() != 0) {
+            if (!sqlValues.equals("")) {
                 sql += ", status";
                 sqlValues += ", ?";
-            } else{
+            } else {
                 sql += "status";
                 sqlValues += ", ?";
             }
@@ -121,7 +119,7 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
         if (componentGroup.getId() == 0 || (componentGroup.getNavn() == null && componentGroup.getStandardLoanDuration() == null))
             return -1;
 
-        
+
         if (componentGroup.getNavn() != null)
             sqlValues += " name = ?";
 
@@ -131,9 +129,9 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
             else
                 sqlValues += " standardLoanDuration = ?";
         }
-        
-        if (componentGroup.getStatus() != 0){
-            if(!sqlValues.equals(""))
+
+        if (componentGroup.getStatus() != 0) {
+            if (!sqlValues.equals(""))
                 sqlValues += ", status = ?";
             else
                 sqlValues += " status = ?";
@@ -141,7 +139,7 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
 
         sql += sqlValues;
         sql += " WHERE componentGroupId = ?";
-           
+
         try {
             PreparedStatement stm = CONN.prepareStatement(sql);
             int param = 1;
@@ -174,9 +172,9 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
             PreparedStatement stm = CONN.prepareStatement(sql);
             stm.setInt(1, componentGroupId);
             stm.execute();
-            if(stm.getUpdateCount() == 1){
+            if (stm.getUpdateCount() == 1) {
                 return 1;
-            } else{
+            } else {
                 return -2;
             }
         } catch (SQLException e) {

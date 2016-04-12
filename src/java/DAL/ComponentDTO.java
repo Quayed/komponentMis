@@ -9,12 +9,12 @@ public class ComponentDTO {
     private int componentNumber;
     private String barcode;
     private int status;
-    
+
     public ComponentDTO() {
 
     }
 
-    public ComponentDTO(int componentId, int componentGroupId, int componentNumber, String barcode, int status){
+    public ComponentDTO(int componentId, int componentGroupId, int componentNumber, String barcode, int status) {
         this.componentId = componentId;
         this.componentGroupId = componentGroupId;
         this.componentNumber = componentNumber;
@@ -53,12 +53,12 @@ public class ComponentDTO {
     public void setBarcode(String barcode) {
         this.barcode = barcode;
     }
-    
-    public int getStatus(){
+
+    public int getStatus() {
         return status;
     }
-    
-    public void setStatus(int status){
+
+    public void setStatus(int status) {
         this.status = status;
     }
 }

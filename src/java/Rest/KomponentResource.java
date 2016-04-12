@@ -51,7 +51,7 @@ public class KomponentResource {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getJson() {
+    public String getOverview() {
         ComponentDTO[] komponenter = dao.getComponents();
         StringBuilder output = new StringBuilder();
         output.append("{");
@@ -73,12 +73,4 @@ public class KomponentResource {
         return output.toString();
     }
 
-    /**
-     * PUT method for updating or creating an instance of KomponentResource
-     * @param content representation for the resource
-     */
-    @PUT
-    @Consumes(MediaType.APPLICATION_XML)
-    public void putXml(String content) {
-    }
 }

@@ -5,8 +5,12 @@ package DAL;
  */
 public interface IComponentDAO {
     int createComponent(ComponentDTO component);
+
     ComponentDTO getComponent(int componentId);
+
     ComponentDTO[] getComponents();
+
     int updateComponent(ComponentDTO component);
+
     int deleteComponent(int componentId);
 }

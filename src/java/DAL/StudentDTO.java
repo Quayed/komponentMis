@@ -6,41 +6,40 @@
 package DAL;
 
 /**
- *
  * @author mathias
  */
 public class StudentDTO {
     private int studentId;
     private String name;
     private int status;
-    
-    public StudentDTO(int studentId, String name, int status){
+
+    public StudentDTO(int studentId, String name, int status) {
         this.studentId = studentId;
         this.name = name;
         this.status = status;
     }
-    
-    public void setStudentId(int studentId){
+
+    public void setStudentId(int studentId) {
         this.studentId = studentId;
     }
-    
-    public int getStudentId(){
+
+    public int getStudentId() {
         return this.studentId;
     }
-    
-    public void setName(String name){
+
+    public void setName(String name) {
         this.name = name;
     }
-    
-    public String getName(){
+
+    public String getName() {
         return this.name;
-    }    
-    
-    public void setStatus(int status){
+    }
+
+    public void setStatus(int status) {
         this.status = status;
     }
-    
-    public int getStatus(){
+
+    public int getStatus() {
         return this.status;
     }
 }

@@ -56,15 +56,15 @@ public class LoanDTO {
     public void setLoanDate(Date loanDate) {
         this.loanDate = loanDate;
     }
-    
-    public Date getDueDate(){
+
+    public Date getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(Date dueDate){
+    public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
     }
-    
+
     public Date getDeliveryDate() {
         return deliveryDate;
     }

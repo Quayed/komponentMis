@@ -5,8 +5,12 @@ package DAL;
  */
 public interface ILoanDAO {
     int createLoan(LoanDTO loan);
+
     LoanDTO getLoan(int loanId);
+
     LoanDTO[] getLoans();
+
     int updateLoan(LoanDTO loan);
+
     int deleteLoan(int loanId);
 }
