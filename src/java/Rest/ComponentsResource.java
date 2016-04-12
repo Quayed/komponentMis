@@ -64,18 +64,19 @@ public class ComponentsResource {
     public String getOverview() {
         ComponentDTO[] components = dao.getComponents();
         StringBuilder output = new StringBuilder();
-        output.append("{");
+        output.append("[");
         for(ComponentDTO component : components){
             output.append("{");
             output.append("\"details\": \"/Components/" + component.getComponentId() + "\"");
-            output.append("\"componentId\": " + component.getComponentId());
-            output.append("\"componentGroupId\": " + component.getComponentGroupId());
-            output.append("\"componentNumber\": " + component.getComponentNumber());
-            output.append("\"barcode\": \"" + component.getBarcode() + "\"");
-            output.append("\"status\":" + component.getStatus());
-            output.append("}");
+            output.append(", \"componentId\": " + component.getComponentId());
+            output.append(", \"componentGroupId\": " + component.getComponentGroupId());
+            output.append(", \"componentNumber\": " + component.getComponentNumber());
+            output.append(", \"barcode\": \"" + component.getBarcode() + "\"");
+            output.append(", \"status\":" + component.getStatus());
+            output.append("},");
         }
-        output.append("}");
+        output.deleteCharAt(output.length()-1);
+        output.append("]");
         return output.toString();
     }
     
@@ -93,33 +94,27 @@ public class ComponentsResource {
         if(component == null)
             throw new WebApplicationException(404);
         
-        ComponentGroupDTO componentGroup = null;
-        if (component.getComponentGroupId() != 0)
-            componentGroup = new ComponentGroupDAO(conn).getComponentGroup(component.getComponentGroupId());
-        
+        ComponentGroupDTO componentGroup = componentGroup = new ComponentGroupDAO(conn).getComponentGroup(component.getComponentGroupId());
+        if (componentGroup == null)
+            throw new WebApplicationException(500);
         
         
         
         StringBuilder output = new StringBuilder();
         output.append("{");
         output.append("\"componentId\": " + component.getComponentId());
+
+        // Information about the componentGroup
+        output.append(", \"componentGroup\": { ");
+        output.append(", \"componentGroupId\": " + componentGroup.getComponentGroupId());
+        output.append(", \"name\": " + "\"" + componentGroup.getName() +  "\"");
+        output.append(", \"standardLoanDuration\": " + "\"" + (componentGroup.getStandardLoanDuration() == null ? "" : componentGroup.getStandardLoanDuration())  + "\"");
+        output.append(", \"standardLoanDuration\": " + componentGroup.getStatus());
+        output.append("}");
         
-        if(componentGroup != null){
-            output.append("\"componentGroup\": { ");
-            output.append("\"componentGroupId\": " + componentGroup.getComponentGroupId());
-            output.append("\"name\": " + "\"" + (componentGroup.getName() == null ? "" : componentGroup.getName()) + "\"");
-            output.append("\"standardLoanDuration\": " + "\"" + (componentGroup.getStandardLoanDuration() == null ? "" : componentGroup.getStandardLoanDuration())  + "\"");
-            output.append("\"standardLoanDuration\": " + componentGroup.getStatus());
-            output.append("}");
-        } else{
-            // this should never happend!!!
-            output.append("\"componentGroup\": { ");
-            output.append("}");
-        }
-        
-        output.append("\"componentNumber\": " + (component.getComponentNumber() == 0 ? "\"\"" : component.getComponentNumber()));
-        output.append("\"barcode\": \"" + (component.getBarcode() == null ? "" : component.getBarcode()) + "\"");
-        output.append("\"status\":" + component.getStatus());
+        output.append(", \"componentNumber\": " + component.getComponentNumber());
+        output.append(", \"barcode\": \"" + (component.getBarcode() == null ? "" : component.getBarcode()) + "\"");
+        output.append(", \"status\":" + component.getStatus());
         output.append("}");
         
         return null;
