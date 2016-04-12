@@ -16,12 +16,12 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
 
     @Override
     public int createComponentGroup(ComponentGroupDTO componentGroup) {
-        if (componentGroup.getNavn() == null && componentGroup.getStandardLoanDuration() == null)
+        if (componentGroup.getName() == null && componentGroup.getStandardLoanDuration() == null)
             return -1;
 
         String sql = "INSERT INTO " + DATABASE_NAME + "(";
         String sqlValues = "";
-        if (componentGroup.getNavn() != null) {
+        if (componentGroup.getName() != null) {
             sql += "name";
             sqlValues += "?";
         }
@@ -52,8 +52,8 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
         try {
             int param = 1;
             PreparedStatement stm = CONN.prepareStatement(sql);
-            if (componentGroup.getNavn() != null)
-                stm.setString(param++, componentGroup.getNavn());
+            if (componentGroup.getName() != null)
+                stm.setString(param++, componentGroup.getName());
             if (componentGroup.getStandardLoanDuration() != null)
                 stm.setString(param++, componentGroup.getStandardLoanDuration());
             if (componentGroup.getStatus() != 0)
@@ -72,7 +72,7 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
             Statement stm = CONN.createStatement();
             ResultSet result = stm.executeQuery("SELECT  * FROM " + DATABASE_NAME + " ORDER by componentGroupId DESC LIMIT 1");
             while (result.next()) {
-                componentGroup.setId(result.getInt("componentGroupId"));
+                componentGroup.setComponentGroupId(result.getInt("componentGroupId"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -116,11 +116,11 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
     public int updateComponentGroups(ComponentGroupDTO componentGroup) {
         String sql = "UPDATE " + DATABASE_NAME + " set ";
         String sqlValues = "";
-        if (componentGroup.getId() == 0 || (componentGroup.getNavn() == null && componentGroup.getStandardLoanDuration() == null))
+        if (componentGroup.getComponentGroupId() == 0 || (componentGroup.getName() == null && componentGroup.getStandardLoanDuration() == null))
             return -1;
 
 
-        if (componentGroup.getNavn() != null)
+        if (componentGroup.getName() != null)
             sqlValues += " name = ?";
 
         if (componentGroup.getStandardLoanDuration() != null) {
@@ -143,14 +143,14 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
         try {
             PreparedStatement stm = CONN.prepareStatement(sql);
             int param = 1;
-            if (componentGroup.getNavn() != null)
-                stm.setString(param++, componentGroup.getNavn());
+            if (componentGroup.getName() != null)
+                stm.setString(param++, componentGroup.getName());
             if (componentGroup.getStandardLoanDuration() != null)
                 stm.setString(param++, componentGroup.getStandardLoanDuration());
             if (componentGroup.getStatus() != 0)
                 stm.setInt(param++, componentGroup.getStatus());
 
-            stm.setInt(param++, componentGroup.getId());
+            stm.setInt(param++, componentGroup.getComponentGroupId());
             if (!stm.execute()) {
                 if (stm.getUpdateCount() == 0) {
                     return -2;

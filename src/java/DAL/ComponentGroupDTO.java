@@ -20,19 +20,19 @@ public class ComponentGroupDTO {
         this.status = status;
     }
 
-    public int getId() {
+    public int getComponentGroupId() {
         return componentGroupId;
     }
 
-    public void setId(int componentGroupId) {
+    public void setComponentGroupId(int componentGroupId) {
         this.componentGroupId = componentGroupId;
     }
 
-    public String getNavn() {
+    public String getName() {
         return name;
     }
 
-    public void setNavn(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 

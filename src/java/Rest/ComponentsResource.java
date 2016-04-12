@@ -7,8 +7,11 @@ package Rest;
 
 import DAL.ComponentDAO;
 import DAL.ComponentDTO;
+import DAL.ComponentGroupDAO;
 import DAL.ComponentGroupDTO;
 import DAL.DatabaseConfig;
+import DAL.IComponentDAO;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -38,13 +41,15 @@ public class ComponentsResource {
 
     @Context
     private UriInfo context;
-    private ComponentDAO dao;
+    private IComponentDAO dao;
+    private Connection conn;
     /**
      * Creates a new instance of KomponentResource
      */
     public ComponentsResource() {
         try {
-            dao = new ComponentDAO(DriverManager.getConnection(DatabaseConfig.ENDPOINT, DatabaseConfig.USERNAME, DatabaseConfig.PASSWORD));
+            conn = DriverManager.getConnection(DatabaseConfig.ENDPOINT, DatabaseConfig.USERNAME, DatabaseConfig.PASSWORD);
+            dao = new ComponentDAO(conn);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -84,14 +89,32 @@ public class ComponentsResource {
         }        
         
         ComponentDTO component = dao.getComponent(Integer.parseInt(id));
+        ComponentGroupDTO componentGroup = null;
+        if (component.getComponentGroupId() != 0)
+            componentGroup = new ComponentGroupDAO(conn).getComponentGroup(component.getComponentGroupId());
         
         if(component == null)
             throw new WebApplicationException(404);
         
+        
+        
         StringBuilder output = new StringBuilder();
         output.append("{");
         output.append("\"componentId\": " + component.getComponentId());
-        output.append("\"componentGroupId\": " + component.getComponentGroupId());
+        
+        if(componentGroup != null){
+            output.append("\"componentGroup\": { ");
+            output.append("\"componentGroupId\": " + componentGroup.getComponentGroupId());
+            output.append("\"name\": " + (componentGroup.getName() == null ? "" : "\"" + componentGroup.getName() + "\""));
+            output.append("\"standardLoanDuration\": " + (componentGroup.getStandardLoanDuration() == null ? "" : "\"" + componentGroup.getStandardLoanDuration() + "\""));
+            output.append("\"standardLoanDuration\": " + componentGroup.getStatus());
+            output.append("}");
+        } else{
+            // this should never happend!!!
+            output.append("\"componentGroup\": { ");
+            output.append("}");
+        }
+        
         output.append("\"componentNumber\": " + component.getComponentNumber());
         output.append("\"barcode\": \"" + component.getBarcode() + "\"");
         output.append("\"status\":" + component.getStatus());

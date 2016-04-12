@@ -8,6 +8,7 @@ package Rest;
 import DAL.ComponentGroupDAO;
 import DAL.ComponentGroupDTO;
 import DAL.DatabaseConfig;
+import DAL.IComponentGroupDAO;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import javax.ws.rs.core.Context;
@@ -35,7 +36,7 @@ public class ComponentGroupsResource {
 
     @Context
     private UriInfo context;
-    private ComponentGroupDAO dao;
+    private IComponentGroupDAO dao;
 
     /**
      * Creates a new instance of KomponentTyperResource
@@ -55,15 +56,19 @@ public class ComponentGroupsResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getOverview() {
-        ComponentGroupDTO[] komponentTyper = dao.getComponentGroups();
+        ComponentGroupDTO[] componentGroups = dao.getComponentGroups();
+        
+        if(componentGroups == null)
+            throw new WebApplicationException(500);
+        
         StringBuilder output = new StringBuilder();
         output.append("[");
-        for(ComponentGroupDTO komponentType: komponentTyper){
+        for(ComponentGroupDTO componentGroup: componentGroups){
             output.append("{");
-            output.append("\"details\": \"/KomponentTyper/" + komponentType.getId() + "\"");
-            output.append(", \"id\": " + komponentType.getId());
-            output.append(", \"navn\": \"" + komponentType.getNavn() + "\"");
-            output.append(", \"standardUdlånstid\": \"" + komponentType.getStandardLoanDuration() + "\"");
+            output.append("\"details\": \"/KomponentTyper/" + componentGroup.getComponentGroupId() + "\"");
+            output.append(", \"id\": " + componentGroup.getComponentGroupId());
+            output.append(", \"navn\": \"" + componentGroup.getName() + "\"");
+            output.append(", \"standardUdlånstid\": \"" + componentGroup.getStandardLoanDuration() + "\"");
             output.append("},");
         }
         output.deleteCharAt(output.length()-1);
@@ -92,8 +97,8 @@ public class ComponentGroupsResource {
         
         StringBuilder output = new StringBuilder();
         output.append("{");
-        output.append("\"id\": " + komponentType.getId());
-        output.append(", \"navn\": \"" + komponentType.getNavn() + "\"");
+        output.append("\"id\": " + komponentType.getComponentGroupId());
+        output.append(", \"navn\": \"" + komponentType.getName() + "\"");
         output.append(", \"standardUdlånstid\": \"" + komponentType.getStandardLoanDuration() + "\"");
         output.append("}");
         
@@ -121,7 +126,7 @@ public class ComponentGroupsResource {
             throw new WebApplicationException(405);
         }
         
-        componentGroup.setId(Integer.parseInt(id));
+        componentGroup.setComponentGroupId(Integer.parseInt(id));
         int returnStatus = dao.updateComponentGroups(componentGroup);
         if(returnStatus == 1)
             return "All Ok";
