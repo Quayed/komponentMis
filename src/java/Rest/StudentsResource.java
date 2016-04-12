@@ -5,19 +5,25 @@
  */
 package Rest;
 
+import DAL.ComponentDTO;
 import DAL.ComponentGroupDAO;
 import DAL.DatabaseConfig;
 import DAL.IStudentDAO;
 import DAL.StudentDAO;
+import DAL.StudentDTO;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -42,23 +48,89 @@ public class StudentsResource {
         }
     }
 
-    /**
-     * Retrieves representation of an instance of Rest.StudentsResource
-     * @return an instance of java.lang.String
-     */
     @GET
-    @Produces(MediaType.APPLICATION_XML)
-    public String getXml() {
-        //TODO return proper representation object
-        throw new UnsupportedOperationException();
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getOverview() {
+        StudentDTO[] students = dao.getStudents();
+        StringBuilder output = new StringBuilder();
+        output.append("[");
+        for(StudentDTO student : students){
+            output.append("{");
+            output.append("\"studentId\": \"" + student.getStudentId() + "\"");
+            output.append(", \"name\": \"" + student.getName() + "\"");
+            output.append(", \"status\": " + student.getStatus());
+            output.append("}");
+        }
+        output.deleteCharAt(output.length()-1);
+        output.append("]");
+        
+        return output.toString();
     }
+    
+    @GET
+    @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getSpecific(@PathParam("id") String studentId){
 
-    /**
-     * PUT method for updating or creating an instance of StudentsResource
-     * @param content representation for the resource
-     */
+        if(studentId.length() != 7)
+            throw new WebApplicationException(405);
+        
+        StudentDTO student = dao.getStudent(studentId);
+        
+        StringBuilder output = new StringBuilder();
+        output.append("{");
+        output.append("\"studentId\": \"" + student.getStudentId() + "\"");
+        output.append(", \"name\": \"" + student.getName() + "\"");
+        output.append(", \"status\": " + student.getStatus());
+        output.append("}");
+        
+        return output.toString();
+    }
+    
+    
     @PUT
-    @Consumes(MediaType.APPLICATION_XML)
-    public void putXml(String content) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public String createStudent(StudentDTO student){
+        int returnStatus = dao.createStudent(student);
+        if(returnStatus == 1)
+            return "All Ok";
+        else
+            throw new WebApplicationException(500);
+    }
+    
+    @POST
+    @Path("{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public String updateComponent(@PathParam("id") String studentId, StudentDTO student){
+        
+        if(studentId.length() != 7)
+            throw new WebApplicationException(405);
+        
+        student.setStudentId(studentId);
+        int returnStatus = dao.updateStudent(student);
+        if (returnStatus == 1)
+            return "All Ok";
+        else
+            throw new WebApplicationException(500);
+    }
+    
+    @DELETE
+    @Path("{id}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String deleteKomponentType(@PathParam("id") String studentId){
+
+        if(studentId.length() != 7)
+            throw new WebApplicationException(405);
+
+        int returnValue = dao.deleteStudent(studentId);
+        
+        if(returnValue == 1)
+            return "All ok";
+        else if(returnValue == -2)
+            throw new WebApplicationException(404);
+        else
+            throw new WebApplicationException(500);
     }
 }

@@ -113,17 +113,17 @@ public class ComponentsResource {
         output.append("}");
         
         output.append(", \"componentNumber\": " + component.getComponentNumber());
-        output.append(", \"barcode\": \"" + (component.getBarcode() == null ? "" : component.getBarcode()) + "\"");
+        output.append(", \"barcode\": \"" + component.getBarcode() + "\"");
         output.append(", \"status\":" + component.getStatus());
         output.append("}");
         
-        return null;
+        return output.toString();
     }
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public String createKomponentType(ComponentDTO component){
+    public String createComponent(ComponentDTO component){
         int returnStatus = dao.createComponent(component);
         if(returnStatus == 1)
             return "All Ok";
@@ -135,7 +135,7 @@ public class ComponentsResource {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public String updateKomponentType(@PathParam("id") String componentId, ComponentDTO component){
+    public String updateComponent(@PathParam("id") String componentId, ComponentDTO component){
         //Check that ID is actually a number
         if(!componentId.matches("^\\d+$")){
             throw new WebApplicationException(405);

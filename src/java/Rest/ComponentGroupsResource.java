@@ -90,16 +90,16 @@ public class ComponentGroupsResource {
             throw new WebApplicationException(405);
         }
         
-        ComponentGroupDTO komponentType = dao.getComponentGroup(Integer.parseInt(id));
+        ComponentGroupDTO componentGroup = dao.getComponentGroup(Integer.parseInt(id));
         
-        if(komponentType == null)
+        if(componentGroup == null)
             throw new WebApplicationException(404);
         
         StringBuilder output = new StringBuilder();
         output.append("{");
-        output.append("\"id\": " + komponentType.getComponentGroupId());
-        output.append(", \"navn\": \"" + komponentType.getName() + "\"");
-        output.append(", \"standardUdlånstid\": \"" + komponentType.getStandardLoanDuration() + "\"");
+        output.append("\"id\": " + componentGroup.getComponentGroupId());
+        output.append(", \"navn\": \"" + componentGroup.getName() + "\"");
+        output.append(", \"standardUdlånstid\": \"" + (componentGroup.getStandardLoanDuration() == null ? "" : componentGroup.getStandardLoanDuration()) + "\"");
         output.append("}");
         
         return output.toString();
