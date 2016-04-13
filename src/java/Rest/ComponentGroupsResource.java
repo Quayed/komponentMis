@@ -108,8 +108,8 @@ public class ComponentGroupsResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public String createKomponentType(ComponentGroupDTO komponentType){
-        int returnStatus = dao.createComponentGroup(komponentType);
+    public String createComponentGroup(ComponentGroupDTO componentGroup){
+        int returnStatus = dao.createComponentGroup(componentGroup);
         if(returnStatus == 1)
             return "All Ok";
         else
@@ -120,7 +120,7 @@ public class ComponentGroupsResource {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public String updateKomponentType(@PathParam("id") String id, ComponentGroupDTO componentGroup){
+    public String updateComponentGroup(@PathParam("id") String id, ComponentGroupDTO componentGroup){
         //Check that ID is actually a number
         if(!id.matches("^\\d+$")){
             throw new WebApplicationException(405);
