@@ -10,8 +10,6 @@ import DAL.ComponentGroupDTO;
 import DAL.LoanDTO;
 import DAL.StudentDTO;
 import java.rmi.RemoteException;
-import java.rmi.server.RMIClientSocketFactory;
-import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.UnicastRemoteObject;
 
 /**
@@ -20,7 +18,10 @@ import java.rmi.server.UnicastRemoteObject;
  */
 public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
 
+    
+    
     public DatabaseRMI() throws RemoteException {
+        
     }
 
     public DatabaseRMI(int port) throws RemoteException {
@@ -29,7 +30,8 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
 
     @Override
     public ComponentDTO getComponent(int componentId) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("TEST");
+        return getComponent(componentId);
     }
 
     @Override
