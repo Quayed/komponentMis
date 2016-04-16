@@ -30,8 +30,7 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
 
     @Override
     public ComponentDTO getComponent(int componentId) throws RemoteException {
-        System.out.println("TEST");
-        return getComponent(componentId);
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
