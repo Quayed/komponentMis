@@ -5,96 +5,61 @@
  */
 package RMI;
 
-import DAL.LoanDAO;
-import java.sql.Connection;
 import java.util.Date;
+
 
 /**
  *
  * @author hippomormor
  */
-public class LoanRMI implements ILoanRMI{
+public class LoanRMI{
     
-    private final int loanId;
-    private final LoanDAO loan;
+    private int loanId;
+    private int componentId;
+    private String studentId;
+    private Date loanDate;
+    private Date dueDate;
+    private Date deliveryDate;
+    private String deliveredTo;
 
-    public LoanRMI(Connection conn, int id) {
-        loanId = id;
-        loan = new LoanDAO(conn);
+    public LoanRMI() {
     }
 
-    @Override
+    public LoanRMI(int loanId, int componentId, String studentId, Date loanDate, Date dueDate, Date deliveryDate, String deliveredTo) {
+        this.loanId = loanId;
+        this.componentId = componentId;
+        this.studentId = studentId;
+        this.loanDate = loanDate;
+        this.dueDate = dueDate;
+        this.deliveryDate = deliveryDate;
+        this.deliveredTo = deliveredTo;
+    }
+    
     public int getLoanId() {
-        return loan.getLoan(loanId).getLoanId();
+        return loanId;
     }
 
-    @Override
-    public void setLoanId(int id) {
-        loan.getLoan(loanId).setLoanId(id);
-    }
-
-    @Override
     public int getComponentId() {
-        return loan.getLoan(loanId).getComponentId();
+        return componentId;
     }
 
-    @Override
-    public void setComponentId(int componentId) {
-        loan.getLoan(loanId).setComponentId(componentId);
-    }
-
-    @Override
     public String getStudentId() {
-        return loan.getLoan(loanId).getStudentId();
+        return studentId;
     }
 
-    @Override
-    public void setStudentId(String studentId) {
-        loan.getLoan(loanId).setStudentId(studentId);
-    }
-
-    @Override
     public Date getLoanDate() {
-        return loan.getLoan(loanId).getLoanDate();
-    }
+        return loanDate;
+    }  
 
-    @Override
-    public void setLoanDate(Date loanDate) {
-        loan.getLoan(loanId).setLoanDate(loanDate);
-    }
-
-    @Override
     public Date getDueDate() {
-        return loan.getLoan(loanId).getDueDate();
+        return dueDate;
     }
 
-    @Override
-    public void setDueDate(Date dueDate) {
-        loan.getLoan(loanId).setDueDate(dueDate);
-    }
-
-    @Override
     public Date getDeliveryDate() {
-        return loan.getLoan(loanId).getDeliveryDate();
+        return deliveryDate;
     }
 
-    @Override
-    public void setDeliveryDate(Date deliveryDate) {
-        loan.getLoan(loanId).setDeliveryDate(deliveryDate);
-    }
-
-    @Override
     public String getDeliveredTo() {
-        return loan.getLoan(loanId).getDeliveredTo();
-    }
-
-    @Override
-    public void setDeliveredTo(String deliveredTo) {
-        loan.getLoan(loanId).setDeliveredTo(deliveredTo);
-    }
-
-    @Override
-    public int deleteLoan() {
-        return loan.deleteLoan(loanId);
+        return deliveredTo;
     }
 }

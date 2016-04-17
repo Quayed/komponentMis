@@ -27,8 +27,6 @@ public class ComponentRMI {
         this.componentNumber = componentNumber;
         this.status = status;
     }
-    
-    
 
     public String getBarcode() {
         return barcode;

@@ -5,6 +5,9 @@
  */
 package RMI;
 
+import DAL.ComponentDAO;
+import RMI.IDatabaseRMI;
+import DAL.LoanDAO;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.Connection;
@@ -16,10 +19,12 @@ import java.sql.Connection;
 public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
     
     private ComponentRMI component;
+    private ComponentDAO componentDAO;
     private ComponentGroupRMI componentGroup;
     private LoanRMI loan;
+    private LoanDAO loanDAO;
     private StudentRMI student;
-    private Connection conn;
+    private final Connection conn;
    
     public DatabaseRMI(Connection conn) throws RemoteException {
         this.conn = conn;
@@ -31,32 +36,31 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
     }
   
     @Override
-    public ComponentRMI getComponent(int componentId) throws RemoteException {  
-        component = new ComponentRMI(conn, componentId);
+    public ComponentRMI getComponent(int componentId) throws RemoteException {
+        componentDAO = new ComponentDAO(conn);
+        component = new ComponentRMI(componentDAO.getComponent(componentId).getComponentId(),componentDAO.getComponent(componentId).getBarcode(),
+                        componentDAO.getComponent(componentId).getComponentGroupId(), componentDAO.getComponent(componentId).getComponentNumber(), 
+                        componentDAO.getComponent(componentId).getStatus()); 
         return component;
     }
 
     @Override
-    public LoanRMI getLoan(int loanId) throws RemoteException {
-        loan = new LoanRMI(conn, loanId);
-        return loan;
-    }
-
-    @Override
-    public int deleteLoan(int loanId) throws RemoteException {
-        loan = new LoanRMI(conn, loanId);
-        return loan.deleteLoan();
-    }
-        
-    @Override
-    public StudentRMI getStudent(String studentId) throws RemoteException {
-        student = new StudentRMI(conn, studentId);
-        return student;
+    public void setComponent(ComponentRMI component) throws RemoteException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public ComponentGroupRMI getComponentGroup(int componentGroupId) throws RemoteException {
-        componentGroup = new ComponentGroupRMI(conn, componentGroupId);
-        return componentGroup;
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void setComponentGroup(ComponentGroupRMI componentGroup) throws RemoteException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int deleteLoan(int loanId) throws RemoteException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

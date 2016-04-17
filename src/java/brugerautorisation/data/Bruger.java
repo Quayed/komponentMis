@@ -10,7 +10,7 @@ public class Bruger implements Serializable {
 
     public String brugernavn;                   // Studienummer
     public String email = "hvad@ved.jeg.dk";
-    public long sidstAktiv;
+    public long   sidstAktiv;
     public String campusnetId;                  // Campusnet database-ID
     public String studeretning = "ukendt";
     public String fornavn = "test";

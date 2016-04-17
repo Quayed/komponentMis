@@ -5,41 +5,37 @@
  */
 package RMI;
 
-import DAL.StudentDAO;
-import java.sql.Connection;
 
 /**
  *
  * @author hippomormor
  */
-public class StudentRMI implements IStudentRMI{
+public class StudentRMI {
 
-    private final String studentId;
-    private final StudentDAO student;
+    private String studentId;
+    private String name;
+    private int status;
 
-    public StudentRMI(Connection conn, String id) {
-        studentId = id;
-        student = new StudentDAO(conn);
+    public StudentRMI() {
+
     }
 
-    @Override
+    public StudentRMI(String studentId, String name, int status) {
+        this.studentId = studentId;
+        this.name = name;
+        this.status = status;
+    }
+ 
     public String getStudentId() {
-        return student.getStudent(studentId).getStudentId();
+        return studentId;
     }
 
-    @Override
     public String getName() {
-        return student.getStudent(studentId).getName();
+        return name;
     }
 
-    @Override
-    public void setStatus(int status) {
-        student.getStudent(studentId).setStatus(status);
-    }
-
-    @Override
     public int getStatus() {
-        return student.getStudent(studentId).getStatus();
+        return status;
     }
  
 }
