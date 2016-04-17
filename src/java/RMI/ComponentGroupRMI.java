@@ -22,15 +22,10 @@ public class ComponentGroupRMI {
 
     public ComponentGroupRMI(int componentGroupId, int componentId, String name, String standardLoanDuration, int status) {
         this.componentGroupId = componentGroupId;
-        this.componentId = componentId;
         this.name = name;
         this.standardLoanDuration = standardLoanDuration;
         this.status = status;
     }
-    
-    public int getComponentId() {
-        return componentId;
-    }  
     
     public int getComponentGroupId() {
         return componentGroupId;
@@ -50,10 +45,6 @@ public class ComponentGroupRMI {
 
     public void setComponentGroupId(int componentGroupId) {
         this.componentGroupId = componentGroupId;
-    }
-
-    public void setComponentId(int componentId) {
-        this.componentId = componentId;
     }
 
     public void setName(String name) {
