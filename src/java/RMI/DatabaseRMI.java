@@ -10,7 +10,6 @@ import DAL.ComponentGroupDAO;
 import DAL.LoanDAO;
 import DAL.LoanDTO;
 import DAL.StudentDAO;
-import RMI.IDatabaseRMI;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.Connection;
@@ -29,7 +28,6 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
     private LoanDAO loanDAO;
     private StudentRMI student;
     private StudentDAO studentDAO;
-    private Connection conn;
    
     public DatabaseRMI(Connection conn) throws RemoteException {
         this(1190, conn);
@@ -37,7 +35,6 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
 
     public DatabaseRMI(int port, Connection conn) throws RemoteException {       
         super(port);
-        this.conn = conn;
         componentDAO = new ComponentDAO(conn);
         componentGroupDAO = new ComponentGroupDAO(conn);
         loanDAO = new LoanDAO(conn);
@@ -46,8 +43,8 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
   
     @Override
     public ComponentRMI getComponent(int componentId) throws RemoteException {        
-        component = 
-                new ComponentRMI(componentDAO.getComponent(componentId).getComponentId(), 
+        component = new ComponentRMI(
+                componentDAO.getComponent(componentId).getComponentId(), 
                 componentDAO.getComponent(componentId).getBarcode(), 
                 componentDAO.getComponent(componentId).getComponentGroupId(), 
                 componentDAO.getComponent(componentId).getComponentNumber(), 
@@ -66,8 +63,8 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
 
     @Override
     public ComponentGroupRMI getComponentGroup(int componentGroupId) throws RemoteException {
-        componentGroup = 
-                new ComponentGroupRMI(componentGroupDAO.getComponentGroup(componentGroupId).getComponentGroupId(), 
+        componentGroup = new ComponentGroupRMI(
+                componentGroupDAO.getComponentGroup(componentGroupId).getComponentGroupId(), 
                 componentGroupDAO.getComponentGroup(componentGroupId).getName(), 
                 componentGroupDAO.getComponentGroup(componentGroupId).getStandardLoanDuration(), 
                 componentGroupDAO.getComponentGroup(componentGroupId).getStatus());
@@ -84,8 +81,8 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
 
     @Override
     public LoanRMI getLoan(int loanId) throws RemoteException {
-        loan = 
-                new LoanRMI(loanDAO.getLoan(loanId).getLoanId(), 
+        loan = new LoanRMI(
+                loanDAO.getLoan(loanId).getLoanId(), 
                 loanDAO.getLoan(loanId).getComponentId(), 
                 loanDAO.getLoan(loanId).getStudentId(), 
                 loanDAO.getLoan(loanId).getLoanDate(), 
@@ -97,8 +94,8 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
  
     @Override
     public void createLoan(LoanRMI loanRMI) throws RemoteException {
-        LoanDTO newLoan = 
-                new LoanDTO(loanRMI.getLoanId(), 
+        LoanDTO newLoan = new LoanDTO(
+                loanRMI.getLoanId(), 
                 loanRMI.getComponentId(), 
                 loanRMI.getStudentId(), 
                 loanRMI.getLoanDate(), 
@@ -126,8 +123,8 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
 
     @Override
     public StudentRMI getStudent(String studentId) throws RemoteException {
-        student = 
-                new StudentRMI(studentDAO.getStudent(studentId).getStudentId(), 
+        student = new StudentRMI(
+                studentDAO.getStudent(studentId).getStudentId(), 
                 studentDAO.getStudent(studentId).getName(), 
                 studentDAO.getStudent(studentId).getStatus());
         return student;
