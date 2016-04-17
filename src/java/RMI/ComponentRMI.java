@@ -47,4 +47,24 @@ public class ComponentRMI {
     public int getComponentId() {
         return componentId;
     }
+
+    public void setComponentId(int componentId) {
+        this.componentId = componentId;
+    }
+
+    public void setBarcode(String barcode) {
+        this.barcode = barcode;
+    }
+
+    public void setComponentGroupId(int componentGroupId) {
+        this.componentGroupId = componentGroupId;
+    }
+
+    public void setComponentNumber(int componentNumber) {
+        this.componentNumber = componentNumber;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 }

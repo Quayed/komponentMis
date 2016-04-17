@@ -62,4 +62,32 @@ public class LoanRMI{
     public String getDeliveredTo() {
         return deliveredTo;
     }
+
+    public void setLoanId(int loanId) {
+        this.loanId = loanId;
+    }
+
+    public void setComponentId(int componentId) {
+        this.componentId = componentId;
+    }
+
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
+    }
+
+    public void setLoanDate(Date loanDate) {
+        this.loanDate = loanDate;
+    }
+
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public void setDeliveryDate(Date deliveryDate) {
+        this.deliveryDate = deliveryDate;
+    }
+
+    public void setDeliveredTo(String deliveredTo) {
+        this.deliveredTo = deliveredTo;
+    }
 }

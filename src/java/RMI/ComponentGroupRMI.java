@@ -47,5 +47,24 @@ public class ComponentGroupRMI {
     public int getStatus() {
         return status;
     }
-    
+
+    public void setComponentGroupId(int componentGroupId) {
+        this.componentGroupId = componentGroupId;
+    }
+
+    public void setComponentId(int componentId) {
+        this.componentId = componentId;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setStandardLoanDuration(String standardLoanDuration) {
+        this.standardLoanDuration = standardLoanDuration;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 }

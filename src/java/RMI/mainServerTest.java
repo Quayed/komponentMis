@@ -5,8 +5,6 @@
  */
 package RMI;
 
-import DAL.ComponentDAO;
-import DAL.ComponentDTO;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -43,12 +41,12 @@ public class mainServerTest {
             System.out.println("VendorError: "  + ex.getErrorCode());
         }
         
-        ComponentDAO cDAO = new ComponentDAO(conn);
-        ComponentDTO cDTO = new ComponentDTO(0, 0, 0, "Test", 0);
-        cDAO.createComponent(cDTO);
+        //ComponentDAO cDAO = new ComponentDAO(conn);
+        //ComponentDTO cDTO = new ComponentDTO(0, 0, 0, "Test", 0);
+        //cDAO.createComponent(cDTO);
         
         
-        System.out.println(cDAO.getComponent(0).getComponentId());
+        //System.out.println(cDAO.getComponent(0).getComponentId());
         
         
         

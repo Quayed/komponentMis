@@ -37,5 +37,16 @@ public class StudentRMI {
     public int getStatus() {
         return status;
     }
- 
+
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 }

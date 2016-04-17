@@ -6,8 +6,9 @@
 package RMI;
 
 import DAL.ComponentDAO;
-import RMI.IDatabaseRMI;
+import DAL.ComponentGroupDAO;
 import DAL.LoanDAO;
+import RMI.IDatabaseRMI;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.Connection;
@@ -21,6 +22,7 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
     private ComponentRMI component;
     private ComponentDAO componentDAO;
     private ComponentGroupRMI componentGroup;
+    private ComponentGroupDAO componentGroupDAO;
     private LoanRMI loan;
     private LoanDAO loanDAO;
     private StudentRMI student;
