@@ -17,9 +17,9 @@ public class TokenHandler {
     private int randomToken;
     private int publicToken;
     private final int credentials;
-    
+
     public TokenHandler(String user, String pass) {
-        credentials = user.hashCode() + pass.hashCode();   
+        credentials = user.hashCode() + pass.hashCode();
     }
 
     public void generateRandom() {
@@ -28,28 +28,24 @@ public class TokenHandler {
         random.nextBytes(bytes);
         randomToken = Arrays.hashCode(bytes);
     }
-    
-    public void generateToken(int random) {   
-        publicToken =  random + credentials;
-        if (checkToken(publicToken)) 
+
+    public void generateToken(int random) {
+        publicToken = random + credentials;
+        if (checkToken(publicToken))
             System.out.println("Generated tokens..");
         else
             System.err.println("Failed to generate tokens..");
     }
-    
+
     public boolean checkToken(int token) {
         return token - credentials == randomToken;
     }
-    
-    public int getRandomToken(){
+
+    public int getRandomToken() {
         return randomToken;
     }
-    
-    public int getPublicToken(){
+
+    public int getPublicToken() {
         return publicToken;
     }
-    
-
-    
-  
 }
