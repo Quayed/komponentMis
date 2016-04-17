@@ -13,6 +13,7 @@ import DAL.StudentDAO;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.Connection;
+import security.TokenHandler;
 
 /**
  *
@@ -28,17 +29,19 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
     private LoanDAO loanDAO;
     private StudentRMI student;
     private StudentDAO studentDAO;
+    private TokenHandler tokenhandler;
    
-    public DatabaseRMI(Connection conn) throws RemoteException {
-        this(1190, conn);
+    public DatabaseRMI(Connection conn, String user, String pass) throws RemoteException {
+        this(1190, conn, user, pass);
     }
 
-    public DatabaseRMI(int port, Connection conn) throws RemoteException {       
+    public DatabaseRMI(int port, Connection conn, String user, String pass) throws RemoteException {       
         super(port);
         componentDAO = new ComponentDAO(conn);
         componentGroupDAO = new ComponentGroupDAO(conn);
         loanDAO = new LoanDAO(conn);
         studentDAO = new StudentDAO(conn);
+        tokenhandler = new TokenHandler(user, pass);
     }
   
     @Override
@@ -140,5 +143,11 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
     @Override
     public StudentRMI getTest() throws RemoteException {
         return new StudentRMI("test", "testName", 0);
+    }
+
+    @Override
+    public int generateToken(int randomToken) throws RemoteException {
+        tokenhandler.generateToken(randomToken);
+        return tokenhandler.getPublicToken();
     }
 }

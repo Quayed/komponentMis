@@ -12,6 +12,8 @@ package RMI;
  */
 public interface IDatabaseRMI extends java.rmi.Remote {
     
+    int generateToken(int randomToken)  throws java.rmi.RemoteException;
+    
     // Component
     
     ComponentRMI getComponent(int componentId) throws java.rmi.RemoteException;

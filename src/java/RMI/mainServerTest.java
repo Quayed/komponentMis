@@ -5,9 +5,6 @@
  */
 package RMI;
 
-import DAL.ComponentDTO;
-import DAL.ComponentGroupDAO;
-import DAL.ComponentGroupDTO;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -17,6 +14,7 @@ import brugerautorisation.transport.rmi.Brugeradmin;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import security.TokenHandler;
 
 /**
  *
@@ -32,7 +30,7 @@ public class mainServerTest {
      * @throws java.net.MalformedURLException
      */
     public static void main(String[] args) throws RemoteException, NotBoundException, MalformedURLException {
-        
+  
         // SQL        
         Connection conn = null;   
         try {
@@ -50,16 +48,15 @@ public class mainServerTest {
         cDAO.getComponentGroup(0).getName();
 */
 
-        
-        
-        
-        // RMI         
-        Brugeradmin brugeradmin = (Brugeradmin) Naming.lookup("rmi://javabog.dk/brugeradmin");   
-        DatabaseRMI databaseRMI = new DatabaseRMI(conn);
+        // RMI    
+        Brugeradmin brugeradmin = (Brugeradmin) Naming.lookup("rmi://javabog.dk/brugeradmin");
+        DatabaseRMI databaseRMI = new DatabaseRMI(conn, "bruger", "kode");
         
         System.setProperty("java.rmi.server.hostname", "127.0.0.1");
         java.rmi.registry.LocateRegistry.createRegistry(1099);
         Naming.rebind("rmi://127.0.0.1/databaseRMI", databaseRMI);
+
+        
         System.out.println("Server running..");   
     }   
 }
