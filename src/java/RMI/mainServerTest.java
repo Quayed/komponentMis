@@ -5,6 +5,9 @@
  */
 package RMI;
 
+import DAL.ComponentDTO;
+import DAL.ComponentGroupDAO;
+import DAL.ComponentGroupDTO;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -40,19 +43,20 @@ public class mainServerTest {
             System.out.println("SQLState: "     + ex.getSQLState());
             System.out.println("VendorError: "  + ex.getErrorCode());
         }
-        
-        //ComponentDAO cDAO = new ComponentDAO(conn);
-        //ComponentDTO cDTO = new ComponentDTO(0, 0, 0, "Test", 0);
-        //cDAO.createComponent(cDTO);
-        
-        
-        //System.out.println(cDAO.getComponent(0).getComponentId());
+  /*      
+        ComponentGroupDAO cDAO = new ComponentGroupDAO(conn);
+        ComponentGroupDTO cDTO = new ComponentGroupDTO(0, "testName", "60", 0);
+        cDAO.createComponentGroup(cDTO);
+        cDAO.getComponentGroup(0).getName();
+*/
+
         
         
         
         // RMI         
         Brugeradmin brugeradmin = (Brugeradmin) Naming.lookup("rmi://javabog.dk/brugeradmin");   
         DatabaseRMI databaseRMI = new DatabaseRMI(conn);
+        
         System.setProperty("java.rmi.server.hostname", "127.0.0.1");
         java.rmi.registry.LocateRegistry.createRegistry(1099);
         Naming.rebind("rmi://127.0.0.1/databaseRMI", databaseRMI);
