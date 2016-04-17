@@ -14,23 +14,23 @@ public interface IDatabaseRMI extends java.rmi.Remote {
     
     // Component
     
-    ComponentRMI getComponent(int componentId) throws java.rmi.RemoteException;
+    IComponentRMI getComponent(int componentId) throws java.rmi.RemoteException;
     
     
     // ComponetGroup
     
-    ComponentGroupRMI getComponentGroup(int componentGroupId) throws java.rmi.RemoteException;
+    IComponentGroupRMI getComponentGroup(int componentGroupId) throws java.rmi.RemoteException;
     
     
     // Loan
 
-    LoanRMI getLoan(int loanId) throws java.rmi.RemoteException;
+    ILoanRMI getLoan(int loanId) throws java.rmi.RemoteException;
 
     int deleteLoan(int loanId) throws java.rmi.RemoteException;
     
     
     // Student
 
-    StudentRMI getStudent(String studentId) throws java.rmi.RemoteException;
+    IStudentRMI getStudent(String studentId) throws java.rmi.RemoteException;
     
 }
