@@ -5,41 +5,47 @@
  */
 package RMI;
 
-import DAL.ComponentGroupDAO;
-import java.sql.Connection;
-
 /**
  *
  * @author hippomormor
  */
-public class ComponentGroupRMI implements IComponentGroupRMI {
+public class ComponentGroupRMI {
 
-    private final ComponentGroupDAO componentGroup;
-    private final int componentGroupId;
+    private int componentGroupId;
+    private int componentId;
+    private String name;
+    private String standardLoanDuration ;
+    private int status;
 
-    public ComponentGroupRMI(Connection conn, int id) {
-        componentGroupId = id;
-        componentGroup = new ComponentGroupDAO(conn);
+    public ComponentGroupRMI() {
+    }
+
+    public ComponentGroupRMI(int componentGroupId, int componentId, String name, String standardLoanDuration, int status) {
+        this.componentGroupId = componentGroupId;
+        this.componentId = componentId;
+        this.name = name;
+        this.standardLoanDuration = standardLoanDuration;
+        this.status = status;
     }
     
-    @Override
+    public int getComponentId() {
+        return componentId;
+    }  
+    
     public int getComponentGroupId() {
-        return componentGroup.getComponentGroup(componentGroupId).getComponentGroupId();
+        return componentGroupId;
     }
 
-    @Override
     public String getName() {
-        return componentGroup.getComponentGroup(componentGroupId).getName();
+        return name;
     }
 
-    @Override
     public String getStandardLoanDuration() {
-        return componentGroup.getComponentGroup(componentGroupId).getStandardLoanDuration();
+        return standardLoanDuration;
     }
 
-    @Override
     public int getStatus() {
-        return componentGroup.getComponentGroup(componentGroupId).getStatus();
+        return status;
     }
     
 }

@@ -5,45 +5,48 @@
  */
 package RMI;
 
-import DAL.ComponentDAO;
-import java.sql.Connection;
-
 /**
  *
  * @author hippomormor
  */
-public class ComponentRMI implements IComponentRMI{
+public class ComponentRMI {
 
-    private final ComponentDAO component;
-    private final int componentId;
+    private int componentId;
+    private String barcode;
+    private int componentGroupId;
+    private int componentNumber;
+    private int status;
 
-    public ComponentRMI(Connection conn, int id) {
-        componentId = id;
-        component = new ComponentDAO(conn);
+    public ComponentRMI() {
     }
+    
+    public ComponentRMI(int componentId, String barcode, int componentGroupId, int componentNumber, int status) {
+        this.componentId = componentId;
+        this.barcode = barcode;
+        this.componentGroupId = componentGroupId;
+        this.componentNumber = componentNumber;
+        this.status = status;
+    }
+    
+    
 
-    @Override
     public String getBarcode() {
-        return component.getComponent(componentId).getBarcode();
+        return barcode;
     }
 
-    @Override
     public int getComponentGroupId() {
-        return component.getComponent(componentId).getComponentGroupId();
+        return componentGroupId;
     }
 
-    @Override
     public int getComponentNumber() {
-        return component.getComponent(componentId).getComponentNumber();
+        return componentNumber;
     }
 
-    @Override
     public int getStatus() {
-        return component.getComponent(componentId).getStatus();
+        return status;
     }
 
-    @Override
     public int getComponentId() {
-        return component.getComponent(componentId).getComponentId();
+        return componentId;
     }
 }

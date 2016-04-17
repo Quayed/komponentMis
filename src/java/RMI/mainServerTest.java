@@ -5,6 +5,8 @@
  */
 package RMI;
 
+import DAL.ComponentDAO;
+import DAL.ComponentDTO;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -24,14 +26,14 @@ public class mainServerTest {
 
     /**
      * @param args the command line arguments
+     * @throws java.rmi.RemoteException
+     * @throws java.rmi.NotBoundException
+     * @throws java.net.MalformedURLException
      */
     public static void main(String[] args) throws RemoteException, NotBoundException, MalformedURLException {
         
-        //java.rmi.registry.LocateRegistry.createRegistry(1099);
-        //System.setProperty("java.rmi.server.hostname", "127.0.0.1");
-        Brugeradmin brugeradmin = (Brugeradmin) Naming.lookup("rmi://javabog.dk/brugeradmin");
-        Connection conn = null;
-        
+        // SQL        
+        Connection conn = null;   
         try {
          conn = DriverManager.getConnection("jdbc:mysql://" + DatabaseConfig.ENDPOINT,
                                     DatabaseConfig.USERNAME, DatabaseConfig.PASSWORD);
@@ -40,5 +42,22 @@ public class mainServerTest {
             System.out.println("SQLState: "     + ex.getSQLState());
             System.out.println("VendorError: "  + ex.getErrorCode());
         }
+        
+        ComponentDAO cDAO = new ComponentDAO(conn);
+        ComponentDTO cDTO = new ComponentDTO(0, 0, 0, "Test", 0);
+        cDAO.createComponent(cDTO);
+        
+        
+        System.out.println(cDAO.getComponent(0).getComponentId());
+        
+        
+        
+        // RMI         
+        Brugeradmin brugeradmin = (Brugeradmin) Naming.lookup("rmi://javabog.dk/brugeradmin");   
+        DatabaseRMI databaseRMI = new DatabaseRMI(conn);
+        System.setProperty("java.rmi.server.hostname", "127.0.0.1");
+        java.rmi.registry.LocateRegistry.createRegistry(1099);
+        Naming.rebind("rmi://127.0.0.1/databaseRMI", databaseRMI);
+        System.out.println("Server running..");   
     }   
 }
