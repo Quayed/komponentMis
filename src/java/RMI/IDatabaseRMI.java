@@ -16,18 +16,21 @@ public interface IDatabaseRMI extends java.rmi.Remote {
     
     ComponentRMI getComponent(int componentId) throws java.rmi.RemoteException;
     
-    void setComponent(ComponentRMI component) throws java.rmi.RemoteException;
+    void setComponent(ComponentRMI componentRMI) throws java.rmi.RemoteException;
     
-    // ComponetGroup
+    
+    // ComponentGroup
     
     ComponentGroupRMI getComponentGroup(int componentGroupId) throws java.rmi.RemoteException;
     
-    void setComponentGroup(ComponentGroupRMI componentGroup) throws java.rmi.RemoteException;
+    void setComponentGroup(ComponentGroupRMI componentGroupRMI) throws java.rmi.RemoteException;
     
     
     // Loan
 
     LoanRMI getLoan(int loanId) throws java.rmi.RemoteException;
+    
+    void setLoan(LoanRMI loanRMI) throws java.rmi.RemoteException;
 
     int deleteLoan(int loanId) throws java.rmi.RemoteException;
     
@@ -35,5 +38,7 @@ public interface IDatabaseRMI extends java.rmi.Remote {
     // Student
 
     StudentRMI getStudent(String studentId) throws java.rmi.RemoteException;
+    
+    void setStudent(StudentRMI studentRMI) throws java.rmi.RemoteException;
     
 }

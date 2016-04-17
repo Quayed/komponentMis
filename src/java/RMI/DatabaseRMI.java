@@ -75,4 +75,14 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
     public StudentRMI getStudent(String studentId) throws RemoteException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public void setLoan(LoanRMI loanRMI) throws RemoteException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void setStudent(StudentRMI studentRMI) throws RemoteException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
