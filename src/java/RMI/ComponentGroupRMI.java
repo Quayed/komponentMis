@@ -5,11 +5,13 @@
  */
 package RMI;
 
+import java.io.Serializable;
+
 /**
  *
  * @author hippomormor
  */
-public class ComponentGroupRMI {
+public class ComponentGroupRMI implements Serializable{
 
     private int componentGroupId;
     private String name;

@@ -5,12 +5,14 @@
  */
 package RMI;
 
+import java.io.Serializable;
+
 
 /**
  *
  * @author hippomormor
  */
-public class StudentRMI {
+public class StudentRMI implements Serializable {
 
     private String studentId;
     private String name;

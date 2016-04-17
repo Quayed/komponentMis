@@ -42,5 +42,6 @@ public interface IDatabaseRMI extends java.rmi.Remote {
     StudentRMI getStudent(String studentId) throws java.rmi.RemoteException;
     
     void setStudent(StudentRMI studentRMI) throws java.rmi.RemoteException;
-    
+
+    StudentRMI getTest() throws java.rmi.RemoteException;
 }

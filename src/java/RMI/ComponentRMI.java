@@ -5,11 +5,13 @@
  */
 package RMI;
 
+import java.io.Serializable;
+
 /**
  *
  * @author hippomormor
  */
-public class ComponentRMI {
+public class ComponentRMI implements Serializable{
 
     private int componentId;
     private String barcode;

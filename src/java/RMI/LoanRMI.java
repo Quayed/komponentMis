@@ -5,6 +5,7 @@
  */
 package RMI;
 
+import java.io.Serializable;
 import java.util.Date;
 
 
@@ -12,7 +13,7 @@ import java.util.Date;
  *
  * @author hippomormor
  */
-public class LoanRMI{
+public class LoanRMI implements Serializable{
     
     private int loanId;
     private int componentId;

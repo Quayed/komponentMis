@@ -139,4 +139,9 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
         studentDAO.getStudent(studentRMI.getStudentId()).setStatus(studentRMI.getStatus());
         studentDAO.getStudent(studentRMI.getStudentId()).setStudentId(studentRMI.getStudentId());
     }
+
+    @Override
+    public StudentRMI getTest() throws RemoteException {
+        return new StudentRMI("test", "testName", 0);
+    }
 }
