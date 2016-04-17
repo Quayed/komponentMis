@@ -27,6 +27,8 @@ public interface IDatabaseRMI extends java.rmi.Remote {
     
     
     // Loan
+    
+    void createLoan(LoanRMI loanRMI) throws java.rmi.RemoteException;
 
     LoanRMI getLoan(int loanId) throws java.rmi.RemoteException;
     
