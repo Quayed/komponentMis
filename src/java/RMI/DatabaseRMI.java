@@ -8,6 +8,7 @@ package RMI;
 import DAL.ComponentDAO;
 import DAL.ComponentGroupDAO;
 import DAL.LoanDAO;
+import DAL.StudentDAO;
 import RMI.IDatabaseRMI;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -26,20 +27,22 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
     private LoanRMI loan;
     private LoanDAO loanDAO;
     private StudentRMI student;
-    private final Connection conn;
+    private StudentDAO studentDAO;
    
     public DatabaseRMI(Connection conn) throws RemoteException {
-        this.conn = conn;
+        this(1190, conn);
     }
 
-    public DatabaseRMI(int port, Connection conn) throws RemoteException {
+    public DatabaseRMI(int port, Connection conn) throws RemoteException {       
         super(port);
-        this.conn = conn;     
+        componentDAO = new ComponentDAO(conn);
+        componentGroupDAO = new ComponentGroupDAO(conn);
+        loanDAO = new LoanDAO(conn);
+        studentDAO = new StudentDAO(conn);
     }
   
     @Override
-    public ComponentRMI getComponent(int componentId) throws RemoteException {
-        componentDAO = new ComponentDAO(conn);
+    public ComponentRMI getComponent(int componentId) throws RemoteException {        
         component = new ComponentRMI(componentDAO.getComponent(componentId).getComponentId(),componentDAO.getComponent(componentId).getBarcode(),
                         componentDAO.getComponent(componentId).getComponentGroupId(), componentDAO.getComponent(componentId).getComponentNumber(), 
                         componentDAO.getComponent(componentId).getStatus()); 
@@ -48,7 +51,11 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
 
     @Override
     public void setComponent(ComponentRMI component) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        componentDAO.getComponent(component.getComponentId()).setBarcode(component.getBarcode());
+        componentDAO.getComponent(component.getComponentId()).setComponentGroupId(component.getComponentGroupId());
+        componentDAO.getComponent(component.getComponentId()).setComponentId(component.getComponentId());
+        componentDAO.getComponent(component.getComponentId()).setComponentNumber(component.getComponentNumber());
+        componentDAO.getComponent(component.getComponentId()).setStatus(component.getStatus());
     }
 
     @Override
