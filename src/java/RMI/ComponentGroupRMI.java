@@ -12,7 +12,6 @@ package RMI;
 public class ComponentGroupRMI {
 
     private int componentGroupId;
-    private int componentId;
     private String name;
     private String standardLoanDuration ;
     private int status;
@@ -20,7 +19,7 @@ public class ComponentGroupRMI {
     public ComponentGroupRMI() {
     }
 
-    public ComponentGroupRMI(int componentGroupId, int componentId, String name, String standardLoanDuration, int status) {
+    public ComponentGroupRMI(int componentGroupId, String name, String standardLoanDuration, int status) {
         this.componentGroupId = componentGroupId;
         this.name = name;
         this.standardLoanDuration = standardLoanDuration;
