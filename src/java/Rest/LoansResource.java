@@ -6,15 +6,15 @@
 package Rest;
 
 import DAL.ComponentDAO;
-import DAL.ComponentDTO;
+import DTO.ComponentDTO;
 import DAL.ComponentGroupDAO;
-import DAL.ComponentGroupDTO;
+import DTO.ComponentGroupDTO;
 import DAL.DatabaseConfig;
 import DAL.ILoanDAO;
 import DAL.LoanDAO;
-import DAL.LoanDTO;
+import DTO.LoanDTO;
 import DAL.StudentDAO;
-import DAL.StudentDTO;
+import DTO.StudentDTO;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
