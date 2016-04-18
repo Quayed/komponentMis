@@ -49,10 +49,10 @@ public class mainServerTest {
 */
 
         // RMI    
-        Brugeradmin brugeradmin = (Brugeradmin) Naming.lookup("rmi://javabog.dk/brugeradmin");
+        //Brugeradmin brugeradmin = (Brugeradmin) Naming.lookup("rmi://javabog.dk/brugeradmin");
         DatabaseRMI databaseRMI = new DatabaseRMI(conn, "bruger", "kode");
         
-        System.setProperty("java.rmi.server.hostname", "127.0.0.1");
+        System.setProperty("java.rmi.server.hostname", "52.58.114.24");
         java.rmi.registry.LocateRegistry.createRegistry(1099);
         Naming.rebind("rmi://127.0.0.1/databaseRMI", databaseRMI);
 
