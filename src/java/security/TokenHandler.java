@@ -31,8 +31,12 @@ public class TokenHandler {
     }
 
     public int generateToken(int random) {
+        randomToken = random;
         publicToken = random + credentials;
-        System.out.println("Generating tokens..");
+        if (checkToken(publicToken))
+            System.out.println("Token generated..");
+        else
+            System.out.println("Token generation failed..");
         return publicToken;
     }
 
