@@ -24,36 +24,38 @@ public interface IDatabaseRMI extends java.rmi.Remote {
     
     // Component
     
-    ComponentDTO getComponent(int componentId) throws java.rmi.RemoteException;
+    ComponentDTO getComponent(int componentId, int publicToken) throws java.rmi.RemoteException;
     
-    ComponentDTO getComponent(String barcode) throws RemoteException;
+    ComponentDTO getComponent(String barcode, int publicToken) throws RemoteException;
     
-    ComponentDTO[] getComponents() throws RemoteException;
+    ComponentDTO[] getComponents(int publicToken) throws RemoteException;
     
     // ComponentGroup
     
-    ComponentGroupDTO getComponentGroup(int componentGroupId) throws java.rmi.RemoteException;
+    ComponentGroupDTO getComponentGroup(int componentGroupId, int publicToken) throws java.rmi.RemoteException;
     
-    ComponentGroupDTO[] getComponentGroups() throws java.rmi.RemoteException;
+    ComponentGroupDTO[] getComponentGroups(int publicToken) throws java.rmi.RemoteException;
     
     // Loan
     
-    void createLoan(LoanDTO loanDTO) throws java.rmi.RemoteException;
+    int createLoan(LoanDTO loanDTO, int publicToken) throws java.rmi.RemoteException;
 
-    LoanDTO getLoan(int loanId) throws java.rmi.RemoteException;
+    LoanDTO getLoan(int loanId, int publicToken) throws java.rmi.RemoteException;
     
-    LoanDTO[] getLoans() throws java.rmi.RemoteException;
+    LoanDTO[] getLoans(int publicToken) throws java.rmi.RemoteException;
+    
+    int updateLoan(LoanDTO loan, int publicToken) throws java.rmi.RemoteException;
 
-    int deleteLoan(int loanId) throws java.rmi.RemoteException;
+    int deleteLoan(int loanId, int publicToken) throws java.rmi.RemoteException;
     
     
     // Student
 
-    StudentDTO getStudent(String studentId) throws java.rmi.RemoteException;
+    StudentDTO getStudent(String studentId, int publicToken) throws java.rmi.RemoteException;
     
-    StudentDTO[] getStudents() throws java.rmi.RemoteException;
+    StudentDTO[] getStudents(int publicToken) throws java.rmi.RemoteException;
     
     // Tests
     
-    StudentDTO getTest() throws java.rmi.RemoteException;
+    StudentDTO getTest(int publicToken) throws java.rmi.RemoteException;
 }

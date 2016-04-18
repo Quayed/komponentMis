@@ -44,58 +44,86 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
     }
   
     @Override
-    public ComponentDTO getComponent(int componentId) throws RemoteException {        
+    public ComponentDTO getComponent(int componentId, int publicToken) throws RemoteException {
+        if (!tokenhandler.checkToken(publicToken))
+            return null;        
         return componentDAO.getComponent(componentId);
     }
     
     @Override
-    public ComponentDTO getComponent(String barcode) throws RemoteException {        
+    public ComponentDTO getComponent(String barcode, int publicToken) throws RemoteException { 
+        if (!tokenhandler.checkToken(publicToken))
+            return null;        
         return componentDAO.getComponent(barcode);
     }    
 
     @Override
-    public ComponentDTO[] getComponents() throws RemoteException {        
+    public ComponentDTO[] getComponents(int publicToken) throws RemoteException {
+        if (!tokenhandler.checkToken(publicToken))
+            return null;        
         return componentDAO.getComponents();
     }
     
     @Override
-    public ComponentGroupDTO getComponentGroup(int componentGroupId) throws RemoteException {
+    public ComponentGroupDTO getComponentGroup(int componentGroupId, int publicToken) throws RemoteException {
+        if (!tokenhandler.checkToken(publicToken))
+            return null;
         return componentGroupDAO.getComponentGroup(componentGroupId);          
     }
     
     @Override
-    public ComponentGroupDTO[] getComponentGroups() throws RemoteException {
+    public ComponentGroupDTO[] getComponentGroups(int publicToken) throws RemoteException {
+        if (!tokenhandler.checkToken(publicToken))
+            return null;        
         return componentGroupDAO.getComponentGroups();
     }
 
     @Override
-    public LoanDTO getLoan(int loanId) throws RemoteException {
+    public LoanDTO getLoan(int loanId, int publicToken) throws RemoteException {
+        if (!tokenhandler.checkToken(publicToken))
+            return null;       
         return loanDAO.getLoan(loanId);
     }
 
     @Override
-    public LoanDTO[] getLoans() throws RemoteException {
+    public LoanDTO[] getLoans(int publicToken) throws RemoteException {
+        if (!tokenhandler.checkToken(publicToken))
+            return null;        
         return loanDAO.getLoans();
     }
     
     @Override
-    public void createLoan(LoanDTO loanDTO) throws RemoteException {
-        loanDAO.createLoan(loanDTO);
-    }   
+    public int createLoan(LoanDTO loanDTO, int publicToken) throws RemoteException {
+        if (!tokenhandler.checkToken(publicToken))
+            return -1;
+        return loanDAO.createLoan(loanDTO);
+    }  
+    
+    public int updateLoan(LoanDTO loanDTO, int publicToken) {
+        if (!tokenhandler.checkToken(publicToken))
+            return -1;        
+        return loanDAO.updateLoan(loanDTO);
+    }
     
     @Override
-    public int deleteLoan(int loanId) throws RemoteException {
+    public int deleteLoan(int loanId, int publicToken) throws RemoteException {
+        if (!tokenhandler.checkToken(publicToken))
+            return -1;        
         return loanDAO.deleteLoan(loanId);
     }
 
     @Override
-    public StudentDTO getStudent(String studentId) throws RemoteException {
-       return studentDAO.getStudent(studentId);
+    public StudentDTO getStudent(String studentId, int publicToken) throws RemoteException {
+        if (!tokenhandler.checkToken(publicToken))
+            return null;       
+        return studentDAO.getStudent(studentId);
     }
 
     @Override
-    public StudentDTO[] getStudents() throws RemoteException {
-       return studentDAO.getStudents();
+    public StudentDTO[] getStudents(int publicToken) throws RemoteException {
+        if (!tokenhandler.checkToken(publicToken))
+            return null;       
+        return studentDAO.getStudents();
     }    
     
     @Override
@@ -105,7 +133,9 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
     }
 
     @Override
-    public StudentDTO getTest() throws RemoteException {
+    public StudentDTO getTest(int publicToken) throws RemoteException {
+        if (!tokenhandler.checkToken(publicToken))
+            return null;
         return new StudentDTO("testId", "testName", 0);
     }
 }
