@@ -5,8 +5,6 @@
  */
 package Rest;
 
-import DAL.ComponentDTO;
-import DAL.ComponentGroupDAO;
 import DAL.DatabaseConfig;
 import DAL.IStudentDAO;
 import DAL.StudentDAO;

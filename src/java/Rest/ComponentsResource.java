@@ -159,6 +159,7 @@ public class ComponentsResource {
         }
         int returnValue = dao.deleteComponent(Integer.parseInt(id));
         
+        System.out.println(id);
         if(returnValue == 1)
             return "All ok";
         else if(returnValue == -2)

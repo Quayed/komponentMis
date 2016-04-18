@@ -53,7 +53,7 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
     @Override
     public ComponentGroupDTO getComponentGroup(int componentGroupId) {
         try {
-            PreparedStatement stm = CONN.prepareStatement("SELECT * FROM " + DATABASE_NAME + " WHERE id = ?");
+            PreparedStatement stm = CONN.prepareStatement("SELECT * FROM " + DATABASE_NAME + " WHERE componentGroupId = ?");
             stm.setInt(1, componentGroupId);
             ResultSet result = stm.executeQuery();
             while (result.next()) {

@@ -22,10 +22,12 @@ public class ComponentDAO implements IComponentDAO {
         if (component.getComponentNumber() == 0 || component.getComponentGroupId() == 0 || component.getBarcode() == null)
             return -1;
 
-        String sql = "INSERT INTO + " + DATABASE_NAME + 
-                "(componentGroupId, componentNumber, barcode, status)"
-                + "VALUES(?, ?, ?, ?)";
+        String sql = "INSERT INTO " + DATABASE_NAME + 
+                " (componentGroupId, componentNumber, barcode, status) "
+                + "VALUES(?, ?, ?, ?);";
 
+        System.out.println(sql);
+        
         try {
             int param = 1;
             PreparedStatement stm = CONN.prepareStatement(sql);
@@ -38,13 +40,14 @@ public class ComponentDAO implements IComponentDAO {
 
             stm.setInt(param++, component.getStatus());
 
+            
             stm.execute();
 
         } catch (SQLException e) {
             e.printStackTrace();
             return -1;
         }
-        return -1;
+        return 1;
     }
 
     @Override
@@ -139,9 +142,10 @@ public class ComponentDAO implements IComponentDAO {
     public int deleteComponent(int componentId) {
 
         try {
-            String sql = "DELETE FROM " + DATABASE_NAME + "WHERE componentId = ?";
+            String sql = "DELETE FROM " + DATABASE_NAME + " WHERE componentId = ?";
             PreparedStatement stm = CONN.prepareStatement(sql);
             stm.setInt(1, componentId);
+            stm.execute();
             if (stm.getUpdateCount() == 1) {
                 return 1;
             } else {

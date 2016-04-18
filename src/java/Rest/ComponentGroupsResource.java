@@ -65,10 +65,10 @@ public class ComponentGroupsResource {
         output.append("[");
         for(ComponentGroupDTO componentGroup: componentGroups){
             output.append("{");
-            output.append("\"details\": \"/KomponentTyper/" + componentGroup.getComponentGroupId() + "\"");
-            output.append(", \"id\": " + componentGroup.getComponentGroupId());
-            output.append(", \"navn\": \"" + componentGroup.getName() + "\"");
-            output.append(", \"standardUdlånstid\": \"" + componentGroup.getStandardLoanDuration() + "\"");
+            output.append("\"details\": \"/ComponentGroups/" + componentGroup.getComponentGroupId() + "\"");
+            output.append(", \"componentGroupId\": " + componentGroup.getComponentGroupId());
+            output.append(", \"name\": \"" + componentGroup.getName() + "\"");
+            output.append(", \"standardLoanDuration\": \"" + componentGroup.getStandardLoanDuration() + "\"");
             output.append("},");
         }
         output.deleteCharAt(output.length()-1);
@@ -84,22 +84,21 @@ public class ComponentGroupsResource {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getSpecific(@PathParam("id") String id){
+    public String getSpecific(@PathParam("id") String componentGroupId){
         //Check that ID is actually a number
-        if(!id.matches("^\\d+$")){
+        if(!componentGroupId.matches("^\\d+$")){
             throw new WebApplicationException(405);
         }
-        
-        ComponentGroupDTO componentGroup = dao.getComponentGroup(Integer.parseInt(id));
+        ComponentGroupDTO componentGroup = dao.getComponentGroup(Integer.parseInt(componentGroupId));
         
         if(componentGroup == null)
             throw new WebApplicationException(404);
         
         StringBuilder output = new StringBuilder();
         output.append("{");
-        output.append("\"id\": " + componentGroup.getComponentGroupId());
-        output.append(", \"navn\": \"" + componentGroup.getName() + "\"");
-        output.append(", \"standardUdlånstid\": \"" + (componentGroup.getStandardLoanDuration() == null ? "" : componentGroup.getStandardLoanDuration()) + "\"");
+        output.append("\"componentGroupId\": " + componentGroup.getComponentGroupId());
+        output.append(", \"name\": \"" + componentGroup.getName() + "\"");
+        output.append(", \"standardLoanDuration\": \"" + (componentGroup.getStandardLoanDuration() == null ? "" : componentGroup.getStandardLoanDuration()) + "\"");
         output.append("}");
         
         return output.toString();
@@ -109,10 +108,12 @@ public class ComponentGroupsResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public String createComponentGroup(ComponentGroupDTO componentGroup){
+        
         int returnStatus = dao.createComponentGroup(componentGroup);
         if(returnStatus == 1)
             return "All Ok";
         else
+            System.out.println("Error");
             throw new WebApplicationException(500);
     }
     
