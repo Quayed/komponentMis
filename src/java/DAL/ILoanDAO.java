@@ -1,5 +1,7 @@
 package DAL;
 
+import DTO.LoanDTO;
+
 /**
  * Created by mathias on 21/03/16.
  */

@@ -1,5 +1,7 @@
 package DAL;
 
+import DTO.ComponentGroupDTO;
+
 /**
  * Created by mathias on 21/03/16.
  */

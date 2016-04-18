@@ -1,5 +1,6 @@
 package DAL;
 
+import DTO.ComponentGroupDTO;
 import java.sql.*;
 import java.util.ArrayList;
 
