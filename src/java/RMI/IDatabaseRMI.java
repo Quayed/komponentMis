@@ -5,6 +5,12 @@
  */
 package RMI;
 
+import DTO.ComponentDTO;
+import DTO.ComponentGroupDTO;
+import DTO.LoanDTO;
+import DTO.StudentDTO;
+import java.rmi.RemoteException;
+
 
 /**
  *
@@ -12,38 +18,38 @@ package RMI;
  */
 public interface IDatabaseRMI extends java.rmi.Remote {
     
+    // Token-stuff
+    
     int generateToken(int randomToken)  throws java.rmi.RemoteException;
     
     // Component
     
-    ComponentRMI getComponent(int componentId) throws java.rmi.RemoteException;
+    ComponentDTO getComponent(int componentId) throws java.rmi.RemoteException;
     
-    void setComponent(ComponentRMI componentRMI) throws java.rmi.RemoteException;
+    ComponentDTO getComponent(String barcode) throws RemoteException;
     
+    ComponentDTO[] getComponents() throws RemoteException;
     
     // ComponentGroup
     
-    ComponentGroupRMI getComponentGroup(int componentGroupId) throws java.rmi.RemoteException;
+    ComponentGroupDTO getComponentGroup(int componentGroupId) throws java.rmi.RemoteException;
     
-    void setComponentGroup(ComponentGroupRMI componentGroupRMI) throws java.rmi.RemoteException;
-    
+    ComponentGroupDTO[] getComponentGroups() throws java.rmi.RemoteException;
     
     // Loan
     
-    void createLoan(LoanRMI loanRMI) throws java.rmi.RemoteException;
+    void createLoan(LoanDTO loanDTO) throws java.rmi.RemoteException;
 
-    LoanRMI getLoan(int loanId) throws java.rmi.RemoteException;
+    LoanDTO getLoan(int loanId) throws java.rmi.RemoteException;
     
-    void setLoan(LoanRMI loanRMI) throws java.rmi.RemoteException;
+    LoanDTO[] getLoans() throws java.rmi.RemoteException;
 
     int deleteLoan(int loanId) throws java.rmi.RemoteException;
     
     
     // Student
 
-    StudentRMI getStudent(String studentId) throws java.rmi.RemoteException;
+    StudentDTO getStudent(String studentId) throws java.rmi.RemoteException;
     
-    void setStudent(StudentRMI studentRMI) throws java.rmi.RemoteException;
-
-    StudentRMI getTest() throws java.rmi.RemoteException;
+    StudentDTO[] getStudents() throws java.rmi.RemoteException;
 }
