@@ -48,7 +48,6 @@ public interface IDatabaseRMI extends java.rmi.Remote {
 
     int deleteLoan(int loanId, int publicToken) throws java.rmi.RemoteException;
     
-    
     // Student
 
     StudentDTO getStudent(String studentId, int publicToken) throws java.rmi.RemoteException;
