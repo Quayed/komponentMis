@@ -103,4 +103,9 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
         tokenhandler.generateToken(randomToken);
         return tokenhandler.getPublicToken();
     }
+
+    @Override
+    public StudentDTO getTest() throws RemoteException {
+        return new StudentDTO("testId", "testName", 0);
+    }
 }

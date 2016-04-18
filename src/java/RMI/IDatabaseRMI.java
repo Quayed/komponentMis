@@ -52,4 +52,8 @@ public interface IDatabaseRMI extends java.rmi.Remote {
     StudentDTO getStudent(String studentId) throws java.rmi.RemoteException;
     
     StudentDTO[] getStudents() throws java.rmi.RemoteException;
+    
+    // Tests
+    
+    StudentDTO getTest() throws java.rmi.RemoteException;
 }

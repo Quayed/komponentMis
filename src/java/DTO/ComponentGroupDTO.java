@@ -1,9 +1,11 @@
 package DTO;
 
+import java.io.Serializable;
+
 /**
  * Created by mathias on 21/03/16.
  */
-public class ComponentGroupDTO {
+public class ComponentGroupDTO implements Serializable {
     private int componentGroupId;
     private String name;
     private String standardLoanDuration;

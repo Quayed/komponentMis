@@ -5,10 +5,12 @@
  */
 package DTO;
 
+import java.io.Serializable;
+
 /**
  * @author mathias
  */
-public class StudentDTO {
+public class StudentDTO implements Serializable {
     private String studentId;
     private String name;
     private int status;

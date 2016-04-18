@@ -1,9 +1,11 @@
 package DTO;
 
+import java.io.Serializable;
+
 /**
  * Created by mathias on 21/03/16.
  */
-public class ComponentDTO {
+public class ComponentDTO implements Serializable {
     private int componentId;
     private int componentGroupId;
     private int componentNumber;

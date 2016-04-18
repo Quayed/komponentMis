@@ -1,11 +1,12 @@
 package DTO;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by mathias on 21/03/16.
  */
-public class LoanDTO {
+public class LoanDTO implements Serializable {
     private int loanId;
     private int componentId;
     private String studentId;
