@@ -22,19 +22,17 @@ public class TokenHandler {
         credentials = user.hashCode() + pass.hashCode();
     }
 
-    public void generateRandom() {
+    public int generateRandom() {
         SecureRandom random = new SecureRandom();
         byte bytes[] = new byte[20];
         random.nextBytes(bytes);
         randomToken = Arrays.hashCode(bytes);
+        return randomToken;
     }
 
-    public void generateToken(int random) {
+    public int generateToken(int random) {
         publicToken = random + credentials;
-        if (checkToken(publicToken))
-            System.out.println("Generated tokens..");
-        else
-            System.err.println("Failed to generate tokens..");
+        return publicToken;
     }
 
     public boolean checkToken(int token) {
