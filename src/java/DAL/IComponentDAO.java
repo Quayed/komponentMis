@@ -6,8 +6,8 @@ package DAL;
 public interface IComponentDAO {
     int createComponent(ComponentDTO component);
 
-    ComponentDTO getComponent(int componentId);
-
+    ComponentDTO getComponent(String param, String value);
+    
     ComponentDTO[] getComponents();
 
     int updateComponent(ComponentDTO component);

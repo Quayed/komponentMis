@@ -39,8 +39,7 @@ public class ComponentDAO implements IComponentDAO {
             stm.setString(param++, component.getBarcode());
 
             stm.setInt(param++, component.getStatus());
-
-            
+    
             stm.execute();
 
         } catch (SQLException e) {
@@ -51,10 +50,17 @@ public class ComponentDAO implements IComponentDAO {
     }
 
     @Override
-    public ComponentDTO getComponent(int componentId) {
+    public ComponentDTO getComponent(String param, String value) {
         try {
-            PreparedStatement stm = CONN.prepareStatement("SELECT * FROM " + DATABASE_NAME + " WHERE componentId = ?");
-            stm.setInt(1, componentId);
+            PreparedStatement stm = CONN.prepareStatement("SELECT * FROM " + DATABASE_NAME + " WHERE " + param + " = ?");
+            if(param.equals("barcode")){
+                stm.setString(1, value);
+            }else{
+                if(!value.matches("^\\d+$")){
+                    return null;
+                }
+                stm.setInt(1, Integer.parseInt(value));
+            }
             ResultSet result = stm.executeQuery();
             while (result.next())
                 return new ComponentDTO(result.getInt("componentId"), result.getInt("componentGroupId"), result.getInt("componentNumber"), result.getString("barcode"), result.getInt("status"));
