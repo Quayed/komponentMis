@@ -50,17 +50,10 @@ public class ComponentDAO implements IComponentDAO {
     }
 
     @Override
-    public ComponentDTO getComponent(String param, String value) {
+    public ComponentDTO getComponent(String barcode) {
         try {
-            PreparedStatement stm = CONN.prepareStatement("SELECT * FROM " + DATABASE_NAME + " WHERE " + param + " = ?");
-            if(param.equals("barcode")){
-                stm.setString(1, value);
-            }else{
-                if(!value.matches("^\\d+$")){
-                    return null;
-                }
-                stm.setInt(1, Integer.parseInt(value));
-            }
+            PreparedStatement stm = CONN.prepareStatement("SELECT * FROM " + DATABASE_NAME + " WHERE barcode = ?");
+            stm.setString(1, barcode);
             ResultSet result = stm.executeQuery();
             while (result.next())
                 return new ComponentDTO(result.getInt("componentId"), result.getInt("componentGroupId"), result.getInt("componentNumber"), result.getString("barcode"), result.getInt("status"));
@@ -71,6 +64,21 @@ public class ComponentDAO implements IComponentDAO {
         return null;
     }
 
+    @Override
+    public ComponentDTO getComponent(int componentId) {
+        try {
+            PreparedStatement stm = CONN.prepareStatement("SELECT * FROM " + DATABASE_NAME + " WHERE componentId = ?");
+            stm.setInt(1, componentId);
+            ResultSet result = stm.executeQuery();
+            while (result.next())
+                return new ComponentDTO(result.getInt("componentId"), result.getInt("componentGroupId"), result.getInt("componentNumber"), result.getString("barcode"), result.getInt("status"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+    
     @Override
     public ComponentDTO[] getComponents() {
         try {

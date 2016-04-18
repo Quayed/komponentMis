@@ -6,7 +6,9 @@ package DAL;
 public interface IComponentDAO {
     int createComponent(ComponentDTO component);
 
-    ComponentDTO getComponent(String param, String value);
+    ComponentDTO getComponent(String barcode);
+    
+    ComponentDTO getComponent(int componentId);
     
     ComponentDTO[] getComponents();
 
