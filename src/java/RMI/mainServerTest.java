@@ -28,11 +28,12 @@ public class mainServerTest {
      * @throws java.rmi.NotBoundException
      * @throws java.net.MalformedURLException
      */
-    public static void main(String[] args) throws RemoteException, NotBoundException, MalformedURLException {
+    public static void main(String[] args) throws RemoteException, NotBoundException, MalformedURLException, ClassNotFoundException {
   
         // SQL        
         Connection conn = null;   
         try {
+         Class.forName("com.mysql.jdbc.Driver");
          conn = DriverManager.getConnection("jdbc:mysql://" + DatabaseConfig.ENDPOINT,
                                     DatabaseConfig.USERNAME, DatabaseConfig.PASSWORD);
         } catch (SQLException ex) {         
