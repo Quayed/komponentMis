@@ -32,6 +32,7 @@ public class TokenHandler {
 
     public int generateToken(int random) {
         publicToken = random + credentials;
+        System.out.println("Generating tokens..");
         return publicToken;
     }
 
