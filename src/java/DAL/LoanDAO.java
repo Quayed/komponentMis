@@ -96,11 +96,42 @@ public class LoanDAO implements ILoanDAO {
             while (result.next())
                 loans.add(new LoanDTO(result.getInt("loanId"), result.getInt("componentId"), result.getString("studentId"),
                         result.getDate("loanDate"), result.getDate("dueDate"), result.getDate("deliveryDate"), result.getString("deliveredTo")));
+
+            // Check if something was actually found
+            if(loans.size() == 0)
+                return null;
+
             return loans.toArray(new LoanDTO[loans.size()]);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
+    }
+    
+    @Override
+    public LoanDTO[] searchLoans(String keyword) {
+        // TODO DESIGN MYSQL QUERY FOR THIS
+    }
+
+    @Override
+    public LoanDTO[] getLoansForStudent(String studentId) {
+        try{
+            ArrayList<LoanDTO> loans = new ArrayList<>();
+            PreparedStatement stm = CONN.prepareStatement("SELECT * FROM " + DATABASE_NAME + " WHERE studentId LIKE '%?%'");
+            stm.setString(1, studentId);
+            ResultSet result = stm.executeQuery();
+            while(result.next())
+                loans.add(new LoanDTO(result.getInt("loanId"), result.getInt("componentId"), result.getString("studentId"),
+                        result.getDate("loanDate"), result.getDate("dueDate"), result.getDate("deliveryDate"), result.getString("deliveredTo")));
+
+            // Check if something was actually found
+            if(loans.size() == 0)
+                return null;
+
+            return loans.toArray(new LoanDTO[loans.size()]);
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
     }
 
     @Override
