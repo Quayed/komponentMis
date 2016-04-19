@@ -5,8 +5,8 @@
  */
 package security;
 
+import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.util.Arrays;
 
 /**
  *
@@ -14,41 +14,53 @@ import java.util.Arrays;
  */
 public class TokenHandler {
 
-    private int randomToken;
-    private int publicToken;
-    private final int credentials;
+    private BigInteger randomToken;
+    private BigInteger publicToken;
+    private BigInteger keyToken;
+    private BigInteger credentials;
 
     public TokenHandler(String user, String pass) {
-        credentials = user.hashCode() + pass.hashCode();
+        credentials = new BigInteger(Integer.toString((user.hashCode() + pass.hashCode())% 10000000));
+        generateRandom();
+        generateToken();
     }
 
-    public int generateRandom() {
-        SecureRandom random = new SecureRandom();
-        byte bytes[] = new byte[20];
-        random.nextBytes(bytes);
-        randomToken = Arrays.hashCode(bytes);
+    private BigInteger generateRandom() {
+        randomToken = BigInteger.probablePrime(5, new SecureRandom());
+        System.out.println("Random prime generated.." + randomToken);
         return randomToken;
     }
 
-    public int generateToken(int random) {
-        randomToken = random;
-        publicToken = random + credentials;
-        if (checkToken(publicToken))
-            System.out.println("Token generated..");
-        else
-            System.out.println("Token generation failed..");
+    private BigInteger generateToken() {
+        publicToken = credentials.pow(Integer.parseInt(randomToken.toString()));
+        System.out.println("Token generated.." + publicToken);
         return publicToken;
     }
 
-    public boolean checkToken(int token) {
-        return token - credentials == randomToken;
+    public BigInteger generateKey(BigInteger token) {
+        keyToken = token.pow(Integer.parseInt(randomToken.toString()));
+        System.out.println("Key generated.." + keyToken);
+        return keyToken;
     }
 
-    public int getRandomToken() {
+    public boolean checkKey(BigInteger key) {
+        if (key.toString().equals(keyToken.toString())) {
+            System.out.println("Key valid");
+            return true;
+        }
+        System.out.println("Key invalid");
+        return false;
+    }
+
+    public BigInteger getRandomToken() {
         return randomToken;
     }
 
-    public int getPublicToken() {
+    public BigInteger getPublicToken() {
         return publicToken;
     }
+    
+    public BigInteger getKeyToken() {
+        return keyToken;
+    }   
 }
