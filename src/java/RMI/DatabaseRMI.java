@@ -8,8 +8,11 @@ package RMI;
 import DAL.ComponentDAO;
 import DAL.ComponentGroupDAO;
 import DAL.LoanDAO;
-import DAL.LoanDTO;
+import DTO.LoanDTO;
 import DAL.StudentDAO;
+import DTO.ComponentDTO;
+import DTO.ComponentGroupDTO;
+import DTO.StudentDTO;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.Connection;
@@ -21,13 +24,9 @@ import security.TokenHandler;
  */
 public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
     
-    private ComponentRMI component;
     private ComponentDAO componentDAO;
-    private ComponentGroupRMI componentGroup;
     private ComponentGroupDAO componentGroupDAO;
-    private LoanRMI loan;
     private LoanDAO loanDAO;
-    private StudentRMI student;
     private StudentDAO studentDAO;
     private TokenHandler tokenhandler;
    
@@ -45,109 +44,98 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
     }
   
     @Override
-    public ComponentRMI getComponent(int componentId) throws RemoteException {        
-        component = new ComponentRMI(
-                componentDAO.getComponent(componentId).getComponentId(), 
-                componentDAO.getComponent(componentId).getBarcode(), 
-                componentDAO.getComponent(componentId).getComponentGroupId(), 
-                componentDAO.getComponent(componentId).getComponentNumber(), 
-                componentDAO.getComponent(componentId).getStatus()); 
-        return component;
-    }
-
-    @Override
-    public void setComponent(ComponentRMI component) throws RemoteException {
-        componentDAO.getComponent(component.getComponentId()).setBarcode(component.getBarcode());
-        componentDAO.getComponent(component.getComponentId()).setComponentGroupId(component.getComponentGroupId());
-        componentDAO.getComponent(component.getComponentId()).setComponentId(component.getComponentId());
-        componentDAO.getComponent(component.getComponentId()).setComponentNumber(component.getComponentNumber());
-        componentDAO.getComponent(component.getComponentId()).setStatus(component.getStatus());
-    }
-
-    @Override
-    public ComponentGroupRMI getComponentGroup(int componentGroupId) throws RemoteException {
-        componentGroup = new ComponentGroupRMI(
-                componentGroupDAO.getComponentGroup(componentGroupId).getComponentGroupId(), 
-                componentGroupDAO.getComponentGroup(componentGroupId).getName(), 
-                componentGroupDAO.getComponentGroup(componentGroupId).getStandardLoanDuration(), 
-                componentGroupDAO.getComponentGroup(componentGroupId).getStatus());
-        return componentGroup;
-    }
-
-    @Override
-    public void setComponentGroup(ComponentGroupRMI componentGroup) throws RemoteException {
-        componentGroupDAO.getComponentGroup(componentGroup.getComponentGroupId()).setComponentGroupId(componentGroup.getComponentGroupId());
-        componentGroupDAO.getComponentGroup(componentGroup.getComponentGroupId()).setName(componentGroup.getName());
-        componentGroupDAO.getComponentGroup(componentGroup.getComponentGroupId()).setStandardLoanDuration(componentGroup.getStandardLoanDuration());
-        componentGroupDAO.getComponentGroup(componentGroup.getComponentGroupId()).setStatus(componentGroup.getStatus());
-    }
-
-    @Override
-    public LoanRMI getLoan(int loanId) throws RemoteException {
-        loan = new LoanRMI(
-                loanDAO.getLoan(loanId).getLoanId(), 
-                loanDAO.getLoan(loanId).getComponentId(), 
-                loanDAO.getLoan(loanId).getStudentId(), 
-                loanDAO.getLoan(loanId).getLoanDate(), 
-                loanDAO.getLoan(loanId).getDueDate(), 
-                loanDAO.getLoan(loanId).getDeliveryDate(), 
-                loanDAO.getLoan(loanId).getDeliveredTo());
-        return loan;
-    }
- 
-    @Override
-    public void createLoan(LoanRMI loanRMI) throws RemoteException {
-        LoanDTO newLoan = new LoanDTO(
-                loanRMI.getLoanId(), 
-                loanRMI.getComponentId(), 
-                loanRMI.getStudentId(), 
-                loanRMI.getLoanDate(), 
-                loanRMI.getDueDate(), 
-                loanRMI.getDeliveryDate(), 
-                loanRMI.getDeliveredTo());
-        loanDAO.createLoan(newLoan);
-    }   
-    
-    @Override
-    public void setLoan(LoanRMI loanRMI) throws RemoteException {
-        loanDAO.getLoan(loanRMI.getLoanId()).setComponentId(loanRMI.getComponentId());
-        loanDAO.getLoan(loanRMI.getLoanId()).setDeliveredTo(loanRMI.getDeliveredTo());
-        loanDAO.getLoan(loanRMI.getLoanId()).setDeliveryDate(loanRMI.getDeliveryDate());
-        loanDAO.getLoan(loanRMI.getLoanId()).setDueDate(loanRMI.getDueDate());
-        loanDAO.getLoan(loanRMI.getLoanId()).setLoanDate(loanRMI.getLoanDate());
-        loanDAO.getLoan(loanRMI.getLoanId()).setLoanId(loanRMI.getLoanId());
-        loanDAO.getLoan(loanRMI.getLoanId()).setStudentId(loanRMI.getStudentId());
+    public ComponentDTO getComponent(int componentId, int publicToken) throws RemoteException {
+        if (!tokenhandler.checkToken(publicToken))
+            return null;        
+        return componentDAO.getComponent(componentId);
     }
     
     @Override
-    public int deleteLoan(int loanId) throws RemoteException {
-        return loanDAO.deleteLoan(loanId);      
+    public ComponentDTO getComponent(String barcode, int publicToken) throws RemoteException { 
+        if (!tokenhandler.checkToken(publicToken))
+            return null;        
+        return componentDAO.getComponent(barcode);
+    }    
+
+    @Override
+    public ComponentDTO[] getComponents(int publicToken) throws RemoteException {
+        if (!tokenhandler.checkToken(publicToken))
+            return null;        
+        return componentDAO.getComponents();
+    }
+    
+    @Override
+    public ComponentGroupDTO getComponentGroup(int componentGroupId, int publicToken) throws RemoteException {
+        if (!tokenhandler.checkToken(publicToken))
+            return null;
+        return componentGroupDAO.getComponentGroup(componentGroupId);          
+    }
+    
+    @Override
+    public ComponentGroupDTO[] getComponentGroups(int publicToken) throws RemoteException {
+        if (!tokenhandler.checkToken(publicToken))
+            return null;        
+        return componentGroupDAO.getComponentGroups();
     }
 
     @Override
-    public StudentRMI getStudent(String studentId) throws RemoteException {
-        student = new StudentRMI(
-                studentDAO.getStudent(studentId).getStudentId(), 
-                studentDAO.getStudent(studentId).getName(), 
-                studentDAO.getStudent(studentId).getStatus());
-        return student;
+    public LoanDTO getLoan(int loanId, int publicToken) throws RemoteException {
+        if (!tokenhandler.checkToken(publicToken))
+            return null;       
+        return loanDAO.getLoan(loanId);
     }
 
     @Override
-    public void setStudent(StudentRMI studentRMI) throws RemoteException {
-        studentDAO.getStudent(studentRMI.getStudentId()).setName(studentRMI.getName());
-        studentDAO.getStudent(studentRMI.getStudentId()).setStatus(studentRMI.getStatus());
-        studentDAO.getStudent(studentRMI.getStudentId()).setStudentId(studentRMI.getStudentId());
+    public LoanDTO[] getLoans(int publicToken) throws RemoteException {
+        if (!tokenhandler.checkToken(publicToken))
+            return null;        
+        return loanDAO.getLoans();
+    }
+    
+    @Override
+    public int createLoan(LoanDTO loanDTO, int publicToken) throws RemoteException {
+        if (!tokenhandler.checkToken(publicToken))
+            return -1;
+        return loanDAO.createLoan(loanDTO);
+    }  
+    
+    public int updateLoan(LoanDTO loanDTO, int publicToken) {
+        if (!tokenhandler.checkToken(publicToken))
+            return -1;        
+        return loanDAO.updateLoan(loanDTO);
+    }
+    
+    @Override
+    public int deleteLoan(int loanId, int publicToken) throws RemoteException {
+        if (!tokenhandler.checkToken(publicToken))
+            return -1;        
+        return loanDAO.deleteLoan(loanId);
     }
 
     @Override
-    public StudentRMI getTest() throws RemoteException {
-        return new StudentRMI("test", "testName", 0);
+    public StudentDTO getStudent(String studentId, int publicToken) throws RemoteException {
+        if (!tokenhandler.checkToken(publicToken))
+            return null;       
+        return studentDAO.getStudent(studentId);
     }
 
+    @Override
+    public StudentDTO[] getStudents(int publicToken) throws RemoteException {
+        if (!tokenhandler.checkToken(publicToken))
+            return null;       
+        return studentDAO.getStudents();
+    }    
+    
     @Override
     public int generateToken(int randomToken) throws RemoteException {
         tokenhandler.generateToken(randomToken);
         return tokenhandler.getPublicToken();
+    }
+
+    @Override
+    public StudentDTO getTest(int publicToken) throws RemoteException {
+        if (!tokenhandler.checkToken(publicToken))
+            return null;
+        return new StudentDTO("testId", "testName", 0);
     }
 }

@@ -6,7 +6,7 @@
 package Rest;
 
 import DAL.ComponentGroupDAO;
-import DAL.ComponentGroupDTO;
+import DTO.ComponentGroupDTO;
 import DAL.DatabaseConfig;
 import DAL.IComponentGroupDAO;
 import java.sql.DriverManager;

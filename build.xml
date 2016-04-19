@@ -68,4 +68,29 @@
     nbproject/build-impl.xml file. 
 
     -->
+
+    <target name="-post-compile">
+
+        <manifest file="build/MANIFEST.MF">
+            <attribute name="Main-Class"
+                       value="RMI.mainServerTest" />
+            <attribute name="Class-Path"
+                       value="lib/mysql-connector-java-5.1.23-bin.jar" />            
+        </manifest>
+        <jar destfile="${basedir}/dist/${ant.project.name}.jar"
+             manifest="build/MANIFEST.MF">
+            <fileset dir="${basedir}/build/web/WEB-INF/classes">
+            </fileset>
+            
+        </jar>
+        
+        <property name="lib" value="lib" />
+    
+        <mkdir dir="${basedir}/dist/lib" />  
+
+        <copy todir="${basedir}/dist/lib/" overwrite="true">
+            <fileset file="${lib}/mysql-connector-java-5.1.23-bin.jar"/>
+        </copy>
+
+    </target>
 </project>

@@ -3,52 +3,49 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package RMI;
+package DTO;
 
 import java.io.Serializable;
 
-
 /**
- *
- * @author hippomormor
+ * @author mathias
  */
-public class StudentRMI implements Serializable {
-
+public class StudentDTO implements Serializable {
     private String studentId;
     private String name;
     private int status;
 
-    public StudentRMI() {
-
+    public StudentDTO(){
+        
     }
-
-    public StudentRMI(String studentId, String name, int status) {
+    
+    public StudentDTO(String studentId, String name, int status) {
         this.studentId = studentId;
         this.name = name;
         this.status = status;
-    }
- 
-    public String getStudentId() {
-        return studentId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getStatus() {
-        return status;
     }
 
     public void setStudentId(String studentId) {
         this.studentId = studentId;
     }
 
+    public String getStudentId() {
+        return this.studentId;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
 
+    public String getName() {
+        return this.name;
+    }
+
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public int getStatus() {
+        return this.status;
     }
 }

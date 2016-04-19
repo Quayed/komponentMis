@@ -5,6 +5,7 @@
  */
 package DAL;
 
+import DTO.StudentDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

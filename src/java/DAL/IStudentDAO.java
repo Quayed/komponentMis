@@ -5,6 +5,8 @@
  */
 package DAL;
 
+import DTO.StudentDTO;
+
 /**
  * @author mathias
  */

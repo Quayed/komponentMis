@@ -6,9 +6,9 @@
 package Rest;
 
 import DAL.ComponentDAO;
-import DAL.ComponentDTO;
+import DTO.ComponentDTO;
 import DAL.ComponentGroupDAO;
-import DAL.ComponentGroupDTO;
+import DTO.ComponentGroupDTO;
 import DAL.DatabaseConfig;
 import DAL.IComponentDAO;
 import java.sql.Connection;

@@ -9,7 +9,7 @@ import DAL.ComponentDTO;
 import DAL.DatabaseConfig;
 import DAL.IStudentDAO;
 import DAL.StudentDAO;
-import DAL.StudentDTO;
+import DTO.StudentDTO;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import javax.ws.rs.core.Context;
