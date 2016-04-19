@@ -73,7 +73,7 @@
 
         <manifest file="build/MANIFEST.MF">
             <attribute name="Main-Class"
-                       value="RMI.mainServerTest" />
+                       value="RMI.ServerMain" />
             <attribute name="Class-Path"
                        value="lib/mysql-connector-java-5.1.23-bin.jar" />            
         </manifest>
