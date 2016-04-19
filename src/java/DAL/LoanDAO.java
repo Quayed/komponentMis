@@ -5,7 +5,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by mathias on 21/03/16.
@@ -20,8 +23,14 @@ public class LoanDAO implements ILoanDAO {
 
     @Override
     public int createLoan(LoanDTO loan) {
-        if(loan.getComponentId() == 0 || loan.getStudentId() == null || loan.getLoanDate() == null || loan.getDueDate() == null)
+        if(loan.getComponentId() == 0 || loan.getStudentId() == null || loan.getLoanDate() == null || loan.getDueDate() == null){
+            if (loan.getStudentId() == null)
+                return -3;
+            if (loan.getLoanDate() == null)
+                return -4;
+            
             return -1;
+        }
         
         String sql = "INSERT INTO " + DATABASE_NAME + "(componentId, studentId, loanDate, dueDate";
         String sqlValues = "?, ?, ?, ?";
@@ -47,12 +56,12 @@ public class LoanDAO implements ILoanDAO {
 
             stm.setString(param++, loan.getStudentId());
 
-            stm.setDate(param++, new java.sql.Date(loan.getLoanDate().getTime()));
+            stm.setDate(param++, new java.sql.Date(loan.getLoanDateAsDate().getTime()));
 
-            stm.setDate(param++, new java.sql.Date(loan.getDueDate().getTime()));
+            stm.setDate(param++, new java.sql.Date(loan.getDueDateAsDate().getTime()));
 
             if (loan.getDeliveryDate() != null)
-                stm.setDate(param++, new java.sql.Date(loan.getDeliveryDate().getTime()));
+                stm.setDate(param++, new java.sql.Date(loan.getDeliveryDateAsDate().getTime()));
 
             if (loan.getDeliveredTo() != null)
                 stm.setString(param++, loan.getDeliveredTo());
@@ -67,7 +76,7 @@ public class LoanDAO implements ILoanDAO {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        } 
 
         return 0;
     }
@@ -111,6 +120,7 @@ public class LoanDAO implements ILoanDAO {
     @Override
     public LoanDTO[] searchLoans(String keyword) {
         // TODO DESIGN MYSQL QUERY FOR THIS
+        return null;
     }
 
     @Override
@@ -132,6 +142,8 @@ public class LoanDAO implements ILoanDAO {
         } catch(SQLException e){
             e.printStackTrace();
         }
+        
+        return null;
     }
 
     @Override
@@ -197,11 +209,11 @@ public class LoanDAO implements ILoanDAO {
             if (loan.getStudentId() != null)
                 stm.setString(param++, loan.getStudentId());
             if (loan.getLoanDate() != null)
-                stm.setDate(param++, new java.sql.Date(loan.getLoanDate().getTime()));
+                stm.setDate(param++, new java.sql.Date(loan.getLoanDateAsDate().getTime()));
             if (loan.getDueDate() != null)
-                stm.setDate(param++, new java.sql.Date(loan.getDueDate().getTime()));
+                stm.setDate(param++, new java.sql.Date(loan.getDueDateAsDate().getTime()));
             if (loan.getDeliveryDate() != null)
-                stm.setDate(param++, new java.sql.Date(loan.getDeliveryDate().getTime()));
+                stm.setDate(param++, new java.sql.Date(loan.getDeliveryDateAsDate().getTime()));
             if (loan.getDeliveredTo() != null)
                 stm.setString(param++, loan.getDeliveredTo());
 
@@ -213,7 +225,8 @@ public class LoanDAO implements ILoanDAO {
                 return 1;
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        } 
+        
         return 0;
     }
 

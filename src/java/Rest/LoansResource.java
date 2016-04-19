@@ -70,11 +70,11 @@ public class LoansResource {
             output.append(", \"loanId\": " + loan.getLoanId());
             output.append(", \"componentId\": " + loan.getComponentId());
             output.append(", \"studentId\": \"" + loan.getStudentId() + "\"");
-            output.append(", \"loanDate\": \"" + formatter.format(loan.getLoanDate()) + "\"");
-            output.append(", \"dueDate\": \"" + formatter.format(loan.getDueDate()) + "\"");
-            output.append(", \"deliveryDate\": \"" + (loan.getDeliveryDate() != null ? formatter.format(loan.getDeliveryDate()) : "") + "\"");
+            output.append(", \"loanDate\": \"" + loan.getLoanDate() + "\"");
+            output.append(", \"dueDate\": \"" + loan.getDueDate() + "\"");
+            output.append(", \"deliveryDate\": \"" + (loan.getDeliveryDate() != null ? loan.getDeliveryDate() : "") + "\"");
             output.append(", \"deliveredTo\": \"" + (loan.getDeliveredTo() != null ? loan.getDeliveredTo() : "") + "\"");
-            output.append("}");
+            output.append("},");
         }
         output.deleteCharAt(output.length()-1);
         output.append("]");
@@ -114,7 +114,7 @@ public class LoansResource {
 
             // Information about the componentGroup
             output.append(", \"componentGroup\": { ");
-            output.append(", \"componentGroupId\": " + componentGroup.getComponentGroupId());
+            output.append(" \"componentGroupId\": " + componentGroup.getComponentGroupId());
             output.append(", \"name\": " + "\"" + componentGroup.getName() +  "\"");
             output.append(", \"standardLoanDuration\": " + "\"" + (componentGroup.getStandardLoanDuration() == null ? "" : componentGroup.getStandardLoanDuration())  + "\"");
             output.append(", \"standardLoanDuration\": " + componentGroup.getStatus());
@@ -134,9 +134,9 @@ public class LoansResource {
             output.append(", \"status\": " + student.getStatus());
             output.append("}");
             
-        output.append(", \"loanDate\": \"" + formatter.format(loan.getLoanDate()) + "\"");
-        output.append(", \"dueDate\": \"" + formatter.format(loan.getDueDate()) + "\"");
-        output.append(", \"deliveryDate\": \"" + (loan.getDeliveryDate() != null ? formatter.format(loan.getDeliveryDate()) : "") + "\"");
+        output.append(", \"loanDate\": \"" + loan.getLoanDate() + "\"");
+        output.append(", \"dueDate\": \"" + loan.getDueDate() + "\"");
+        output.append(", \"deliveryDate\": \"" + (loan.getDeliveryDate() != null ? loan.getDeliveryDate() : "") + "\"");
         output.append(", \"deliveredTo\": \"" + (loan.getDeliveredTo() != null ? loan.getDeliveredTo() : "") + "\"");
         output.append("}");  
         
@@ -152,6 +152,7 @@ public class LoansResource {
         if(returnStatus == 1)
             return "All Ok";
         else
+            System.out.println(returnStatus);
             throw new WebApplicationException(500);
     }
     
