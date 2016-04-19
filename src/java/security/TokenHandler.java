@@ -20,13 +20,13 @@ public class TokenHandler {
     private BigInteger credentials;
 
     public TokenHandler(String user, String pass) {
-        credentials = new BigInteger(Integer.toString((user.hashCode() + pass.hashCode())% 10000000));
+        credentials = new BigInteger(Integer.toString((user.hashCode() + pass.hashCode())/100000000));
         generateRandom();
         generateToken();
     }
 
     private BigInteger generateRandom() {
-        randomToken = BigInteger.probablePrime(5, new SecureRandom());
+        randomToken = BigInteger.probablePrime(8, new SecureRandom());
         System.out.println("Random prime generated.." + randomToken);
         return randomToken;
     }
