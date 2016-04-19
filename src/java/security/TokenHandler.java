@@ -20,13 +20,14 @@ public class TokenHandler {
     private BigInteger credentials;
 
     public TokenHandler(String user, String pass) {
-        credentials = new BigInteger(Integer.toString((user.hashCode() + pass.hashCode())/100000000));
+        credentials = new BigInteger(Integer.toString((user.hashCode() + pass.hashCode())/10000000-1));
+        System.out.println("Credentials.." + credentials);
         generateRandom();
         generateToken();
     }
 
     private BigInteger generateRandom() {
-        randomToken = BigInteger.probablePrime(8, new SecureRandom());
+        randomToken = BigInteger.probablePrime(7, new SecureRandom());
         System.out.println("Random prime generated.." + randomToken);
         return randomToken;
     }
@@ -39,7 +40,7 @@ public class TokenHandler {
 
     public BigInteger generateKey(BigInteger token) {
         keyToken = token.pow(Integer.parseInt(randomToken.toString()));
-        System.out.println("Key generated.." + keyToken);
+        System.out.println("Key generated.." + keyToken.toString());
         return keyToken;
     }
 
