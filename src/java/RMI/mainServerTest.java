@@ -29,7 +29,8 @@ public class mainServerTest {
      * @throws java.net.MalformedURLException
      */
     public static void main(String[] args) throws RemoteException, NotBoundException, MalformedURLException, ClassNotFoundException {
-  
+        System.setProperty("java.rmi.server.hostname", "52.58.114.24");
+    
         // SQL        
         Connection conn = null;   
         try {
@@ -52,7 +53,7 @@ public class mainServerTest {
         //Brugeradmin brugeradmin = (Brugeradmin) Naming.lookup("rmi://javabog.dk/brugeradmin");
         DatabaseRMI databaseRMI = new DatabaseRMI(conn, "bruger", "kode");
         
-        System.setProperty("java.rmi.server.hostname", "52.58.114.24");
+        
         java.rmi.registry.LocateRegistry.createRegistry(1099);
         Naming.rebind("rmi://127.0.0.1/databaseRMI", databaseRMI);
 

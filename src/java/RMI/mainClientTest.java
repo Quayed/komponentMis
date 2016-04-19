@@ -5,7 +5,6 @@
  */
 package RMI;
 
-import DTO.StudentDTO;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -24,8 +23,8 @@ public class mainClientTest {
     /**
      * @param args the command line arguments
      */
- /*   public static void main(String[] args) throws NotBoundException, MalformedURLException, RemoteException {
-       IDatabaseRMI databaseRMI = (IDatabaseRMI) Naming.lookup("rmi://ec2-52-58-114-24.eu-central-1.compute.amazonaws.com/databaseRMI");
+    public static void main(String[] args) throws NotBoundException, MalformedURLException, RemoteException {
+       /*IDatabaseRMI databaseRMI = (IDatabaseRMI) Naming.lookup("rmi://ec2-52-58-114-24.eu-central-1.compute.amazonaws.com/databaseRMI");
     
         // SQL        
         Connection conn = null;   
@@ -45,7 +44,6 @@ public class mainClientTest {
         else
             System.out.println("False");        
        
-        System.out.println(databaseRMI.getTest(tokenhandler.getPublicToken()).getName());
-    }
- */   
+        System.out.println(databaseRMI.getTest(tokenhandler.getPublicToken()).getName());*/
+    }   
 }
