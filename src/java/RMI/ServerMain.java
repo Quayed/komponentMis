@@ -5,11 +5,13 @@
  */
 package RMI;
 
+import DAL.ComponentGroupDAO;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import DAL.DatabaseConfig;
+import DTO.ComponentGroupDTO;
 import brugerautorisation.data.Bruger;
 import brugerautorisation.transport.rmi.Brugeradmin;
 import java.io.Console;
@@ -32,18 +34,20 @@ public class ServerMain {
     public static void main(String[] args) throws RemoteException, NotBoundException, MalformedURLException {
         System.setProperty("java.rmi.server.hostname", "54.93.88.60");
         System.out.println(">> Remember to run in terminal <<");
-        boolean granted = false;
 
         // Log-in
+        boolean granted = false;
         Brugeradmin brugerAdmin = (Brugeradmin) Naming.lookup("rmi://javabog.dk/brugeradmin");
         Console console;
+        String user;
+        char[] pass;
 
         while (true) {
             try {
                 console = System.console();
                 if (console != null) {
-                    String user = console.readLine("Name: ");
-                    char[] pass = console.readPassword("Password: ");
+                    user = console.readLine("Name: ");
+                    pass = console.readPassword("Password: ");
                     try {
                         Bruger bruger = brugerAdmin.hentBruger(user, new String(pass));
                         if (bruger != null) {
@@ -75,7 +79,7 @@ public class ServerMain {
             }
 
             // RMI            
-            DatabaseRMI databaseRMI = new DatabaseRMI(conn, "bruger", "kode");
+            DatabaseRMI databaseRMI = new DatabaseRMI(conn, user, new String(pass));
             java.rmi.registry.LocateRegistry.createRegistry(1099);
             Naming.rebind("rmi://127.0.0.1/databaseRMI", databaseRMI);
 
@@ -84,12 +88,9 @@ public class ServerMain {
     }
 }
 
-
-
-
-  /*      
+/*      
         ComponentGroupDAO cDAO = new ComponentGroupDAO(conn);
         ComponentGroupDTO cDTO = new ComponentGroupDTO(0, "testName", "60", 0);
         cDAO.createComponentGroup(cDTO);
         cDAO.getComponentGroup(0).getName();
-*/
+ */
