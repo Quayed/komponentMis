@@ -13,6 +13,7 @@ import DAL.StudentDAO;
 import DTO.ComponentDTO;
 import DTO.ComponentGroupDTO;
 import DTO.StudentDTO;
+import java.math.BigInteger;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.Connection;
@@ -44,97 +45,105 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
     }
   
     @Override
-    public ComponentDTO getComponent(int componentId, int publicToken) throws RemoteException {
-        if (!tokenhandler.checkToken(publicToken))
+    public ComponentDTO getComponent(int componentId, BigInteger keyToken) throws RemoteException {
+        if (!tokenhandler.checkKey(keyToken))
             return null;        
         return componentDAO.getComponent(componentId);
     }
     
     @Override
-    public ComponentDTO getComponent(String barcode, int publicToken) throws RemoteException { 
-        if (!tokenhandler.checkToken(publicToken))
+    public ComponentDTO getComponent(String barcode, BigInteger keyToken) throws RemoteException { 
+        if (!tokenhandler.checkKey(keyToken))
             return null;        
         return componentDAO.getComponent(barcode);
     }    
 
     @Override
-    public ComponentDTO[] getComponents(int publicToken) throws RemoteException {
-        if (!tokenhandler.checkToken(publicToken))
+    public ComponentDTO[] getComponents(BigInteger keyToken) throws RemoteException {
+        if (!tokenhandler.checkKey(keyToken))
             return null;        
         return componentDAO.getComponents();
     }
     
     @Override
-    public ComponentGroupDTO getComponentGroup(int componentGroupId, int publicToken) throws RemoteException {
-        if (!tokenhandler.checkToken(publicToken))
+    public ComponentGroupDTO getComponentGroup(int componentGroupId, BigInteger keyToken) throws RemoteException {
+        if (!tokenhandler.checkKey(keyToken))
             return null;
         return componentGroupDAO.getComponentGroup(componentGroupId);          
     }
     
     @Override
-    public ComponentGroupDTO[] getComponentGroups(int publicToken) throws RemoteException {
-        if (!tokenhandler.checkToken(publicToken))
+    public ComponentGroupDTO[] getComponentGroups(BigInteger keyToken) throws RemoteException {
+        if (!tokenhandler.checkKey(keyToken))
             return null;        
         return componentGroupDAO.getComponentGroups();
     }
 
     @Override
-    public LoanDTO getLoan(int loanId, int publicToken) throws RemoteException {
-        if (!tokenhandler.checkToken(publicToken))
+    public LoanDTO getLoan(int loanId, BigInteger keyToken) throws RemoteException {
+        if (!tokenhandler.checkKey(keyToken))
             return null;       
         return loanDAO.getLoan(loanId);
     }
 
     @Override
-    public LoanDTO[] getLoans(int publicToken) throws RemoteException {
-        if (!tokenhandler.checkToken(publicToken))
+    public LoanDTO[] getLoans(BigInteger keyToken) throws RemoteException {
+        if (!tokenhandler.checkKey(keyToken))
             return null;        
         return loanDAO.getLoans();
     }
     
     @Override
-    public int createLoan(LoanDTO loanDTO, int publicToken) throws RemoteException {
-        if (!tokenhandler.checkToken(publicToken))
+    public int createLoan(LoanDTO loanDTO, BigInteger keyToken) throws RemoteException {
+        if (!tokenhandler.checkKey(keyToken))
             return -1;
         return loanDAO.createLoan(loanDTO);
     }  
     
-    public int updateLoan(LoanDTO loanDTO, int publicToken) {
-        if (!tokenhandler.checkToken(publicToken))
+    @Override
+    public int updateLoan(LoanDTO loanDTO, BigInteger keyToken) {
+        if (!tokenhandler.checkKey(keyToken))
             return -1;        
         return loanDAO.updateLoan(loanDTO);
     }
     
     @Override
-    public int deleteLoan(int loanId, int publicToken) throws RemoteException {
-        if (!tokenhandler.checkToken(publicToken))
+    public int deleteLoan(int loanId, BigInteger keyToken) throws RemoteException {
+        if (!tokenhandler.checkKey(keyToken))
             return -1;        
         return loanDAO.deleteLoan(loanId);
     }
 
     @Override
-    public StudentDTO getStudent(String studentId, int publicToken) throws RemoteException {
-        if (!tokenhandler.checkToken(publicToken))
+    public StudentDTO getStudent(String studentId, BigInteger keyToken) throws RemoteException {
+        if (!tokenhandler.checkKey(keyToken))
             return null;       
         return studentDAO.getStudent(studentId);
     }
 
     @Override
-    public StudentDTO[] getStudents(int publicToken) throws RemoteException {
-        if (!tokenhandler.checkToken(publicToken))
+    public StudentDTO[] getStudents(BigInteger keyToken) throws RemoteException {
+        if (!tokenhandler.checkKey(keyToken))
             return null;       
         return studentDAO.getStudents();
     }    
     
     @Override
-    public int generateToken(int randomToken) throws RemoteException {
-        tokenhandler.generateToken(randomToken);
+    public BigInteger exchangeTokens(BigInteger publicToken) throws RemoteException {
+        tokenhandler.generateKey(publicToken);
         return tokenhandler.getPublicToken();
+    }
+    
+    @Override
+    public BigInteger exchangeKeys(BigInteger keyToken) {
+        if (!tokenhandler.checkKey(keyToken))
+            System.out.println("Key-tokens not matching!");
+        return tokenhandler.getKeyToken();
     }
 
     @Override
-    public StudentDTO getTest(int publicToken) throws RemoteException {
-        if (!tokenhandler.checkToken(publicToken))
+    public StudentDTO getTest(BigInteger keyToken) throws RemoteException {
+        if (!tokenhandler.checkKey(keyToken))
             return null;
         return new StudentDTO("testId", "testName", 0);
     }
