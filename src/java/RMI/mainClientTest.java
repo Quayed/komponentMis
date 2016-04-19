@@ -24,7 +24,7 @@ public class mainClientTest {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws NotBoundException, MalformedURLException, RemoteException {
-       /*IDatabaseRMI databaseRMI = (IDatabaseRMI) Naming.lookup("rmi://ec2-52-58-114-24.eu-central-1.compute.amazonaws.com/databaseRMI");
+       /*IDatabaseRMI databaseRMI = (IDatabaseRMI) Naming.lookup("rmi://52.58.114.24/databaseRMI");
     
         // SQL        
         Connection conn = null;   
