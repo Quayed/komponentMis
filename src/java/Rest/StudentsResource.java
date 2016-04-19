@@ -5,6 +5,7 @@
  */
 package Rest;
 
+import DAL.ComponentDTO;
 import DAL.DatabaseConfig;
 import DAL.IStudentDAO;
 import DAL.StudentDAO;
@@ -23,6 +24,10 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+import javax.json.stream.JsonParser;
+import org.glassfish.json.JsonParserImpl;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * REST Web Service
@@ -85,7 +90,6 @@ public class StudentsResource {
         
         return output.toString();
     }
-    
     
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)

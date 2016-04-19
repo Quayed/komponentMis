@@ -13,6 +13,10 @@ public class StudentDTO {
     private String name;
     private int status;
 
+    public StudentDTO(){
+        
+    }
+    
     public StudentDTO(String studentId, String name, int status) {
         this.studentId = studentId;
         this.name = name;

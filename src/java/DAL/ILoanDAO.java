@@ -10,6 +10,10 @@ public interface ILoanDAO {
 
     LoanDTO[] getLoans();
 
+    LoanDTO[] searchLoans(String keyword);
+    
+    LoanDTO[] getLoansForStudent(String studentId);
+    
     int updateLoan(LoanDTO loan);
 
     int deleteLoan(int loanId);
