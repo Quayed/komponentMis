@@ -30,10 +30,11 @@ public class ClientMainTEMPLATE {
      * @throws java.rmi.RemoteException
      */
     public static void main(String[] args) throws NotBoundException, MalformedURLException, RemoteException {
-       /*
-        System.out.println(">> Remember to run in terminal <<");
+    /*  System.out.println(">> Remember to run in terminal <<");
         boolean granted = false;
-
+        String user;
+        char[] pass;
+        
         // Log-in
         Brugeradmin brugerAdmin = (Brugeradmin) Naming.lookup("rmi://javabog.dk/brugeradmin");
         Console console;
@@ -42,8 +43,8 @@ public class ClientMainTEMPLATE {
             try {
                 console = System.console();
                 if (console != null) {
-                    String user = console.readLine("Name: ");
-                    char[] pass = console.readPassword("Password: ");
+                    user = console.readLine("Name: ");
+                    pass = console.readPassword("Password: ");
                     try {
                         Bruger bruger = brugerAdmin.hentBruger(user,new String(pass));
                         if (bruger != null) {
@@ -63,31 +64,22 @@ public class ClientMainTEMPLATE {
 
         if (granted) {
 
-            // SQL        
-            Connection conn = null;
-            try {
-                conn = DriverManager.getConnection("jdbc:mysql://" + DatabaseConfig.ENDPOINT,
-                        DatabaseConfig.USERNAME, DatabaseConfig.PASSWORD);
-            } catch (SQLException ex) {
-                System.out.println("SQLException: " + ex.getMessage());
-                System.out.println("SQLState: " + ex.getSQLState());
-                System.out.println("VendorError: " + ex.getErrorCode());
-            }
-
             // RMI        
             IDatabaseRMI databaseRMI = (IDatabaseRMI) Naming.lookup("rmi://54.93.88.60/databaseRMI");
 
-            TokenHandler tokenhandler = new TokenHandler("bruger", "kode");
-            tokenhandler.generateToken(tokenhandler.generateRandom());
-            int answer = databaseRMI.generateToken(tokenhandler.getRandomToken());
-            if (tokenhandler.checkToken(answer)) {
+            TokenHandler tokenhandler = new TokenHandler(user, new String(pass));
+            
+            tokenhandler.generateKey(databaseRMI.exchangeTokens(tokenhandler.getPublicToken()));
+            
+            BigInteger answer = databaseRMI.exchangeKeys(tokenhandler.getKeyToken());
+            
+            if (tokenhandler.checkKey(answer)) {
                 System.out.println("True");
             } else {
                 System.out.println("False");
             }
 
             System.out.println(databaseRMI.getTest(tokenhandler.getPublicToken()).getName());
-
-        }  */     
+        }    */   
     }
 }
