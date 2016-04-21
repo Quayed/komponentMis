@@ -28,21 +28,21 @@ public class TokenHandlerClient {
     // Generate random 7-bit prime number
     private BigInteger generateRandom() {
         randomToken = BigInteger.probablePrime(7, new SecureRandom());
-        System.out.println("Random prime generated.." + randomToken);
+        System.out.println("Random prime generated");
         return randomToken;
     }
 
     // Generate token from random prime and hashed credentials: hashedCredentials^randomPrime (power)
     private BigInteger generateToken(BigInteger credentials) {
         publicToken = credentials.pow(Integer.parseInt(randomToken.toString()));
-        System.out.println("Token generated.." + publicToken);
+        System.out.println("Token generated");
         return publicToken;
     }
 
     // Generate key from recieved token and random prime: recievedToken^randomPrime (power)
     public BigInteger generateKey(BigInteger token) {
         keyToken = token.pow(Integer.parseInt(randomToken.toString()));
-        System.out.println("Key generated..");
+        System.out.println("Key generated");
         return keyToken;
     }
     
