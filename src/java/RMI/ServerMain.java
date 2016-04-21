@@ -80,7 +80,6 @@ public class ServerMain {
             DatabaseRMI databaseRMI = new DatabaseRMI(conn, user, new String(pass));
             java.rmi.registry.LocateRegistry.createRegistry(1099);
             Naming.rebind("rmi://127.0.0.1/databaseRMI", databaseRMI);
-
             System.out.println("Server running..");
         }
     }
