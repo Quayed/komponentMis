@@ -32,7 +32,7 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
     private TokenHandler tokenhandler;
    
     public DatabaseRMI(Connection conn, String user, String pass) throws RemoteException {
-        this(1190, conn, user, pass);
+        this(1099, conn, user, pass);
     }
 
     public DatabaseRMI(int port, Connection conn, String user, String pass) throws RemoteException {       
