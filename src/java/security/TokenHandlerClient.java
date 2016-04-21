@@ -48,10 +48,10 @@ public class TokenHandlerClient {
     
     // Check key with own key (should be equal)
     public boolean checkKey(BigInteger key) {
-        if (key.toString().equals(keyToken.toString())) {
+        if (key.equals(keyToken)) {
             return true;
         }
-        System.out.println("Key  invalid");
+        System.out.println("Key invalid");
         return false;
     }
 
