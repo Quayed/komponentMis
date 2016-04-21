@@ -21,43 +21,45 @@ public interface IDatabaseRMI extends java.rmi.Remote {
     
     // Token-stuff
     
-    BigInteger exchangeTokens(BigInteger keyToken) throws java.rmi.RemoteException;
+    int getNewID() throws java.rmi.RemoteException;
     
-    BigInteger exchangeKeys(BigInteger keyToken) throws java.rmi.RemoteException;
+    BigInteger exchangeTokens(BigInteger keyToken, int ID) throws java.rmi.RemoteException;
+    
+    BigInteger exchangeKeys(BigInteger keyToken, int ID) throws java.rmi.RemoteException;
     
     // Component
     
-    ComponentDTO getComponent(int componentId, BigInteger keyToken) throws java.rmi.RemoteException;
+    ComponentDTO getComponent(int componentId, BigInteger keyToken, int ID) throws java.rmi.RemoteException;
     
-    ComponentDTO getComponent(String barcode, BigInteger keyToken) throws RemoteException;
+    ComponentDTO getComponent(String barcode, BigInteger keyToken, int ID) throws RemoteException;
     
-    ComponentDTO[] getComponents(BigInteger keyToken) throws RemoteException;
+    ComponentDTO[] getComponents(BigInteger keyToken, int ID) throws RemoteException;
     
     // ComponentGroup
     
-    ComponentGroupDTO getComponentGroup(int componentGroupId, BigInteger keyToken) throws java.rmi.RemoteException;
+    ComponentGroupDTO getComponentGroup(int componentGroupId, BigInteger keyToken, int ID) throws java.rmi.RemoteException;
     
-    ComponentGroupDTO[] getComponentGroups(BigInteger keyToken) throws java.rmi.RemoteException;
+    ComponentGroupDTO[] getComponentGroups(BigInteger keyToken, int ID) throws java.rmi.RemoteException;
     
     // Loan
     
-    int createLoan(LoanDTO loanDTO, BigInteger keyToken) throws java.rmi.RemoteException;
+    int createLoan(LoanDTO loanDTO, BigInteger keyToken, int ID) throws java.rmi.RemoteException;
 
-    LoanDTO getLoan(int loanId, BigInteger keyToken) throws java.rmi.RemoteException;
+    LoanDTO getLoan(int loanId, BigInteger keyToken, int ID) throws java.rmi.RemoteException;
     
-    LoanDTO[] getLoans(BigInteger keyToken) throws java.rmi.RemoteException;
+    LoanDTO[] getLoans(BigInteger keyToken, int ID) throws java.rmi.RemoteException;
     
-    int updateLoan(LoanDTO loan, BigInteger keyToken) throws java.rmi.RemoteException;
+    int updateLoan(LoanDTO loan, BigInteger keyToken, int ID) throws java.rmi.RemoteException;
 
-    int deleteLoan(int loanId, BigInteger keyToken) throws java.rmi.RemoteException;
+    int deleteLoan(int loanId, BigInteger keyToken, int ID) throws java.rmi.RemoteException;
     
     // Student
 
-    StudentDTO getStudent(String studentId, BigInteger keyToken) throws java.rmi.RemoteException;
+    StudentDTO getStudent(String studentId, BigInteger keyToken, int ID) throws java.rmi.RemoteException;
     
-    StudentDTO[] getStudents(BigInteger keyToken) throws java.rmi.RemoteException;
+    StudentDTO[] getStudents(BigInteger keyToken, int ID) throws java.rmi.RemoteException;
     
     // Tests
     
-    StudentDTO getTest(BigInteger keyToken) throws java.rmi.RemoteException;
+    StudentDTO getTest(BigInteger keyToken, int ID) throws java.rmi.RemoteException;
 }
