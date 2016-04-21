@@ -5,13 +5,11 @@
  */
 package RMI;
 
-import DAL.ComponentGroupDAO;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import DAL.DatabaseConfig;
-import DTO.ComponentGroupDTO;
 import brugerautorisation.data.Bruger;
 import brugerautorisation.transport.rmi.Brugeradmin;
 import java.io.Console;
@@ -32,7 +30,7 @@ public class ServerMain {
      * @throws java.net.MalformedURLException
      */
     public static void main(String[] args) throws RemoteException, NotBoundException, MalformedURLException {
-        System.setProperty("java.rmi.server.hostname", "54.93.88.60");
+        System.setProperty("java.rmi.server.hostname", "52.28.66.187");
         System.out.println(">> Remember to run in terminal <<");
 
         // Log-in
