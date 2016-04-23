@@ -113,6 +113,20 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
             return -1;        
         return loanDAO.deleteLoan(loanId);
     }
+    
+    @Override
+    public LoanDTO[] searchLoans(String keyword, BigInteger keyToken, int ID) throws RemoteException {
+        if (!tokenhandler.checkKey(keyToken, ID))
+            return null;
+        return loanDAO.searchLoans(keyword);
+    }
+
+    @Override
+    public LoanDTO[] getLoansForStudent(String studentId, BigInteger keyToken, int ID) throws RemoteException {
+        if (!tokenhandler.checkKey(keyToken, ID))
+            return null;
+        return loanDAO.getLoansForStudent(studentId);
+    }       
 
     @Override
     public StudentDTO getStudent(String studentId, BigInteger keyToken, int ID) throws RemoteException {
