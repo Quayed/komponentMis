@@ -119,7 +119,29 @@ public class LoanDAO implements ILoanDAO {
     
     @Override
     public LoanDTO[] searchLoans(String keyword) {
-        // TODO DESIGN MYSQL QUERY FOR THIS
+        String sql = "SELECT * FROM Loan l "
+            +"LEFT JOIN Component c ON l.componentId = c.componentId "
+            +"LEFT JOIN ComponentGroup cg ON c.componentGroupId = cg.componentGroupId "
+            +"WHERE l.studentId LIKE ? OR "
+            +"l.loanDate LIKE ? OR "
+            +"l.dueDate LIKE ? OR "
+            +"c.barcode LIKE ? OR "
+            +"cg.name LIKE ?;";
+        keyword = "%" + keyword + "%";
+        try{
+            ArrayList<LoanDTO> loans = new ArrayList<>();
+            PreparedStatement stm = CONN.prepareStatement(sql);
+            stm.setString(1, keyword);
+            stm.setString(2, keyword);
+            stm.setString(3, keyword);
+            stm.setString(4, keyword);
+            stm.setString(5, keyword);
+            ResultSet result = stm.executeQuery();
+            
+            
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
         return null;
     }
 

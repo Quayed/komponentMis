@@ -62,7 +62,7 @@ public class StudentsResource {
             output.append(", \"studentId\": \"" + student.getStudentId() + "\"");
             output.append(", \"name\": \"" + student.getName() + "\"");
             output.append(", \"status\": " + student.getStatus());
-            output.append("}");
+            output.append("},");
         }
         output.deleteCharAt(output.length()-1);
         output.append("]");
