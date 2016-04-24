@@ -42,8 +42,7 @@ public class ComponentGroupsResource {
     /**
      * Creates a new instance of KomponentTyperResource
      */
-    public ComponentGroupsResource(@Context HttpServletResponse response) {
-        Helper.addHeaders(response);
+    public ComponentGroupsResource() {
         try {
             dao = new ComponentGroupDAO(DriverManager.getConnection(DatabaseConfig.ENDPOINT, DatabaseConfig.USERNAME, DatabaseConfig.PASSWORD));
         } catch (SQLException e) {

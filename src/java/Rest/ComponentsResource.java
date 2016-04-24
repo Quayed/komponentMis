@@ -47,8 +47,7 @@ public class ComponentsResource {
     /**
      * Creates a new instance of KomponentResource
      */
-    public ComponentsResource(@Context HttpServletResponse response) {
-        Helper.addHeaders(response);
+    public ComponentsResource() {
         try {
             conn = DriverManager.getConnection(DatabaseConfig.ENDPOINT, DatabaseConfig.USERNAME, DatabaseConfig.PASSWORD);
             dao = new ComponentDAO(conn);

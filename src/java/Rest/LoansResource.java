@@ -50,8 +50,7 @@ public class LoansResource {
     /**
      * Creates a new instance of LoansResource
      */
-    public LoansResource(@Context HttpServletResponse response) {
-        Helper.addHeaders(response);
+    public LoansResource() {
         try {
             conn = DriverManager.getConnection(DatabaseConfig.ENDPOINT, DatabaseConfig.USERNAME, DatabaseConfig.PASSWORD);
             dao = new LoanDAO(conn);

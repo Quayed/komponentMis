@@ -43,8 +43,7 @@ public class StudentsResource {
     /**
      * Creates a new instance of StudentsResource
      */
-    public StudentsResource(@Context HttpServletResponse response) {
-        Helper.addHeaders(response);
+    public StudentsResource() {
         try {
             dao = new StudentDAO(DriverManager.getConnection(DatabaseConfig.ENDPOINT, DatabaseConfig.USERNAME, DatabaseConfig.PASSWORD));
         } catch (SQLException e) {
