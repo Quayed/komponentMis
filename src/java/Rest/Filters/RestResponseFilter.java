@@ -6,6 +6,7 @@
 package Rest.Filters;
 
 import java.io.IOException;
+import javax.servlet.annotation.WebFilter;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
@@ -18,6 +19,7 @@ import javax.ws.rs.ext.Provider;
  */
 @Provider
 @PreMatching
+@WebFilter(filterName = "AddHeaderFilter", urlPatterns = {"/*"})
 public class RestResponseFilter implements ContainerResponseFilter{
 
     @Override
