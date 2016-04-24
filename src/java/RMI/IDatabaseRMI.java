@@ -28,9 +28,7 @@ public interface IDatabaseRMI extends java.rmi.Remote {
     BigInteger exchangeKeys(BigInteger keyToken, int ID) throws java.rmi.RemoteException;
     
     // Component
-    
-    ComponentDTO getComponent(int componentId, BigInteger keyToken, int ID) throws java.rmi.RemoteException;
-    
+        
     ComponentDTO getComponent(String barcode, BigInteger keyToken, int ID) throws RemoteException;
     
     ComponentDTO[] getComponents(BigInteger keyToken, int ID) throws RemoteException;
@@ -62,8 +60,4 @@ public interface IDatabaseRMI extends java.rmi.Remote {
     StudentDTO getStudent(String studentId, BigInteger keyToken, int ID) throws java.rmi.RemoteException;
     
     StudentDTO[] getStudents(BigInteger keyToken, int ID) throws java.rmi.RemoteException;
-    
-    // Tests
-    
-    StudentDTO getTest(BigInteger keyToken, int ID) throws java.rmi.RemoteException;
 }
