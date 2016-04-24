@@ -43,14 +43,7 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
         studentDAO = new StudentDAO(conn);
         tokenhandler = new TokenHandlerServer(user, pass);
     }
-  
-    @Override
-    public ComponentDTO getComponent(int componentId, BigInteger keyToken, int ID) throws RemoteException {
-        if (!tokenhandler.checkKey(keyToken, ID))
-            return null;        
-        return componentDAO.getComponent(componentId);
-    }
-    
+      
     @Override
     public ComponentDTO getComponent(String barcode, BigInteger keyToken, int ID) throws RemoteException { 
         if (!tokenhandler.checkKey(keyToken, ID))
@@ -153,13 +146,6 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
         if (!tokenhandler.checkKey(keyToken, ID))
             System.out.println("Key-tokens not matching!");
         return tokenhandler.getKeyToken(ID);
-    }
-
-    @Override
-    public StudentDTO getTest(BigInteger keyToken, int ID) throws RemoteException {
-        if (!tokenhandler.checkKey(keyToken, ID))
-            return null;
-        return new StudentDTO("testId", "testName", 0);
     }
 
     @Override
