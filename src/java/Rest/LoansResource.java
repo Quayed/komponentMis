@@ -20,6 +20,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
@@ -49,7 +50,8 @@ public class LoansResource {
     /**
      * Creates a new instance of LoansResource
      */
-    public LoansResource() {
+    public LoansResource(@Context HttpServletResponse response) {
+        Helper.addHeaders(response);
         try {
             conn = DriverManager.getConnection(DatabaseConfig.ENDPOINT, DatabaseConfig.USERNAME, DatabaseConfig.PASSWORD);
             dao = new LoanDAO(conn);

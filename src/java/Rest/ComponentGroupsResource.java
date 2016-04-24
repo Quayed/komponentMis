@@ -11,6 +11,7 @@ import DAL.DatabaseConfig;
 import DAL.IComponentGroupDAO;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
@@ -41,7 +42,8 @@ public class ComponentGroupsResource {
     /**
      * Creates a new instance of KomponentTyperResource
      */
-    public ComponentGroupsResource() {
+    public ComponentGroupsResource(@Context HttpServletResponse response) {
+        Helper.addHeaders(response);
         try {
             dao = new ComponentGroupDAO(DriverManager.getConnection(DatabaseConfig.ENDPOINT, DatabaseConfig.USERNAME, DatabaseConfig.PASSWORD));
         } catch (SQLException e) {

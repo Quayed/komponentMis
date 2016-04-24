@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.stream.JsonParser;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
@@ -46,7 +47,8 @@ public class ComponentsResource {
     /**
      * Creates a new instance of KomponentResource
      */
-    public ComponentsResource() {
+    public ComponentsResource(@Context HttpServletResponse response) {
+        Helper.addHeaders(response);
         try {
             conn = DriverManager.getConnection(DatabaseConfig.ENDPOINT, DatabaseConfig.USERNAME, DatabaseConfig.PASSWORD);
             dao = new ComponentDAO(conn);
