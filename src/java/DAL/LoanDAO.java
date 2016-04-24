@@ -149,7 +149,8 @@ public class LoanDAO implements ILoanDAO {
     public LoanDTO[] getLoansForStudent(String studentId) {
         try{
             ArrayList<LoanDTO> loans = new ArrayList<>();
-            PreparedStatement stm = CONN.prepareStatement("SELECT * FROM " + DATABASE_NAME + " WHERE studentId LIKE '%?%'");
+            PreparedStatement stm = CONN.prepareStatement("SELECT * FROM " + DATABASE_NAME + " WHERE studentId LIKE ?");
+            studentId = "'%" + studentId + "%'";
             stm.setString(1, studentId);
             ResultSet result = stm.executeQuery();
             while(result.next())
