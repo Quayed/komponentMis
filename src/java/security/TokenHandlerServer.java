@@ -76,6 +76,8 @@ public class TokenHandlerServer {
 
     // Get new ID
     public int getNewID() {
+        if (clientCount > 50000000)
+            clientCount = 0;
         keyList.add(clientCount, BigInteger.ZERO);
         return clientCount++;
     }
