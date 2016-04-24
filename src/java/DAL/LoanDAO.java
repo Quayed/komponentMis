@@ -32,7 +32,7 @@ public class LoanDAO implements ILoanDAO {
             return -1;
         }
         
-        String sql = "INSERT INTO " + DATABASE_NAME + "(componentId, studentId, loanDate, dueDate";
+        String sql = "INSERT INTO " + DATABASE_NAME + "(barcode, studentId, loanDate, dueDate";
         String sqlValues = "?, ?, ?, ?";
 
 
@@ -120,7 +120,7 @@ public class LoanDAO implements ILoanDAO {
     @Override
     public LoanDTO[] searchLoans(String keyword) {
         String sql = "SELECT * FROM Loan l "
-            +"LEFT JOIN Component c ON l.componentId = c.componentId "
+            +"LEFT JOIN Component c ON l.barcode = c.barcode "
             +"LEFT JOIN ComponentGroup cg ON c.componentGroupId = cg.componentGroupId "
             +"WHERE l.studentId LIKE ? OR "
             +"l.loanDate LIKE ? OR "
