@@ -23,7 +23,7 @@ public class LoanDAO implements ILoanDAO {
 
     @Override
     public int createLoan(LoanDTO loan) {
-        if(loan.getComponentId() == 0 || loan.getStudentId() == null || loan.getLoanDate() == null || loan.getDueDate() == null){
+        if(loan.getBarcode() == null || loan.getStudentId() == null || loan.getLoanDate() == null || loan.getDueDate() == null){
             if (loan.getStudentId() == null)
                 return -3;
             if (loan.getLoanDate() == null)
@@ -52,7 +52,7 @@ public class LoanDAO implements ILoanDAO {
             int param = 1;
             PreparedStatement stm = CONN.prepareStatement(sql);
 
-            stm.setInt(param++, loan.getComponentId());
+            stm.setString(param++, loan.getBarcode());
 
             stm.setString(param++, loan.getStudentId());
 
@@ -88,7 +88,7 @@ public class LoanDAO implements ILoanDAO {
             stm.setInt(1, loanId);
             ResultSet result = stm.executeQuery();
             while (result.next())
-                return new LoanDTO(result.getInt("loanId"), result.getInt("componentId"), result.getString("studentId"),
+                return new LoanDTO(result.getInt("loanId"), result.getString("barcode"), result.getString("studentId"),
                         result.getDate("loanDate"), result.getDate("dueDate"), result.getDate("deliveryDate"), result.getString("deliveredTo"));
         } catch (SQLException e) {
             e.printStackTrace();
@@ -103,7 +103,7 @@ public class LoanDAO implements ILoanDAO {
             ResultSet result = CONN.createStatement().executeQuery("SELECT * FROM " + DATABASE_NAME);
             ArrayList<LoanDTO> loans = new ArrayList<>();
             while (result.next())
-                loans.add(new LoanDTO(result.getInt("loanId"), result.getInt("componentId"), result.getString("studentId"),
+                loans.add(new LoanDTO(result.getInt("loanId"), result.getString("barcode"), result.getString("studentId"),
                         result.getDate("loanDate"), result.getDate("dueDate"), result.getDate("deliveryDate"), result.getString("deliveredTo")));
 
             // Check if something was actually found
@@ -153,7 +153,7 @@ public class LoanDAO implements ILoanDAO {
             stm.setString(1, studentId);
             ResultSet result = stm.executeQuery();
             while(result.next())
-                loans.add(new LoanDTO(result.getInt("loanId"), result.getInt("componentId"), result.getString("studentId"),
+                loans.add(new LoanDTO(result.getInt("loanId"), result.getString("barcode"), result.getString("studentId"),
                         result.getDate("loanDate"), result.getDate("dueDate"), result.getDate("deliveryDate"), result.getString("deliveredTo")));
 
             // Check if something was actually found
@@ -170,7 +170,7 @@ public class LoanDAO implements ILoanDAO {
 
     @Override
     public int updateLoan(LoanDTO loan) {
-        if (loan.getLoanId() == 0 || (loan.getComponentId() == 0 && loan.getStudentId() != null && loan.getLoanDate() == null
+        if (loan.getLoanId() == 0 || (loan.getBarcode() == null && loan.getStudentId() != null && loan.getLoanDate() == null
                 && loan.getDueDate() == null && loan.getDeliveryDate() == null && loan.getDeliveredTo() == null)) {
             return -1;
         }
@@ -178,8 +178,8 @@ public class LoanDAO implements ILoanDAO {
         String sql = "UPDATE " + DATABASE_NAME + " set ";
         String sqlValues = "";
 
-        if (loan.getComponentId() != 0) {
-            sqlValues += "componentId = ?";
+        if (loan.getBarcode() != null) {
+            sqlValues += "barcode = ?";
         }
 
         if (loan.getStudentId() != null) {
@@ -226,8 +226,8 @@ public class LoanDAO implements ILoanDAO {
             PreparedStatement stm = CONN.prepareStatement(sql);
             int param = 1;
 
-            if (loan.getComponentId() != 0)
-                stm.setInt(param++, loan.getComponentId());
+            if (loan.getBarcode() != null)
+                stm.setString(param++, loan.getBarcode());
             if (loan.getStudentId() != null)
                 stm.setString(param++, loan.getStudentId());
             if (loan.getLoanDate() != null)

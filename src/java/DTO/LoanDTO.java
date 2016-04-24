@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  */
 public class LoanDTO implements Serializable {
     private int loanId;
-    private int componentId;
+    private String barcode;
     private String studentId;
     private String loanDate;
     private String dueDate;
@@ -30,9 +30,9 @@ public class LoanDTO implements Serializable {
         return this.FORMAT;
     }
     
-    public LoanDTO(int loanId, int componentId, String studentId, String loanDate, String dueDate, String deliveryDate, String deliveredTo) {
+    public LoanDTO(int loanId, String barcode,  String studentId, String loanDate, String dueDate, String deliveryDate, String deliveredTo) {
         this.loanId = loanId;
-        this.componentId = componentId;
+        this.barcode = barcode;
         this.studentId = studentId;
         this.loanDate = loanDate;
         this.dueDate = dueDate;
@@ -40,9 +40,9 @@ public class LoanDTO implements Serializable {
         this.deliveredTo = deliveredTo;
     }
     
-    public LoanDTO(int loanId, int componentId, String studentId, Date loanDate, Date dueDate, Date deliveryDate, String deliveredTo) {
+    public LoanDTO(int loanId, String barcode, String studentId, Date loanDate, Date dueDate, Date deliveryDate, String deliveredTo) {
         this.loanId = loanId;
-        this.componentId = componentId;
+        this.barcode = barcode;
         this.studentId = studentId;
         this.loanDate = FORMAT.format(loanDate);
         this.dueDate = FORMAT.format(dueDate);
@@ -58,12 +58,12 @@ public class LoanDTO implements Serializable {
         this.loanId = loanId;
     }
 
-    public int getComponentId() {
-        return componentId;
+    public String getBarcode() {
+        return barcode;
     }
 
-    public void setComponentId(int componentId) {
-        this.componentId = componentId;
+    public void setBarcode(String barcode) {
+        this.barcode = barcode;
     }
 
     public String getStudentId() {

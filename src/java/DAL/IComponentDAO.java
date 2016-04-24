@@ -9,12 +9,10 @@ public interface IComponentDAO {
     int createComponent(ComponentDTO component);
 
     ComponentDTO getComponent(String barcode);
-    
-    ComponentDTO getComponent(int componentId);
-    
+        
     ComponentDTO[] getComponents();
 
     int updateComponent(ComponentDTO component);
 
-    int deleteComponent(int componentId);
+    int deleteComponent(String barcode);
 }

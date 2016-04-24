@@ -6,7 +6,6 @@ import java.io.Serializable;
  * Created by mathias on 21/03/16.
  */
 public class ComponentDTO implements Serializable {
-    private int componentId;
     private int componentGroupId;
     private int componentNumber;
     private String barcode;
@@ -16,20 +15,11 @@ public class ComponentDTO implements Serializable {
 
     }
 
-    public ComponentDTO(int componentId, int componentGroupId, int componentNumber, String barcode, int status) {
-        this.componentId = componentId;
+    public ComponentDTO(int componentGroupId, int componentNumber, String barcode, int status) {
         this.componentGroupId = componentGroupId;
         this.componentNumber = componentNumber;
         this.barcode = barcode;
         this.status = status;
-    }
-
-    public int getComponentId() {
-        return componentId;
-    }
-
-    public void setComponentId(int id) {
-        this.componentId = id;
     }
 
     public int getComponentGroupId() {

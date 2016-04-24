@@ -70,7 +70,7 @@ public class LoansResource {
             output.append("{");
             output.append("\"details\": \"/Loans/" + loan.getLoanId() + "\"");
             output.append(", \"loanId\": " + loan.getLoanId());
-            output.append(", \"componentId\": " + loan.getComponentId());
+            output.append(", \"barcode\": " + loan.getBarcode());
             output.append(", \"studentId\": \"" + loan.getStudentId() + "\"");
             output.append(", \"loanDate\": \"" + loan.getLoanDate() + "\"");
             output.append(", \"dueDate\": \"" + loan.getDueDate() + "\"");
@@ -99,7 +99,7 @@ public class LoansResource {
         if (loan == null)
             throw new WebApplicationException(404);
         
-        ComponentDTO component = new ComponentDAO(conn).getComponent(loan.getComponentId());
+        ComponentDTO component = new ComponentDAO(conn).getComponent(loan.getBarcode());
         
         ComponentGroupDTO componentGroup = new ComponentGroupDAO(conn).getComponentGroup(component.getComponentGroupId());
         
@@ -112,7 +112,7 @@ public class LoansResource {
         
         // Adding the component information
             output.append("{");
-            output.append("\"componentId\": " + component.getComponentId());
+            output.append("\"barcode\": " + component.getBarcode());
 
             // Information about the componentGroup
             output.append(", \"componentGroup\": { ");
@@ -123,7 +123,6 @@ public class LoansResource {
             output.append("}");
 
             output.append(", \"componentNumber\": " + component.getComponentNumber());
-            output.append(", \"barcode\": \"" + component.getBarcode() + "\"");
             output.append(", \"status\":" + component.getStatus());
             output.append("}");
             

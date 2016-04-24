@@ -57,7 +57,7 @@ public class ComponentDAO implements IComponentDAO {
             stm.setString(1, barcode);
             ResultSet result = stm.executeQuery();
             while (result.next())
-                return new ComponentDTO(result.getInt("componentId"), result.getInt("componentGroupId"), result.getInt("componentNumber"), result.getString("barcode"), result.getInt("status"));
+                return new ComponentDTO(result.getInt("componentGroupId"), result.getInt("componentNumber"), result.getString("barcode"), result.getInt("status"));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -65,28 +65,13 @@ public class ComponentDAO implements IComponentDAO {
         return null;
     }
 
-    @Override
-    public ComponentDTO getComponent(int componentId) {
-        try {
-            PreparedStatement stm = CONN.prepareStatement("SELECT * FROM " + DATABASE_NAME + " WHERE componentId = ?");
-            stm.setInt(1, componentId);
-            ResultSet result = stm.executeQuery();
-            while (result.next())
-                return new ComponentDTO(result.getInt("componentId"), result.getInt("componentGroupId"), result.getInt("componentNumber"), result.getString("barcode"), result.getInt("status"));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-    
     @Override
     public ComponentDTO[] getComponents() {
         try {
             ResultSet result = CONN.createStatement().executeQuery("SELECT * FROM " + DATABASE_NAME);
             ArrayList<ComponentDTO> components = new ArrayList<>();
             while (result.next())
-                components.add(new ComponentDTO(result.getInt("componentId"), result.getInt("componentGroupId"), result.getInt("componentNumber"), result.getString("barcode"), result.getInt("status")));
+                components.add(new ComponentDTO(result.getInt("componentGroupId"), result.getInt("componentNumber"), result.getString("barcode"), result.getInt("status")));
             return components.toArray(new ComponentDTO[components.size()]);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -96,7 +81,7 @@ public class ComponentDAO implements IComponentDAO {
 
     @Override
     public int updateComponent(ComponentDTO component) {
-        if (component.getComponentId() == 0 || (component.getBarcode() == null && component.getComponentNumber() == 0 && component.getComponentGroupId() == 0))
+        if (component.getBarcode() == null || (component.getComponentNumber() == 0 && component.getComponentGroupId() == 0))
             return -1;
 
         String sql = "UPDATE " + DATABASE_NAME + " set ";
@@ -126,7 +111,7 @@ public class ComponentDAO implements IComponentDAO {
         else
             sqlValues += ", status = ?";
 
-        sql += sqlValues + " WHERE componentId = ?";
+        sql += sqlValues + " WHERE barcode = ?";
 
         try {
             PreparedStatement stm = CONN.prepareStatement(sql);
@@ -135,12 +120,10 @@ public class ComponentDAO implements IComponentDAO {
                 stm.setInt(param++, component.getComponentNumber());
             if (component.getComponentGroupId() != 0)
                 stm.setInt(param++, component.getComponentGroupId());
-            if (component.getBarcode() != null)
-                stm.setString(param++, component.getBarcode());
-
+            
             stm.setInt(param++, component.getStatus());
 
-            stm.setInt(param++, component.getComponentId());
+            stm.setString(param++, component.getBarcode());
 
             stm.execute();
 
@@ -154,12 +137,12 @@ public class ComponentDAO implements IComponentDAO {
     }
 
     @Override
-    public int deleteComponent(int componentId) {
+    public int deleteComponent(String barcode) {
 
         try {
-            String sql = "DELETE FROM " + DATABASE_NAME + " WHERE componentId = ?";
+            String sql = "DELETE FROM " + DATABASE_NAME + " WHERE barcode = ?";
             PreparedStatement stm = CONN.prepareStatement(sql);
-            stm.setInt(1, componentId);
+            stm.setString(1, barcode);
             stm.execute();
             if (stm.getUpdateCount() == 1) {
                 return 1;

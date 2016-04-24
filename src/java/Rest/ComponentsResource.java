@@ -69,11 +69,10 @@ public class ComponentsResource {
         output.append("[");
         for(ComponentDTO component : components){
             output.append("{");
-            output.append("\"details\": \"/Components/" + component.getComponentId() + "\"");
-            output.append(", \"componentId\": " + component.getComponentId());
+            output.append("\"details\": \"/Components/" + component.getBarcode() + "\"");
+            output.append(", \"barcode\": " + component.getBarcode());
             output.append(", \"componentGroupId\": " + component.getComponentGroupId());
             output.append(", \"componentNumber\": " + component.getComponentNumber());
-            output.append(", \"barcode\": \"" + component.getBarcode() + "\"");
             output.append(", \"status\":" + component.getStatus());
             output.append("},");
         }
@@ -83,15 +82,10 @@ public class ComponentsResource {
     }
     
     @GET
-    @Path("{id}")
+    @Path("{barcode}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getSpecific(@PathParam("id") String id){
-        
-        if(!id.matches("^\\d+$")){
-            throw new WebApplicationException(405);
-        }        
-        
-        ComponentDTO component = dao.getComponent(Integer.parseInt(id));
+    public String getSpecific(@PathParam("barcode") String barcode){
+        ComponentDTO component = dao.getComponent(barcode);
         
         if(component == null)
             throw new WebApplicationException(404);
@@ -104,7 +98,7 @@ public class ComponentsResource {
         
         StringBuilder output = new StringBuilder();
         output.append("{");
-        output.append("\"componentId\": " + component.getComponentId());
+        output.append("\"barcode\": " + component.getBarcode());
 
         // Information about the componentGroup
         output.append(", \"componentGroup\": { ");
@@ -115,7 +109,6 @@ public class ComponentsResource {
         output.append("}");
         
         output.append(", \"componentNumber\": " + component.getComponentNumber());
-        output.append(", \"barcode\": \"" + component.getBarcode() + "\"");
         output.append(", \"status\":" + component.getStatus());
         output.append("}");
         
@@ -134,16 +127,12 @@ public class ComponentsResource {
     }
     
     @POST
-    @Path("{id}")
+    @Path("{barcode}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public String updateComponent(@PathParam("id") String componentId, ComponentDTO component){
-        //Check that ID is actually a number
-        if(!componentId.matches("^\\d+$")){
-            throw new WebApplicationException(405);
-        }
-        
-        component.setComponentId(Integer.parseInt(componentId));
+    public String updateComponent(@PathParam("barcode") String barcode, ComponentDTO component){
+               
+        component.setBarcode(barcode);
         int returnStatus = dao.updateComponent(component);
         if (returnStatus == 1)
             return "All Ok";
@@ -155,11 +144,8 @@ public class ComponentsResource {
     @Path("{id}")
     @Produces(MediaType.TEXT_PLAIN)
     public String deleteKomponentType(@PathParam("id") String id){
-        //Check that ID is actually a number
-        if(!id.matches("^\\d+$")){
-            throw new WebApplicationException(405);
-        }
-        int returnValue = dao.deleteComponent(Integer.parseInt(id));
+        
+        int returnValue = dao.deleteComponent(id);
         
         System.out.println(id);
         if(returnValue == 1)
