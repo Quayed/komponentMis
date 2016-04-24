@@ -108,7 +108,7 @@ public class ComponentsResource {
 
         // Information about the componentGroup
         output.append(", \"componentGroup\": { ");
-        output.append(", \"componentGroupId\": " + componentGroup.getComponentGroupId());
+        output.append("\"componentGroupId\": " + componentGroup.getComponentGroupId());
         output.append(", \"name\": " + "\"" + componentGroup.getName() +  "\"");
         output.append(", \"standardLoanDuration\": " + "\"" + (componentGroup.getStandardLoanDuration() == null ? "" : componentGroup.getStandardLoanDuration())  + "\"");
         output.append(", \"standardLoanDuration\": " + componentGroup.getStatus());
