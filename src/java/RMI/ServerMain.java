@@ -30,11 +30,13 @@ public class ServerMain {
      * @throws java.net.MalformedURLException
      */
     public static void main(String[] args) throws RemoteException, NotBoundException, MalformedURLException {
+        
         // Check shell arguments
         if (args.length == 1)
             System.setProperty("java.rmi.server.hostname", args[0]);
         else
             System.setProperty("java.rmi.server.hostname", "52.28.66.187");
+        
         System.out.println(">> Remember to run in terminal <<");
 
         // Log-in
@@ -88,10 +90,3 @@ public class ServerMain {
         }
     }
 }
-
-/*      
-        ComponentGroupDAO cDAO = new ComponentGroupDAO(conn);
-        ComponentGroupDTO cDTO = new ComponentGroupDTO(0, "testName", "60", 0);
-        cDAO.createComponentGroup(cDTO);
-        cDAO.getComponentGroup(0).getName();
- */
