@@ -5,4 +5,5 @@
 /build/web/WEB-INF/classes/.idea
 /build/web/WEB-INF/classes/*.iml
 /build
+/dist
 /nbproject
