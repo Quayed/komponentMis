@@ -1,6 +1,7 @@
 package DAL;
 
 import DTO.ComponentDTO;
+import DTO.ComponentGroupDTO;
 import DTO.LoanDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -143,10 +144,17 @@ public class LoanDAO implements ILoanDAO {
                 LoanDTO loan = new LoanDTO();
                 loan.setLoanId(result.getInt("loanId"));
                 loan.setBarcode(result.getString("barcode"));
-                //loan.getComponent().getComponentGroup().setName(result.get);
+                loan.getComponent().setComponentGroup(new ComponentGroupDTO());
+                loan.getComponent().getComponentGroup().setName(result.getString("name"));
+                loan.getComponent().setComponentNumber(result.getInt("componentNumber"));
                 loan.setStudentId(result.getString("studentId"));
+                loan.setLoanDateFromDate(result.getDate("loanDate"));
+                loan.setDueDateFromDate(result.getDate("dueDate"));
+                loan.setDeliveryDateFromDate(result.getDate("deliveryDate"));
+                loan.setDeliveredTo(result.getString("deliveredTo"));
+                loans.add(loan);
             }
-                
+            return loans.toArray(new LoanDTO[loans.size()]); 
         } catch(SQLException e){
             e.printStackTrace();
         }

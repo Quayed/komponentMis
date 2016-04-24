@@ -154,7 +154,8 @@ public class LoanDTO implements Serializable {
     }
     
     public void setDeliveryDateFromDate(Date deliveryDate){
-        this.deliveryDate = FORMAT.format(deliveryDate);
+        if(deliveryDate != null)
+            this.deliveryDate = FORMAT.format(deliveryDate);
     }
     
     public void setComponent(ComponentDTO component){
