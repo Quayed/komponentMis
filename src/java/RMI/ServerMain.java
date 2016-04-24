@@ -30,7 +30,11 @@ public class ServerMain {
      * @throws java.net.MalformedURLException
      */
     public static void main(String[] args) throws RemoteException, NotBoundException, MalformedURLException {
-        System.setProperty("java.rmi.server.hostname", "52.28.66.187");
+        // Check shell arguments
+        if (args.length == 1)
+            System.setProperty("java.rmi.server.hostname", args[0]);
+        else
+            System.setProperty("java.rmi.server.hostname", "52.28.66.187");
         System.out.println(">> Remember to run in terminal <<");
 
         // Log-in
