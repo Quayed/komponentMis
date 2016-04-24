@@ -11,11 +11,13 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import DAL.DatabaseConfig;
 import brugerautorisation.data.Bruger;
-import brugerautorisation.transport.rmi.Brugeradmin;
 import java.io.Console;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import javax.xml.namespace.QName;
+import javax.xml.ws.Service;
 
 /**
  *
@@ -41,7 +43,12 @@ public class ServerMain {
 
         // Log-in
         boolean granted = false;
-        Brugeradmin brugerAdmin = (Brugeradmin) Naming.lookup("rmi://javabog.dk/brugeradmin");
+        
+        URL url = new URL("http://javabog.dk:9901/brugeradmin?wsdl");
+        QName qname = new QName("http://soap.transport.brugerautorisation/", "BrugeradminImplService");
+        Service service = Service.create(url, qname);
+        brugerautorisation.transport.soap.Brugeradmin brugerAdmin = service.getPort(brugerautorisation.transport.soap.Brugeradmin.class);
+
         Console console;
         String user;
         char[] pass;
