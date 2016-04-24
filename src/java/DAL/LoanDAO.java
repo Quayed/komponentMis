@@ -170,7 +170,7 @@ public class LoanDAO implements ILoanDAO {
 
             PreparedStatement stm = CONN.prepareStatement("SELECT * FROM Loan WHERE studentId LIKE ?");
             studentId = "%" + studentId + "%";
-            System.out.println(studentId);
+            
             stm.setString(1, studentId);
             ResultSet result = stm.executeQuery();
             while(result.next())
