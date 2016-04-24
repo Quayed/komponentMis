@@ -1,5 +1,6 @@
 package DAL;
 
+import DTO.ComponentDTO;
 import DTO.LoanDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -138,7 +139,14 @@ public class LoanDAO implements ILoanDAO {
             stm.setString(5, keyword);
             ResultSet result = stm.executeQuery();
             
-            
+            while(result.next()){
+                LoanDTO loan = new LoanDTO();
+                loan.setLoanId(result.getInt("loanId"));
+                loan.setBarcode(result.getString("barcode"));
+                //loan.getComponent().getComponentGroup().setName(result.get);
+                loan.setStudentId(result.getString("studentId"));
+            }
+                
         } catch(SQLException e){
             e.printStackTrace();
         }
@@ -149,8 +157,12 @@ public class LoanDAO implements ILoanDAO {
     public LoanDTO[] getLoansForStudent(String studentId) {
         try{
             ArrayList<LoanDTO> loans = new ArrayList<>();
-            PreparedStatement stm = CONN.prepareStatement("SELECT * FROM " + DATABASE_NAME + " WHERE studentId LIKE ?");
-            studentId = "'%" + studentId + "%'";
+            
+            //PreparedStatement stm = CONN.prepareStatement");
+
+            PreparedStatement stm = CONN.prepareStatement("SELECT * FROM Loan WHERE studentId LIKE ?");
+            studentId = "%" + studentId + "%";
+            System.out.println(studentId);
             stm.setString(1, studentId);
             ResultSet result = stm.executeQuery();
             while(result.next())

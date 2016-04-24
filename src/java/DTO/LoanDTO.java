@@ -63,6 +63,8 @@ public class LoanDTO implements Serializable {
     }
 
     public String getBarcode() {
+        if(component == null)
+            return null;
         return component.getBarcode();
     }
 
@@ -73,6 +75,8 @@ public class LoanDTO implements Serializable {
     }
 
     public String getStudentId() {
+        if(student == null)
+            return null;
         return student.getStudentId();
     }
 
@@ -151,5 +155,21 @@ public class LoanDTO implements Serializable {
     
     public void setDeliveryDateFromDate(Date deliveryDate){
         this.deliveryDate = FORMAT.format(deliveryDate);
+    }
+    
+    public void setComponent(ComponentDTO component){
+        this.component = component;
+    }
+    
+    public ComponentDTO getComponent(){
+        return this.component;
+    }
+    
+    public void setStudent(StudentDTO student){
+        this.student = student;
+    }
+    
+    public StudentDTO getStudent(){
+        return this.student;
     }
 }
