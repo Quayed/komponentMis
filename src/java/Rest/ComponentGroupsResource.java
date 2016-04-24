@@ -71,6 +71,7 @@ public class ComponentGroupsResource {
             output.append(", \"componentGroupId\": " + componentGroup.getComponentGroupId());
             output.append(", \"name\": \"" + componentGroup.getName() + "\"");
             output.append(", \"standardLoanDuration\": \"" + componentGroup.getStandardLoanDuration() + "\"");
+            output.append(", \"status\": " + componentGroup.getStatus());            
             output.append("},");
         }
         output.deleteCharAt(output.length()-1);
