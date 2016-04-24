@@ -23,9 +23,10 @@ public class RestResponseFilter implements ContainerResponseFilter{
     @Override
     public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {
         if(requestContext.getRequest().getMethod().equals( "OPTIONS" )){
-            responseContext.getHeaders().add( "Access-Control-Allow-Origin", requestContext.getHeaderString("Access-Control-Allow-Origin"));
+            responseContext.getHeaders().add( "Access-Control-Allow-Origin", requestContext.getHeaderString("Origin"));
             responseContext.getHeaders().add( "Access-Control-Allow-Credentials", "true" );
-            responseContext.getHeaders().add( "Access-Control-Allow-Methods", requestContext.getHeaderString("Access-Control-Allow-Methods") );
+            responseContext.getHeaders().add( "Access-Control-Allow-Methods", "GET, POST, PUT" );
+            responseContext.getHeaders().add( "Access-Control-Allow-Headers", requestContext.getHeaderString("Access-Control-Request-Headers") );
         }else{
             responseContext.getHeaders().add( "Access-Control-Allow-Origin", "*" );
             responseContext.getHeaders().add( "Access-Control-Allow-Credentials", "true" );
