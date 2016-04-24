@@ -101,7 +101,7 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
     }  
     
     @Override
-    public int updateLoan(LoanDTO loanDTO, BigInteger keyToken, int ID) {
+    public int updateLoan(LoanDTO loanDTO, BigInteger keyToken, int ID) throws RemoteException{
         if (!tokenhandler.checkKey(keyToken, ID))
             return -1;        
         return loanDAO.updateLoan(loanDTO);
@@ -149,7 +149,7 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
     }
     
     @Override
-    public BigInteger exchangeKeys(BigInteger keyToken, int ID) {
+    public BigInteger exchangeKeys(BigInteger keyToken, int ID) throws RemoteException{
         if (!tokenhandler.checkKey(keyToken, ID))
             System.out.println("Key-tokens not matching!");
         return tokenhandler.getKeyToken(ID);
