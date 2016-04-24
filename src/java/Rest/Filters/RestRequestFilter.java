@@ -19,7 +19,6 @@ import javax.ws.rs.ext.Provider;
  */
 @Provider
 @PreMatching
-@WebFilter(filterName = "AddHeaderFilter", urlPatterns = {"/*"})
 public class RestRequestFilter implements ContainerRequestFilter{
 
     @Override

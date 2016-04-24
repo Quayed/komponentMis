@@ -28,6 +28,7 @@ import org.glassfish.json.JsonParserImpl;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.container.ContainerRequestContext;
 
 /**
  * REST Web Service
@@ -43,8 +44,7 @@ public class StudentsResource {
     /**
      * Creates a new instance of StudentsResource
      */
-    public StudentsResource(@Context HttpServletResponse response) {
-        Helper.addHeaders(response);
+    public StudentsResource() {
         try {
             dao = new StudentDAO(DriverManager.getConnection(DatabaseConfig.ENDPOINT, DatabaseConfig.USERNAME, DatabaseConfig.PASSWORD));
         } catch (SQLException e) {

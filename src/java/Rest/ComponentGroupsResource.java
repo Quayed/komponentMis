@@ -25,6 +25,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -42,8 +43,7 @@ public class ComponentGroupsResource {
     /**
      * Creates a new instance of KomponentTyperResource
      */
-    public ComponentGroupsResource(@Context HttpServletResponse response) {
-        Helper.addHeaders(response);
+    public ComponentGroupsResource() {
         try {
             dao = new ComponentGroupDAO(DriverManager.getConnection(DatabaseConfig.ENDPOINT, DatabaseConfig.USERNAME, DatabaseConfig.PASSWORD));
         } catch (SQLException e) {

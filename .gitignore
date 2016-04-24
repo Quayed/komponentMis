@@ -4,3 +4,4 @@
 /src/java/.idea
 /build/web/WEB-INF/classes/.idea
 /build/web/WEB-INF/classes/*.iml
+/dist/

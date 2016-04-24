@@ -29,6 +29,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.MediaType;
 import org.glassfish.json.JsonParserImpl;
 
@@ -47,8 +48,7 @@ public class ComponentsResource {
     /**
      * Creates a new instance of KomponentResource
      */
-    public ComponentsResource(@Context HttpServletResponse response) {
-        Helper.addHeaders(response);
+    public ComponentsResource() {
         try {
             conn = DriverManager.getConnection(DatabaseConfig.ENDPOINT, DatabaseConfig.USERNAME, DatabaseConfig.PASSWORD);
             dao = new ComponentDAO(conn);
