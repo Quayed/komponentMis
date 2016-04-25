@@ -171,12 +171,36 @@ public class LoanDAO implements ILoanDAO {
         try{
             ArrayList<LoanDTO> loans = new ArrayList<>();
             
-            //PreparedStatement stm = CONN.prepareStatement");
-
             PreparedStatement stm = CONN.prepareStatement("SELECT * FROM Loan WHERE studentId LIKE ?");
             studentId = "%" + studentId + "%";
             
             stm.setString(1, studentId);
+            ResultSet result = stm.executeQuery();
+            while(result.next())
+                loans.add(new LoanDTO(result.getInt("loanId"), result.getString("barcode"), result.getString("studentId"),
+                        result.getDate("loanDate"), result.getDate("dueDate"), result.getDate("deliveryDate"), result.getString("deliveredTo")));
+
+            // Check if something was actually found
+            if(loans.size() == 0)
+                return null;
+
+            return loans.toArray(new LoanDTO[loans.size()]);
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+        
+        return null;
+    }
+    
+    @Override
+    public LoanDTO[] getLoansForBarcode(String barcode) {
+        try{
+            ArrayList<LoanDTO> loans = new ArrayList<>();
+            
+            PreparedStatement stm = CONN.prepareStatement("SELECT * FROM Loan WHERE barcode LIKE ?");
+            barcode = "%" + barcode + "%";
+            
+            stm.setString(1, barcode);
             ResultSet result = stm.executeQuery();
             while(result.next())
                 loans.add(new LoanDTO(result.getInt("loanId"), result.getString("barcode"), result.getString("studentId"),

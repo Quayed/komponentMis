@@ -16,6 +16,8 @@ public interface ILoanDAO {
     
     LoanDTO[] getLoansForStudent(String studentId);
     
+    LoanDTO[] getLoansForBarcode(String barcode);
+    
     int updateLoan(LoanDTO loan);
 
     int deleteLoan(int loanId);
