@@ -132,8 +132,8 @@ public class ComponentsResource {
     @Produces(MediaType.TEXT_PLAIN)
     public String updateComponent(@PathParam("barcode") String barcode, ComponentDTO component){
                
-        component.setBarcode(barcode);
-        int returnStatus = dao.updateComponent(component);
+        
+        int returnStatus = dao.updateComponent(barcode, component);
         if (returnStatus == 1)
             return "All Ok";
         else

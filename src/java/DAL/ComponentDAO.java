@@ -81,18 +81,29 @@ public class ComponentDAO implements IComponentDAO {
         return null;
     }
 
+    @Override 
+    public int updateComponent(ComponentDTO component){
+        if(component.getBarcode() == null){
+            return -1;
+        }else{
+            String barcode = component.getBarcode();
+            component.setBarcode(null);
+            return updateComponent(barcode, component);
+        }
+    }
+    
     @Override
-    public int updateComponent(ComponentDTO component) {
-        if (component.getBarcode() == null || (component.getComponentNumber() == 0 && component.getComponentGroupId() == 0))
+    public int updateComponent(String barcode, ComponentDTO component) {
+        if (barcode== null || (component.getComponentNumber() == -1 && component.getComponentGroupId() == -1 && component.getStatus() == -1 && component.getBarcode() == null))
             return -1;
 
         String sql = "UPDATE " + DATABASE_NAME + " set ";
         String sqlValues = "";
 
-        if (component.getComponentGroupId() != 0)
+        if (component.getComponentGroupId() != -1)
             sqlValues += "componentGroupId = ?";
 
-        if (component.getComponentNumber() != 0) {
+        if (component.getComponentNumber() != -1) {
             if (sqlValues.equals("")) {
                 sqlValues += "componentNumber = ?";
             } else {
@@ -118,14 +129,16 @@ public class ComponentDAO implements IComponentDAO {
         try {
             PreparedStatement stm = CONN.prepareStatement(sql);
             int param = 1;
-            if (component.getComponentNumber() != 0)
+            if (component.getComponentNumber() != -1)
                 stm.setInt(param++, component.getComponentNumber());
-            if (component.getComponentGroupId() != 0)
+            if (component.getComponentGroupId() != -1)
                 stm.setInt(param++, component.getComponentGroupId());
+            if (component.getBarcode() != null)
+                stm.setString(param++, component.getBarcode());
             
             stm.setInt(param++, component.getStatus());
 
-            stm.setString(param++, component.getBarcode());
+            stm.setString(param++, barcode);
 
             stm.execute();
 
