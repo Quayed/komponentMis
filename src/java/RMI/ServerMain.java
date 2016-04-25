@@ -81,7 +81,7 @@ public class ServerMain {
             // SQL        
             Connection conn = null;
             try {
-                conn = DriverManager.getConnection("jdbc:mysql://" + DatabaseConfig.ENDPOINT,
+                conn = DriverManager.getConnection(DatabaseConfig.ENDPOINT,
                         DatabaseConfig.USERNAME, DatabaseConfig.PASSWORD);
             } catch (SQLException ex) {
                 System.out.println("SQLException: " + ex.getMessage());
