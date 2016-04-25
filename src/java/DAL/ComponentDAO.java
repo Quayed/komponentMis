@@ -70,10 +70,15 @@ public class ComponentDAO implements IComponentDAO {
     @Override
     public ComponentDTO[] getComponents() {
         try {
-            ResultSet result = CONN.createStatement().executeQuery("SELECT * FROM " + DATABASE_NAME);
+            ResultSet result = CONN.createStatement().executeQuery("SELECT * FROM " + DATABASE_NAME + " c "
+                            + "LEFT JOIN ComponentGroup cg ON c.componentGroupId = cg.componentGroupId;");
             ArrayList<ComponentDTO> components = new ArrayList<>();
-            while (result.next())
-                components.add(new ComponentDTO(result.getInt("componentGroupId"), result.getInt("componentNumber"), result.getString("barcode"), result.getInt("status")));
+            while (result.next()){
+                ComponentDTO component = new ComponentDTO(result.getInt("componentGroupId"), result.getInt("componentNumber"), result.getString("barcode"), result.getInt("status"));
+                component.getComponentGroup().setName(result.getString("name"));
+                components.add(component);
+                
+            }
             return components.toArray(new ComponentDTO[components.size()]);
         } catch (SQLException e) {
             e.printStackTrace();

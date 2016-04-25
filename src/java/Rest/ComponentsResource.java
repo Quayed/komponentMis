@@ -72,6 +72,7 @@ public class ComponentsResource {
             output.append("\"details\": \"/Components/" + component.getBarcode() + "\"");
             output.append(", \"barcode\": " + component.getBarcode());
             output.append(", \"componentGroupId\": " + component.getComponentGroupId());
+            output.append(", \"name\" : \"" + component.getComponentGroup().getName() + "\"");
             output.append(", \"componentNumber\": " + component.getComponentNumber());
             output.append(", \"status\":" + component.getStatus());
             output.append("},");
