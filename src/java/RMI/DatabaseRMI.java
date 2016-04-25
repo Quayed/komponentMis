@@ -47,91 +47,91 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
     @Override
     public ComponentDTO getComponent(String barcode, BigInteger keyToken, int ID) throws RemoteException { 
         if (!tokenhandler.checkKey(keyToken, ID))
-            return null;        
+            throw new RemoteException();        
         return componentDAO.getComponent(barcode);
     }    
 
     @Override
     public ComponentDTO[] getComponents(BigInteger keyToken, int ID) throws RemoteException {
         if (!tokenhandler.checkKey(keyToken, ID))
-            return null;        
+            throw new RemoteException();        
         return componentDAO.getComponents();
     }
     
     @Override
     public ComponentGroupDTO getComponentGroup(int componentGroupId, BigInteger keyToken, int ID) throws RemoteException {
         if (!tokenhandler.checkKey(keyToken, ID))
-            return null;
+            throw new RemoteException();
         return componentGroupDAO.getComponentGroup(componentGroupId);          
     }
     
     @Override
     public ComponentGroupDTO[] getComponentGroups(BigInteger keyToken, int ID) throws RemoteException {
         if (!tokenhandler.checkKey(keyToken, ID))
-            return null;        
+            throw new RemoteException();        
         return componentGroupDAO.getComponentGroups();
     }
 
     @Override
     public LoanDTO getLoan(int loanId, BigInteger keyToken, int ID) throws RemoteException {
         if (!tokenhandler.checkKey(keyToken, ID))
-            return null;       
+            throw new RemoteException();       
         return loanDAO.getLoan(loanId);
     }
 
     @Override
     public LoanDTO[] getLoans(BigInteger keyToken, int ID) throws RemoteException {
         if (!tokenhandler.checkKey(keyToken, ID))
-            return null;        
+            throw new RemoteException();        
         return loanDAO.getLoans();
     }
     
     @Override
     public int createLoan(LoanDTO loanDTO, BigInteger keyToken, int ID) throws RemoteException {
         if (!tokenhandler.checkKey(keyToken, ID))
-            return -1;
+            throw new RemoteException();
         return loanDAO.createLoan(loanDTO);
     }  
     
     @Override
     public int updateLoan(LoanDTO loanDTO, BigInteger keyToken, int ID) throws RemoteException{
         if (!tokenhandler.checkKey(keyToken, ID))
-            return -1;        
+            throw new RemoteException();        
         return loanDAO.updateLoan(loanDTO);
     }
     
     @Override
     public int deleteLoan(int loanId, BigInteger keyToken, int ID) throws RemoteException {
         if (!tokenhandler.checkKey(keyToken, ID))
-            return -1;        
+            throw new RemoteException();        
         return loanDAO.deleteLoan(loanId);
     }
     
     @Override
     public LoanDTO[] searchLoans(String keyword, BigInteger keyToken, int ID) throws RemoteException {
         if (!tokenhandler.checkKey(keyToken, ID))
-            return null;
+            throw new RemoteException();
         return loanDAO.searchLoans(keyword);
     }
 
     @Override
     public LoanDTO[] getLoansForStudent(String studentId, BigInteger keyToken, int ID) throws RemoteException {
         if (!tokenhandler.checkKey(keyToken, ID))
-            return null;
+            throw new RemoteException();
         return loanDAO.getLoansForStudent(studentId);
     }       
 
     @Override
     public StudentDTO getStudent(String studentId, BigInteger keyToken, int ID) throws RemoteException {
         if (!tokenhandler.checkKey(keyToken, ID))
-            return null;       
+            throw new RemoteException();       
         return studentDAO.getStudent(studentId);
     }
 
     @Override
     public StudentDTO[] getStudents(BigInteger keyToken, int ID) throws RemoteException {
         if (!tokenhandler.checkKey(keyToken, ID))
-            return null;       
+            throw new RemoteException();       
         return studentDAO.getStudents();
     }    
     
@@ -156,7 +156,7 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
     @Override
     public int updateComponent(ComponentDTO component, BigInteger keyToken, int ID) throws RemoteException {
          if (!tokenhandler.checkKey(keyToken, ID))
-            return -1;
+            throw new RemoteException();
          return componentDAO.updateComponent(component);
     }
 }
