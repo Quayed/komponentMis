@@ -9,6 +9,7 @@ import DAL.DatabaseConfig;
 import DAL.IStudentDAO;
 import DAL.StudentDAO;
 import DTO.StudentDTO;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import javax.ws.rs.core.Context;
@@ -27,7 +28,10 @@ import javax.json.stream.JsonParser;
 import org.glassfish.json.JsonParserImpl;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 import javax.ws.rs.container.ContainerRequestContext;
 
 /**
@@ -46,10 +50,16 @@ public class StudentsResource {
      */
     public StudentsResource() {
         try {
-            dao = new StudentDAO(DriverManager.getConnection(DatabaseConfig.ENDPOINT, DatabaseConfig.USERNAME, DatabaseConfig.PASSWORD));
+            /*InitialContext ctx = new InitialContext();
+            DataSource ds = (DataSource) ctx.lookup("jdbc/KomponentMis");
+            Connection conn = ds.getConnection();
+            dao = new StudentDAO(conn);*/
+        dao = new StudentDAO(DriverManager.getConnection(DatabaseConfig.ENDPOINT, DatabaseConfig.USERNAME, DatabaseConfig.PASSWORD));
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        } /*catch (NamingException ex) {
+            Logger.getLogger(StudentsResource.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
     }
 
     @GET

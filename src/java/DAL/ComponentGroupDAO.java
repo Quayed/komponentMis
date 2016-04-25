@@ -33,7 +33,7 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
 
         try {
             int param = 1;
-            PreparedStatement stm = CONN.prepareStatement(sql);
+            PreparedStatement stm = CONN.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             stm.setString(param++, componentGroup.getName());
             
@@ -44,11 +44,15 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
 
             stm.execute();
 
+            ResultSet generatedKeys = stm.getGeneratedKeys();
+            if(generatedKeys.next())
+                return generatedKeys.getInt(1);
+            else
+                return 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return -1;
         }
-        return 1;
     }
 
     @Override

@@ -150,8 +150,8 @@ public class LoansResource {
     @Produces(MediaType.TEXT_PLAIN)
     public String createComponentGroup(LoanDTO loan){
         int returnStatus = dao.createLoan(loan);
-        if(returnStatus == 1)
-            return "All Ok";
+        if(returnStatus > 0)
+            return "{\"loanId\": "  + returnStatus + " }";
         else
             System.out.println(returnStatus);
             throw new WebApplicationException(500);

@@ -113,8 +113,8 @@ public class ComponentGroupsResource {
     public String createComponentGroup(ComponentGroupDTO componentGroup){
         
         int returnStatus = dao.createComponentGroup(componentGroup);
-        if(returnStatus == 1)
-            return "All Ok";
+        if(returnStatus > 0)
+            return "{\"componentGroupId\": "  + returnStatus + " }";
         else
             System.out.println("Error");
             throw new WebApplicationException(500);

@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 /**
@@ -31,7 +32,7 @@ public class ComponentDAO implements IComponentDAO {
         
         try {
             int param = 1;
-            PreparedStatement stm = CONN.prepareStatement(sql);
+            PreparedStatement stm = CONN.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             stm.setInt(param++, component.getComponentGroupId());
 
@@ -43,6 +44,7 @@ public class ComponentDAO implements IComponentDAO {
     
             stm.execute();
 
+            
         } catch (SQLException e) {
             e.printStackTrace();
             return -1;

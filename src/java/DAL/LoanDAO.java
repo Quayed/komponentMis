@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -38,12 +39,12 @@ public class LoanDAO implements ILoanDAO {
         String sqlValues = "?, ?, ?, ?";
 
 
-        if (loan.getDeliveryDate() != null) {
+        if (loan.getDeliveryDate() != null && !loan.getDeliveryDate().equals("")) {
             sql += ", deliveryDate";
-            sqlValues = ", ?";
+            sqlValues += ", ?";
         }
 
-        if (loan.getDeliveredTo() != null) {
+        if (loan.getDeliveredTo() != null && !loan.getDeliveredTo().equals("")) {
             sql += ", deliveredTo";
             sqlValues += ", ?";
         }
@@ -52,7 +53,7 @@ public class LoanDAO implements ILoanDAO {
 
         try {
             int param = 1;
-            PreparedStatement stm = CONN.prepareStatement(sql);
+            PreparedStatement stm = CONN.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             stm.setString(param++, loan.getBarcode());
 
@@ -62,10 +63,10 @@ public class LoanDAO implements ILoanDAO {
 
             stm.setDate(param++, new java.sql.Date(loan.getDueDateAsDate().getTime()));
 
-            if (loan.getDeliveryDate() != null)
+            if (loan.getDeliveryDate() != null && !loan.getDeliveryDate().equals(""))
                 stm.setDate(param++, new java.sql.Date(loan.getDeliveryDateAsDate().getTime()));
 
-            if (loan.getDeliveredTo() != null)
+            if (loan.getDeliveredTo() != null && !loan.getDeliveredTo().equals(""))
                 stm.setString(param++, loan.getDeliveredTo());
 
             stm.execute();
@@ -73,7 +74,11 @@ public class LoanDAO implements ILoanDAO {
             if (stm.getUpdateCount() != 1) {
                 return -2;
             } else {
-                return 1;
+                ResultSet generatedKeys = stm.getGeneratedKeys();
+                if(generatedKeys.next())
+                    return generatedKeys.getInt(1);
+                else
+                    return 0;
             }
 
         } catch (SQLException e) {
