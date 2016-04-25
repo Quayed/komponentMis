@@ -28,14 +28,14 @@ public interface IDatabaseRMI extends java.rmi.Remote {
     BigInteger exchangeKeys(BigInteger keyToken, int ID) throws java.rmi.RemoteException;
     
     // Component
+    
+    int updateComponent(ComponentDTO component, BigInteger keyToken, int ID) throws java.rmi.RemoteException;
         
     ComponentDTO getComponent(String barcode, BigInteger keyToken, int ID) throws RemoteException;
     
     ComponentDTO[] getComponents(BigInteger keyToken, int ID) throws RemoteException;
     
-    // ComponentGroup
-    
-    int updateComponent(ComponentDTO component, BigInteger keyToken, int ID) throws java.rmi.RemoteException;
+    // ComponentGroup   
     
     ComponentGroupDTO getComponentGroup(int componentGroupId, BigInteger keyToken, int ID) throws java.rmi.RemoteException;
     
