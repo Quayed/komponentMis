@@ -118,6 +118,19 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
         if (!tokenhandler.checkKey(keyToken, ID)) {
             throw new RemoteException();
         }
+        LoanDTO[] loans = loanDAO.getLoansForBarcode(loanDTO.getBarcode());
+        if (loans != null) { // first time loaned check
+            boolean isNotLoaned = false;
+            for (LoanDTO loan : loans) {
+                if (loan.getDeliveryDate() != "") {
+                    isNotLoaned = true;
+                    break;
+                }
+            }
+            if (isNotLoaned) { // check if any loan currently active
+                return -5;
+            }
+        }
         return loanDAO.updateLoan(loanDTO);
     }
 
