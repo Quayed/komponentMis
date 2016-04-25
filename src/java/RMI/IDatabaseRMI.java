@@ -53,6 +53,8 @@ public interface IDatabaseRMI extends java.rmi.Remote {
     
     LoanDTO[] getLoansForStudent(String studentId, BigInteger keyToken, int ID) throws java.rmi.RemoteException;
     
+    LoanDTO[] getLoansForBarcode(String barcode, BigInteger keyToken, int ID) throws java.rmi.RemoteException;
+    
     int updateLoan(LoanDTO loan, BigInteger keyToken, int ID) throws java.rmi.RemoteException;
 
     int deleteLoan(int loanId, BigInteger keyToken, int ID) throws java.rmi.RemoteException;
