@@ -156,7 +156,7 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
     @Override
     public int updateComponent(ComponentDTO component, BigInteger keyToken, int ID) throws RemoteException {
          if (!tokenhandler.checkKey(keyToken, ID))
-            System.out.println("Key-tokens not matching!");
+            return -1;
          return componentDAO.updateComponent(component);
     }
 }
