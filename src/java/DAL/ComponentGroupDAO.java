@@ -91,7 +91,7 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
     public int updateComponentGroups(ComponentGroupDTO componentGroup) {
         String sql = "UPDATE " + DATABASE_NAME + " set ";
         String sqlValues = "";
-        if (componentGroup.getComponentGroupId() == 0 || (componentGroup.getName() == null && componentGroup.getStandardLoanDuration() == null))
+        if (componentGroup.getComponentGroupId() == 0)
             return -1;
 
 

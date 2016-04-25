@@ -13,7 +13,9 @@ public class ComponentDTO implements Serializable {
     private int status;
 
     public ComponentDTO() {
-
+        componentGroupId = -1;
+        componentNumber = -1;
+        status = -1;
     }
 
     public ComponentDTO(int componentGroupId, int componentNumber, String barcode, int status) {
@@ -26,7 +28,7 @@ public class ComponentDTO implements Serializable {
 
     public int getComponentGroupId() {
         if (componentGroup == null)
-            return 0;
+            return -1;
         return componentGroup.getComponentGroupId();
     }
 

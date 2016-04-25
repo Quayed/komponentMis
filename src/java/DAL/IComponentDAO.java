@@ -14,5 +14,7 @@ public interface IComponentDAO {
 
     int updateComponent(ComponentDTO component);
 
+    int updateComponent(String barcode, ComponentDTO component);
+    
     int deleteComponent(String barcode);
 }
