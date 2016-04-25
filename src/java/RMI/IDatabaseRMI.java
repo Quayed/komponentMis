@@ -35,6 +35,8 @@ public interface IDatabaseRMI extends java.rmi.Remote {
     
     // ComponentGroup
     
+    int updateComponent(ComponentDTO component, BigInteger keyToken, int ID) throws java.rmi.RemoteException;
+    
     ComponentGroupDTO getComponentGroup(int componentGroupId, BigInteger keyToken, int ID) throws java.rmi.RemoteException;
     
     ComponentGroupDTO[] getComponentGroups(BigInteger keyToken, int ID) throws java.rmi.RemoteException;
