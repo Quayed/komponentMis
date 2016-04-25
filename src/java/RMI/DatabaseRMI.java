@@ -101,7 +101,7 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
         if (loans != null) { // first time loaned check
             boolean isLoaned = false;
             for (LoanDTO loan : loans) {
-                if (loan.getDeliveryDate() == null) {
+                if (loan.getDeliveryDate() == "") {
                     isLoaned = true;
                     break;
                 }
@@ -117,19 +117,6 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
     public int updateLoan(LoanDTO loanDTO, BigInteger keyToken, int ID) throws RemoteException {
         if (!tokenhandler.checkKey(keyToken, ID)) {
             throw new RemoteException();
-        }
-        LoanDTO[] loans = loanDAO.getLoansForBarcode(loanDTO.getBarcode());
-        if (loans != null) { // first time loaned check
-            boolean isLoaned = false;
-            for (LoanDTO loan : loans) {
-                if (loan.getDeliveryDate() == null) {
-                    isLoaned = true;
-                    break;
-                }
-            }
-            if (isLoaned) { // check if any loan currently active
-                return -5;
-            }
         }
         return loanDAO.updateLoan(loanDTO);
     }
