@@ -9,7 +9,6 @@ import java.util.Set;
 import javax.ws.rs.core.Application;
 
 /**
- *
  * @author mathias
  */
 @javax.ws.rs.ApplicationPath("api")
@@ -36,7 +35,6 @@ public class ApplicationConfig extends Application {
         resources.add(Rest.LoansResource.class);
         resources.add(Rest.StudentsResource.class);
     }
-    
-    
-    
+
+
 }

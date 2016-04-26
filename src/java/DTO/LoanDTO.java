@@ -5,8 +5,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Created by mathias on 21/03/16.
@@ -19,18 +17,17 @@ public class LoanDTO implements Serializable {
     private String dueDate;
     private String deliveryDate;
     private String deliveredTo;
-    private final DateFormat FORMAT = new SimpleDateFormat("dd/MM/yyyy");;
-    
-    
-    public LoanDTO(){
-         
+    private final DateFormat FORMAT = new SimpleDateFormat("dd/MM/yyyy");
+
+    public LoanDTO() {
+
     }
-    
-    public DateFormat getFORMAT(){
+
+    public DateFormat getFORMAT() {
         return this.FORMAT;
     }
-    
-    public LoanDTO(int loanId, String barcode,  String studentId, String loanDate, String dueDate, String deliveryDate, String deliveredTo) {
+
+    public LoanDTO(int loanId, String barcode, String studentId, String loanDate, String dueDate, String deliveryDate, String deliveredTo) {
         this.loanId = loanId;
         this.component = new ComponentDTO();
         this.component.setBarcode(barcode);
@@ -41,7 +38,7 @@ public class LoanDTO implements Serializable {
         this.deliveryDate = deliveryDate;
         this.deliveredTo = deliveredTo;
     }
-    
+
     public LoanDTO(int loanId, String barcode, String studentId, Date loanDate, Date dueDate, Date deliveryDate, String deliveredTo) {
         this.loanId = loanId;
         this.component = new ComponentDTO();
@@ -50,7 +47,7 @@ public class LoanDTO implements Serializable {
         this.student.setStudentId(studentId);
         this.loanDate = FORMAT.format(loanDate);
         this.dueDate = FORMAT.format(dueDate);
-        this.deliveryDate = (deliveryDate == null) ? null :  FORMAT.format(deliveryDate);
+        this.deliveryDate = (deliveryDate == null) ? null : FORMAT.format(deliveryDate);
         this.deliveredTo = deliveredTo;
     }
 
@@ -63,25 +60,25 @@ public class LoanDTO implements Serializable {
     }
 
     public String getBarcode() {
-        if(component == null)
+        if (component == null)
             return null;
         return component.getBarcode();
     }
 
     public void setBarcode(String barcode) {
-        if(component == null)
-           component = new ComponentDTO();
+        if (component == null)
+            component = new ComponentDTO();
         component.setBarcode(barcode);
     }
 
     public String getStudentId() {
-        if(student == null)
+        if (student == null)
             return null;
         return student.getStudentId();
     }
 
     public void setStudentId(String studentId) {
-        if(student == null)
+        if (student == null)
             student = new StudentDTO();
         student.setStudentId(studentId);
     }
@@ -93,7 +90,7 @@ public class LoanDTO implements Serializable {
     public void setLoanDate(String loanDate) {
         this.loanDate = loanDate;
     }
-    
+
     public String getDueDate() {
         return dueDate;
     }
@@ -117,8 +114,8 @@ public class LoanDTO implements Serializable {
     public void setDeliveredTo(String deliveredTo) {
         this.deliveredTo = deliveredTo;
     }
-    
-    public Date getLoanDateAsDate(){
+
+    public Date getLoanDateAsDate() {
         try {
             return FORMAT.parse(loanDate);
         } catch (ParseException e) {
@@ -126,12 +123,12 @@ public class LoanDTO implements Serializable {
         }
         return null;
     }
-    
-    public void setLoanDateFromDate(Date loanDate){
+
+    public void setLoanDateFromDate(Date loanDate) {
         this.loanDate = FORMAT.format(loanDate);
     }
-    
-    public Date getDueDateAsDate(){
+
+    public Date getDueDateAsDate() {
         try {
             return FORMAT.parse(dueDate);
         } catch (ParseException e) {
@@ -139,12 +136,12 @@ public class LoanDTO implements Serializable {
         }
         return null;
     }
-    
-    public void setDueDateFromDate(Date dueDate){
+
+    public void setDueDateFromDate(Date dueDate) {
         this.dueDate = FORMAT.format(dueDate);
     }
-    
-    public Date getDeliveryDateAsDate(){
+
+    public Date getDeliveryDateAsDate() {
         try {
             return FORMAT.parse(deliveryDate);
         } catch (ParseException e) {
@@ -152,25 +149,25 @@ public class LoanDTO implements Serializable {
         }
         return null;
     }
-    
-    public void setDeliveryDateFromDate(Date deliveryDate){
-        if(deliveryDate != null)
+
+    public void setDeliveryDateFromDate(Date deliveryDate) {
+        if (deliveryDate != null)
             this.deliveryDate = FORMAT.format(deliveryDate);
     }
-    
-    public void setComponent(ComponentDTO component){
+
+    public void setComponent(ComponentDTO component) {
         this.component = component;
     }
-    
-    public ComponentDTO getComponent(){
+
+    public ComponentDTO getComponent() {
         return this.component;
     }
-    
-    public void setStudent(StudentDTO student){
+
+    public void setStudent(StudentDTO student) {
         this.student = student;
     }
-    
-    public StudentDTO getStudent(){
+
+    public StudentDTO getStudent() {
         return this.student;
     }
 }

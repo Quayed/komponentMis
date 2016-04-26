@@ -15,6 +15,7 @@ import DAL.LoanDAO;
 import DTO.LoanDTO;
 import DAL.StudentDAO;
 import DTO.StudentDTO;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -48,6 +49,7 @@ public class LoansResource {
     private ILoanDAO dao;
     private Connection conn;
     private Format formatter = new SimpleDateFormat("dd/MM/yyyy");
+
     /**
      * Creates a new instance of LoansResource
      */
@@ -59,14 +61,14 @@ public class LoansResource {
             e.printStackTrace();
         }
     }
-    
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getOverview() {
         LoanDTO[] loans = dao.getLoans();
         StringBuilder output = new StringBuilder();
         output.append("[");
-        for(LoanDTO loan : loans){
+        for (LoanDTO loan : loans) {
             output.append("{");
             output.append("\"details\": \"/Loans/" + loan.getLoanId() + "\"");
             output.append(", \"loanId\": " + loan.getLoanId());
@@ -78,120 +80,120 @@ public class LoansResource {
             output.append(", \"deliveredTo\": \"" + (loan.getDeliveredTo() != null ? loan.getDeliveredTo() : "") + "\"");
             output.append("},");
         }
-        output.deleteCharAt(output.length()-1);
+        output.deleteCharAt(output.length() - 1);
         output.append("]");
-        
+
         return output.toString();
     }
 
-    
+
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getSpecific(@PathParam("id") String loanId){
+    public String getSpecific(@PathParam("id") String loanId) {
         // Check that the id supplied is actually an id.
-        if(!loanId.matches("^\\d+$")){
+        if (!loanId.matches("^\\d+$")) {
             throw new WebApplicationException(405);
-        }  
-        
+        }
+
         LoanDTO loan = dao.getLoan(Integer.parseInt(loanId));
-        
+
         if (loan == null)
             throw new WebApplicationException(404);
-        
+
         ComponentDTO component = new ComponentDAO(conn).getComponent(loan.getBarcode());
-        
+
         ComponentGroupDTO componentGroup = new ComponentGroupDAO(conn).getComponentGroup(component.getComponentGroupId());
-        
+
         StudentDTO student = new StudentDAO(conn).getStudent(loan.getStudentId());
-        
+
         StringBuilder output = new StringBuilder();
         output.append("{");
         output.append("\"loanId\": " + loan.getLoanId());
-        output.append(", \"component\": "); 
-        
+        output.append(", \"component\": ");
+
         // Adding the component information
-            output.append("{");
-            output.append("\"barcode\": " + component.getBarcode());
+        output.append("{");
+        output.append("\"barcode\": " + component.getBarcode());
 
-            // Information about the componentGroup
-            output.append(", \"componentGroup\": { ");
-            output.append(" \"componentGroupId\": " + componentGroup.getComponentGroupId());
-            output.append(", \"name\": " + "\"" + componentGroup.getName() +  "\"");
-            output.append(", \"standardLoanDuration\": " + "\"" + (componentGroup.getStandardLoanDuration() == null ? "" : componentGroup.getStandardLoanDuration())  + "\"");
-            output.append(", \"standardLoanDuration\": " + componentGroup.getStatus());
-            output.append("}");
+        // Information about the componentGroup
+        output.append(", \"componentGroup\": { ");
+        output.append(" \"componentGroupId\": " + componentGroup.getComponentGroupId());
+        output.append(", \"name\": " + "\"" + componentGroup.getName() + "\"");
+        output.append(", \"standardLoanDuration\": " + "\"" + (componentGroup.getStandardLoanDuration() == null ? "" : componentGroup.getStandardLoanDuration()) + "\"");
+        output.append(", \"standardLoanDuration\": " + componentGroup.getStatus());
+        output.append("}");
 
-            output.append(", \"componentNumber\": " + component.getComponentNumber());
-            output.append(", \"status\":" + component.getStatus());
-            output.append("}");
-            
+        output.append(", \"componentNumber\": " + component.getComponentNumber());
+        output.append(", \"status\":" + component.getStatus());
+        output.append("}");
+
         output.append(", \"student\": ");
-        
+
         //Adding the student information
-            output.append("{");
-            output.append("\"studentId\": \"" + student.getStudentId() + "\"");
-            output.append(", \"name\": \"" + student.getName() + "\"");
-            output.append(", \"status\": " + student.getStatus());
-            output.append("}");
-            
+        output.append("{");
+        output.append("\"studentId\": \"" + student.getStudentId() + "\"");
+        output.append(", \"name\": \"" + student.getName() + "\"");
+        output.append(", \"status\": " + student.getStatus());
+        output.append("}");
+
         output.append(", \"loanDate\": \"" + loan.getLoanDate() + "\"");
         output.append(", \"dueDate\": \"" + loan.getDueDate() + "\"");
         output.append(", \"deliveryDate\": \"" + (loan.getDeliveryDate() != null ? loan.getDeliveryDate() : "") + "\"");
         output.append(", \"deliveredTo\": \"" + (loan.getDeliveredTo() != null ? loan.getDeliveredTo() : "") + "\"");
-        output.append("}");  
-        
-        
+        output.append("}");
+
+
         return output.toString();
     }
-    
+
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public String createComponentGroup(LoanDTO loan){
+    public String createComponentGroup(LoanDTO loan) {
         int returnStatus = dao.createLoan(loan);
-        if(returnStatus > 0)
-            return "{\"loanId\": "  + returnStatus + " }";
+        if (returnStatus > 0)
+            return "{\"loanId\": " + returnStatus + " }";
         else
             System.out.println(returnStatus);
-            throw new WebApplicationException(500);
+        throw new WebApplicationException(500);
     }
-    
-    
+
+
     @POST
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public String updateComponentGroup(@PathParam("id") String loanId, LoanDTO loan){
-         //Check that ID is actually a number
-        if(!loanId.matches("^\\d+$")){
+    public String updateComponentGroup(@PathParam("id") String loanId, LoanDTO loan) {
+        //Check that ID is actually a number
+        if (!loanId.matches("^\\d+$")) {
             throw new WebApplicationException(405);
         }
-        
+
         loan.setLoanId(Integer.parseInt(loanId));
         int returnStatus = dao.updateLoan(loan);
-        if(returnStatus == 1)
+        if (returnStatus == 1)
             return "All Ok";
         else
             throw new WebApplicationException(500);
     }
-    
+
     @DELETE
     @Path("{id}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String deleteKomponentType(@PathParam("id") String loanId){
+    public String deleteKomponentType(@PathParam("id") String loanId) {
         //Check that ID is actually a number
-        if(!loanId.matches("^\\d+$")){
+        if (!loanId.matches("^\\d+$")) {
             throw new WebApplicationException(405);
         }
         int returnValue = dao.deleteLoan(Integer.parseInt(loanId));
-        
-        if(returnValue == 1){
+
+        if (returnValue == 1) {
             return "All ok";
-        } else if(returnValue == -2)
+        } else if (returnValue == -2)
             throw new WebApplicationException(404);
         else
             throw new WebApplicationException(500);
     }
-    
+
 }

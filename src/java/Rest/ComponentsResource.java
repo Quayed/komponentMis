@@ -11,6 +11,7 @@ import DAL.ComponentGroupDAO;
 import DTO.ComponentGroupDTO;
 import DAL.DatabaseConfig;
 import DAL.IComponentDAO;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -31,6 +32,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.MediaType;
+
 import org.glassfish.json.JsonParserImpl;
 
 /**
@@ -45,6 +47,7 @@ public class ComponentsResource {
     private UriInfo context;
     private IComponentDAO dao;
     private Connection conn;
+
     /**
      * Creates a new instance of KomponentResource
      */
@@ -59,6 +62,7 @@ public class ComponentsResource {
 
     /**
      * Retrieves representation of an instance of Rest.ComponentsResource
+     *
      * @return an instance of java.lang.String
      */
     @GET
@@ -67,7 +71,7 @@ public class ComponentsResource {
         ComponentDTO[] components = dao.getComponents();
         StringBuilder output = new StringBuilder();
         output.append("[");
-        for(ComponentDTO component : components){
+        for (ComponentDTO component : components) {
             output.append("{");
             output.append("\"details\": \"/Components/" + component.getBarcode() + "\"");
             output.append(", \"barcode\": " + component.getBarcode());
@@ -77,26 +81,25 @@ public class ComponentsResource {
             output.append(", \"status\":" + component.getStatus());
             output.append("},");
         }
-        output.deleteCharAt(output.length()-1);
+        output.deleteCharAt(output.length() - 1);
         output.append("]");
         return output.toString();
     }
-    
+
     @GET
     @Path("{barcode}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getSpecific(@PathParam("barcode") String barcode){
+    public String getSpecific(@PathParam("barcode") String barcode) {
         ComponentDTO component = dao.getComponent(barcode);
-        
-        if(component == null)
+
+        if (component == null)
             throw new WebApplicationException(404);
-        
+
         ComponentGroupDTO componentGroup = componentGroup = new ComponentGroupDAO(conn).getComponentGroup(component.getComponentGroupId());
         if (componentGroup == null)
             throw new WebApplicationException(500);
-        
-        
-        
+
+
         StringBuilder output = new StringBuilder();
         output.append("{");
         output.append("\"barcode\": " + component.getBarcode());
@@ -104,57 +107,57 @@ public class ComponentsResource {
         // Information about the componentGroup
         output.append(", \"componentGroup\": { ");
         output.append("\"componentGroupId\": " + componentGroup.getComponentGroupId());
-        output.append(", \"name\": " + "\"" + componentGroup.getName() +  "\"");
-        output.append(", \"standardLoanDuration\": " + "\"" + (componentGroup.getStandardLoanDuration() == null ? "" : componentGroup.getStandardLoanDuration())  + "\"");
+        output.append(", \"name\": " + "\"" + componentGroup.getName() + "\"");
+        output.append(", \"standardLoanDuration\": " + "\"" + (componentGroup.getStandardLoanDuration() == null ? "" : componentGroup.getStandardLoanDuration()) + "\"");
         output.append(", \"standardLoanDuration\": " + componentGroup.getStatus());
         output.append("}");
-        
+
         output.append(", \"componentNumber\": " + component.getComponentNumber());
         output.append(", \"status\":" + component.getStatus());
         output.append("}");
-        
+
         return output.toString();
     }
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public String createComponent(ComponentDTO component){
+    public String createComponent(ComponentDTO component) {
         int returnStatus = dao.createComponent(component);
-        if(returnStatus == 1)
+        if (returnStatus == 1)
             return "All Ok";
         else
             throw new WebApplicationException(500);
     }
-    
+
     @POST
     @Path("{barcode}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public String updateComponent(@PathParam("barcode") String barcode, ComponentDTO component){
-               
-        
+    public String updateComponent(@PathParam("barcode") String barcode, ComponentDTO component) {
+
+
         int returnStatus = dao.updateComponent(barcode, component);
         if (returnStatus == 1)
             return "All Ok";
         else
             throw new WebApplicationException(500);
     }
-    
+
     @DELETE
     @Path("{id}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String deleteKomponentType(@PathParam("id") String id){
-        
+    public String deleteKomponentType(@PathParam("id") String id) {
+
         int returnValue = dao.deleteComponent(id);
-        
+
         System.out.println(id);
-        if(returnValue == 1)
+        if (returnValue == 1)
             return "All ok";
-        else if(returnValue == -2)
+        else if (returnValue == -2)
             throw new WebApplicationException(404);
         else
             throw new WebApplicationException(500);
     }
-    
+
 }

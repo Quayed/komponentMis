@@ -6,6 +6,7 @@
 package DAL;
 
 import DTO.StudentDTO;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,7 +35,7 @@ public class StudentDAO implements IStudentDAO {
         String sql = "INSERT INTO " + DATABASE_NAME + "(studentId, name, status)"
                 + " VALUES (?, ?, ?)";
         String sqlValues = "";
-        
+
         try {
             PreparedStatement stm = CONN.prepareStatement(sql);
             int param = 1;
@@ -141,7 +142,7 @@ public class StudentDAO implements IStudentDAO {
 
     @Override
     public int deleteStudent(String studentId) {
-        if (studentId == null ||studentId.equals(""))
+        if (studentId == null || studentId.equals(""))
             return -1;
 
         try {

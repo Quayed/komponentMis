@@ -13,11 +13,11 @@ public interface ILoanDAO {
     LoanDTO[] getLoans();
 
     LoanDTO[] searchLoans(String keyword);
-    
+
     LoanDTO[] getLoansForStudent(String studentId);
-    
+
     LoanDTO[] getLoansForBarcode(String barcode);
-    
+
     int updateLoan(LoanDTO loan);
 
     int deleteLoan(int loanId);

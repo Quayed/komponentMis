@@ -33,7 +33,7 @@ public class ComponentDTO implements Serializable {
     }
 
     public void setComponentGroupId(int componentGroupId) {
-        if(componentGroup == null)
+        if (componentGroup == null)
             componentGroup = new ComponentGroupDTO();
         componentGroup.setComponentGroupId(componentGroupId);
         componentGroupId = componentGroupId;
@@ -62,12 +62,12 @@ public class ComponentDTO implements Serializable {
     public void setStatus(int status) {
         this.status = status;
     }
-    
-    public void setComponentGroup(ComponentGroupDTO componentGroup){
+
+    public void setComponentGroup(ComponentGroupDTO componentGroup) {
         this.componentGroup = componentGroup;
     }
-    
-    public ComponentGroupDTO getComponentGroup(){
+
+    public ComponentGroupDTO getComponentGroup() {
         return this.componentGroup;
     }
 }

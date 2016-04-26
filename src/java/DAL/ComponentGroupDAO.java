@@ -1,6 +1,7 @@
 package DAL;
 
 import DTO.ComponentGroupDTO;
+
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -24,8 +25,8 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
         String sqlValues = "?, ?";
 
         if (componentGroup.getStandardLoanDuration() != null) {
-                sql += ", standardLoanDuration";
-                sqlValues += ", ?";
+            sql += ", standardLoanDuration";
+            sqlValues += ", ?";
         }
 
         sql += ") VALUES(";
@@ -36,19 +37,19 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
             PreparedStatement stm = CONN.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             stm.setString(param++, componentGroup.getName());
-            
-            if(componentGroup.getStatus() == -1)
+
+            if (componentGroup.getStatus() == -1)
                 stm.setInt(param++, 0);
             else
                 stm.setInt(param++, componentGroup.getStatus());
-            
+
             if (componentGroup.getStandardLoanDuration() != null)
                 stm.setString(param++, componentGroup.getStandardLoanDuration());
 
             stm.execute();
 
             ResultSet generatedKeys = stm.getGeneratedKeys();
-            if(generatedKeys.next())
+            if (generatedKeys.next())
                 return generatedKeys.getInt(1);
             else
                 return 0;
@@ -94,7 +95,7 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
     public int updateComponentGroups(ComponentGroupDTO componentGroup) {
         String sql = "UPDATE " + DATABASE_NAME + " set ";
         String sqlValues = "";
-        
+
         if (componentGroup.getComponentGroupId() == 0)
             return -1;
 
@@ -108,7 +109,7 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
                 sqlValues += " standardLoanDuration = ?";
         }
 
-        if (componentGroup.getStatus() != -1){
+        if (componentGroup.getStatus() != -1) {
             if (!sqlValues.equals(""))
                 sqlValues += ", status = ?";
             else

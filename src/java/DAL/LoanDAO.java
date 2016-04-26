@@ -3,6 +3,7 @@ package DAL;
 import DTO.ComponentDTO;
 import DTO.ComponentGroupDTO;
 import DTO.LoanDTO;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,7 +27,7 @@ public class LoanDAO implements ILoanDAO {
 
     @Override
     public int createLoan(LoanDTO loan) {
-        if(loan.getBarcode() == null || loan.getStudentId() == null || loan.getLoanDate() == null || loan.getDueDate() == null){
+        if (loan.getBarcode() == null || loan.getStudentId() == null || loan.getLoanDate() == null || loan.getDueDate() == null) {
             if (loan.getStudentId() == null)
                 return -3;
             if (loan.getLoanDate() == null)
@@ -75,7 +76,7 @@ public class LoanDAO implements ILoanDAO {
                 return -2;
             } else {
                 ResultSet generatedKeys = stm.getGeneratedKeys();
-                if(generatedKeys.next())
+                if (generatedKeys.next())
                     return generatedKeys.getInt(1);
                 else
                     return 0;
@@ -114,7 +115,7 @@ public class LoanDAO implements ILoanDAO {
                         result.getDate("loanDate"), result.getDate("dueDate"), result.getDate("deliveryDate"), result.getString("deliveredTo")));
 
             // Check if something was actually found
-            if(loans.size() == 0)
+            if (loans.size() == 0)
                 return null;
 
             return loans.toArray(new LoanDTO[loans.size()]);
@@ -127,15 +128,15 @@ public class LoanDAO implements ILoanDAO {
     @Override
     public LoanDTO[] searchLoans(String keyword) {
         String sql = "SELECT * FROM Loan l "
-            +"LEFT JOIN Component c ON l.barcode = c.barcode "
-            +"LEFT JOIN ComponentGroup cg ON c.componentGroupId = cg.componentGroupId "
-            +"WHERE l.studentId LIKE ? OR "
-            +"l.loanDate LIKE ? OR "
-            +"l.dueDate LIKE ? OR "
-            +"c.barcode LIKE ? OR "
-            +"cg.name LIKE ?;";
+                + "LEFT JOIN Component c ON l.barcode = c.barcode "
+                + "LEFT JOIN ComponentGroup cg ON c.componentGroupId = cg.componentGroupId "
+                + "WHERE l.studentId LIKE ? OR "
+                + "l.loanDate LIKE ? OR "
+                + "l.dueDate LIKE ? OR "
+                + "c.barcode LIKE ? OR "
+                + "cg.name LIKE ?;";
         keyword = "%" + keyword + "%";
-        try{
+        try {
             PreparedStatement stm = CONN.prepareStatement(sql);
             stm.setString(1, keyword);
             stm.setString(2, keyword);
@@ -145,7 +146,7 @@ public class LoanDAO implements ILoanDAO {
             ResultSet result = stm.executeQuery();
 
             return addResultToLoan(result);
-        } catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
@@ -153,12 +154,12 @@ public class LoanDAO implements ILoanDAO {
 
     @Override
     public LoanDTO[] getLoansForStudent(String studentId) {
-        try{
+        try {
 
             PreparedStatement stm = CONN.prepareStatement("SELECT * FROM Loan l "
-                            +"LEFT JOIN Component c ON l.barcode = c.barcode "
-                            +"LEFT JOIN ComponentGroup cg ON c.componentGroupId = cg.componentGroupId "
-                            +"WHERE l.studentId LIKE ?;");
+                    + "LEFT JOIN Component c ON l.barcode = c.barcode "
+                    + "LEFT JOIN ComponentGroup cg ON c.componentGroupId = cg.componentGroupId "
+                    + "WHERE l.studentId LIKE ?;");
 
             studentId = "%" + studentId + "%";
 
@@ -166,7 +167,7 @@ public class LoanDAO implements ILoanDAO {
             ResultSet result = stm.executeQuery();
 
             return addResultToLoan(result);
-        } catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -175,29 +176,29 @@ public class LoanDAO implements ILoanDAO {
 
     @Override
     public LoanDTO[] getLoansForBarcode(String barcode) {
-        try{
+        try {
 
 
             PreparedStatement stm = CONN.prepareStatement("SELECT * FROM Loan l "
-                    +"LEFT JOIN Component c ON l.barcode = c.barcode "
-                    +"LEFT JOIN ComponentGroup cg ON c.componentGroupId = cg.componentGroupId "
-                    +"WHERE l.barcode LIKE ?;");
+                    + "LEFT JOIN Component c ON l.barcode = c.barcode "
+                    + "LEFT JOIN ComponentGroup cg ON c.componentGroupId = cg.componentGroupId "
+                    + "WHERE l.barcode LIKE ?;");
             barcode = "%" + barcode + "%";
 
             stm.setString(1, barcode);
             ResultSet result = stm.executeQuery();
 
             return addResultToLoan(result);
-        } catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return null;
     }
 
-    private LoanDTO[] addResultToLoan(ResultSet result) throws SQLException{
+    private LoanDTO[] addResultToLoan(ResultSet result) throws SQLException {
         ArrayList<LoanDTO> loans = new ArrayList<>();
-        while(result.next()){
+        while (result.next()) {
             LoanDTO loan = new LoanDTO();
             loan.setLoanId(result.getInt("loanId"));
             loan.setBarcode(result.getString("barcode"));
@@ -213,7 +214,7 @@ public class LoanDAO implements ILoanDAO {
         }
 
         // Check if something was actually found
-        if(loans.size() == 0)
+        if (loans.size() == 0)
             return null;
 
         return loans.toArray(new LoanDTO[loans.size()]);

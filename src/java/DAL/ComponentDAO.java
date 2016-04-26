@@ -1,6 +1,7 @@
 package DAL;
 
 import DTO.ComponentDTO;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,12 +25,12 @@ public class ComponentDAO implements IComponentDAO {
         if (component.getComponentNumber() == -1 || component.getComponentGroupId() == -1 || component.getBarcode() == null)
             return -1;
 
-        String sql = "INSERT INTO " + DATABASE_NAME + 
+        String sql = "INSERT INTO " + DATABASE_NAME +
                 " (componentGroupId, componentNumber, barcode, status) "
                 + "VALUES(?, ?, ?, ?);";
 
         System.out.println(sql);
-        
+
         try {
             int param = 1;
             PreparedStatement stm = CONN.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -40,14 +41,14 @@ public class ComponentDAO implements IComponentDAO {
 
             stm.setString(param++, component.getBarcode());
 
-            if(component.getStatus() == -1)
+            if (component.getStatus() == -1)
                 stm.setInt(param++, 0);
             else
                 stm.setInt(param++, component.getStatus());
-    
+
             stm.execute();
 
-            
+
         } catch (SQLException e) {
             e.printStackTrace();
             return -1;
@@ -74,13 +75,13 @@ public class ComponentDAO implements IComponentDAO {
     public ComponentDTO[] getComponents() {
         try {
             ResultSet result = CONN.createStatement().executeQuery("SELECT * FROM " + DATABASE_NAME + " c "
-                            + "LEFT JOIN ComponentGroup cg ON c.componentGroupId = cg.componentGroupId;");
+                    + "LEFT JOIN ComponentGroup cg ON c.componentGroupId = cg.componentGroupId;");
             ArrayList<ComponentDTO> components = new ArrayList<>();
-            while (result.next()){
+            while (result.next()) {
                 ComponentDTO component = new ComponentDTO(result.getInt("componentGroupId"), result.getInt("componentNumber"), result.getString("barcode"), result.getInt("status"));
                 component.getComponentGroup().setName(result.getString("name"));
                 components.add(component);
-                
+
             }
             return components.toArray(new ComponentDTO[components.size()]);
         } catch (SQLException e) {
@@ -89,20 +90,20 @@ public class ComponentDAO implements IComponentDAO {
         return null;
     }
 
-    @Override 
-    public int updateComponent(ComponentDTO component){
-        if(component.getBarcode() == null){
+    @Override
+    public int updateComponent(ComponentDTO component) {
+        if (component.getBarcode() == null) {
             return -1;
-        }else{
+        } else {
             String barcode = component.getBarcode();
             component.setBarcode(null);
             return updateComponent(barcode, component);
         }
     }
-    
+
     @Override
     public int updateComponent(String barcode, ComponentDTO component) {
-        if (barcode== null || (component.getComponentNumber() == -1 && component.getComponentGroupId() == -1 && component.getStatus() == -1 && component.getBarcode() == null))
+        if (barcode == null || (component.getComponentNumber() == -1 && component.getComponentGroupId() == -1 && component.getStatus() == -1 && component.getBarcode() == null))
             return -1;
 
         String sql = "UPDATE " + DATABASE_NAME + " set ";
@@ -143,7 +144,7 @@ public class ComponentDAO implements IComponentDAO {
                 stm.setInt(param++, component.getComponentGroupId());
             if (component.getBarcode() != null)
                 stm.setString(param++, component.getBarcode());
-            
+
             stm.setInt(param++, component.getStatus());
 
             stm.setString(param++, barcode);
