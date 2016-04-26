@@ -123,7 +123,7 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
             
             for (LoanDTO loan : loans) {
 
-                if (!loan.getDeliveryDate().equals("")) {
+                if (!loan.getDeliveryDate().equals("") && loan.getDeliveryDate() != null) {
                     return loanDAO.updateLoan(loanDTO);
                 }
             }
