@@ -28,12 +28,16 @@ public class MailHandler implements Runnable {
     public void run() {
         while (true) {
             try {               
-                SendEmail("TestEmne", "TestBody", "mailservicemis@gmail.com");
+                checkLoans();
                 Thread.sleep(msPerDay);
             } catch (InterruptedException ex) {
                 System.out.println("MailHandler stopped");
             }
         }
+    }
+    
+    private void checkLoans() {
+        SendEmail("TestEmne", "TestBody", "mailservicemis@gmail.com");
     }
 
     private void SendEmail(String subject, String body, String address) {
