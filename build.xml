@@ -75,7 +75,7 @@
             <attribute name="Main-Class"
                        value="RMI.ServerMain" />
             <attribute name="Class-Path"
-                       value="lib/mysql-connector-java-5.1.23-bin.jar" />            
+                       value="lib/mysql-connector-java-5.1.23-bin.jar lib/javax.mail.jar" />           
         </manifest>
         <jar destfile="${basedir}/dist/${ant.project.name}.jar"
              manifest="build/MANIFEST.MF">
@@ -90,6 +90,10 @@
 
         <copy todir="${basedir}/dist/lib/" overwrite="true">
             <fileset file="${lib}/mysql-connector-java-5.1.23-bin.jar"/>
+        </copy>
+        
+        <copy todir="${basedir}/dist/lib/" overwrite="true">
+            <fileset file="${lib}/javax.mail.jar"/>
         </copy>
 
     </target>
