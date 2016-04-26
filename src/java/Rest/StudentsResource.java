@@ -54,16 +54,10 @@ public class StudentsResource {
      */
     public StudentsResource() {
         try {
-            /*InitialContext ctx = new InitialContext();
-            DataSource ds = (DataSource) ctx.lookup("jdbc/KomponentMis");
-            Connection conn = ds.getConnection();
-            dao = new StudentDAO(conn);*/
             dao = new StudentDAO(DriverManager.getConnection(DatabaseConfig.ENDPOINT, DatabaseConfig.USERNAME, DatabaseConfig.PASSWORD));
         } catch (SQLException e) {
             e.printStackTrace();
-        } /*catch (NamingException ex) {
-            Logger.getLogger(StudentsResource.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+        }
     }
 
     @GET
