@@ -5,6 +5,7 @@
  */
 package Mail;
 
+import DAL.ComponentDAO;
 import DAL.LoanDAO;
 import DTO.LoanDTO;
 import java.sql.Connection;
@@ -33,7 +34,7 @@ public class MailHandler implements Runnable {
     @Override
     public void run() {
         while (true) {
-            try {               
+            try {
                 checkLoans();
                 Thread.sleep(msPerDay);
             } catch (InterruptedException ex) {
@@ -41,29 +42,33 @@ public class MailHandler implements Runnable {
             }
         }
     }
-    
+
     private void checkLoans() throws InterruptedException {
         LoanDTO[] loans = new LoanDAO(conn).getLoans();
         Date curDate = new Date();
-        for (LoanDTO loan : loans) {
-            if ((int) ((loan.getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay) < 7 
-                   && !loan.getDeliveryDate().equals("") && loan.getDeliveryDate() != null) {
-                String subject = "StudieNr:" + loan.getBarcode() + "-ID:" + loan.getStudentId();
-                String body = "Du har komponenten " + loan.getComponent().getComponentGroup().getName() + 
-                        ". Du skal inden for de næste 7 dage aflevere komponenten i Komponentshoppen på DTU Ballerup Campus.\n" + 
-                        "Afleveringsdatoen for komponenten er: " + loan.getDueDate() + "\nMed venlig hilsen\n\nKomponentshoppen på DTU Ballerup Campus";
-                SendEmail(subject, body, "mailservicemis@gmail.com");
-                Thread.sleep(100);
+        try {
+            for (LoanDTO loan : loans) {
+              
+                    if (((int) ((loan.getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay) < 7) && 
+                            (loan.getDeliveryDate() == null || loan.getDeliveryDate().equals(""))) {
+                        String subject = "Komponent:" + loan.getBarcode() + "-StudieNr:" + loan.getStudentId();
+                        String body = "Dette er en automatisk påmindelse til " + loan.getStudentId() + ".\nDu har komponenten "
+                                + ". Du skal inden for de næste 7 dage aflevere komponenten i Komponentshoppen på DTU Ballerup Campus.\n"
+                                + "Afleveringsdatoen for komponenten er: " + loan.getDueDate() + "\n\nMed venlig hilsen\nKomponentshoppen på DTU Ballerup Campus";
+                        SendEmail(subject, body, "mailservicemis@gmail.com");
+                    }
             }
+        } catch (NullPointerException ex) {
+            System.out.println("No due loans found");
+            ex.printStackTrace();
         }
     }
 
     private void SendEmail(String subject, String body, String user) {
 
         String to = "mailservicemis@gmail.com";
-        
-        //String to = user + "@student.dtu.dk";
 
+        //String to = user + "@student.dtu.dk";
         String from = "mailservicemis@gmail.com";
 
         String host = "localhost";
