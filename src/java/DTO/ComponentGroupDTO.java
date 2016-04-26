@@ -12,7 +12,7 @@ public class ComponentGroupDTO implements Serializable {
     private int status;
 
     public ComponentGroupDTO() {
-
+        status = -1;
     }
 
     public ComponentGroupDTO(int componentGroupId, String name, String standardLoanDuration, int status) {
