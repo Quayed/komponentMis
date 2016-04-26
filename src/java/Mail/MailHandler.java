@@ -23,8 +23,8 @@ import javax.mail.internet.MimeMessage;
  */
 public class MailHandler implements Runnable {
 
-    private int msPerDay = 86400 * 1000;
-    private Connection conn;
+    private final int msPerDay = 86400 * 1000;
+    private final Connection conn;
 
     public MailHandler(Connection conn) {
         this.conn = conn;
@@ -47,11 +47,13 @@ public class MailHandler implements Runnable {
         Date curDate = new Date();
         for (LoanDTO loan : loans) {
             if ((int) ((loan.getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay) < 7 
-                   && !loan.getDeliveryDate().equals("")) {
-                String subject = loan.getBarcode() + " is due in less than 7 days!";
-                SendEmail(subject, "You have a delivery due in less than 7 days", 
-                        "mailservicemis@gmail.com");
-                Thread.sleep(20);
+                   && !loan.getDeliveryDate().equals("") && loan.getDeliveryDate() != null) {
+                String subject = "StudieNr:" + loan.getBarcode() + "-ID:" + loan.getStudentId();
+                String body = "Du har komponenten " + loan.getComponent().getComponentGroup().getName() + 
+                        ". Du skal inden for de næste 7 dage aflevere komponenten i Komponentshoppen på DTU Ballerup Campus.\n" + 
+                        "Afleveringsdatoen for komponenten er: " + loan.getDueDate() + "\nMed venlig hilsen\n\nKomponentshoppen på DTU Ballerup Campus";
+                SendEmail(subject, body, "mailservicemis@gmail.com");
+                Thread.sleep(100);
             }
         }
     }
