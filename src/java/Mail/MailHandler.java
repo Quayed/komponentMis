@@ -36,7 +36,7 @@ public class MailHandler implements Runnable {
         while (true) {
             try {
                 checkLoans();
-                Thread.sleep(msPerDay);
+                Thread.sleep(msPerDay/4);
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
@@ -45,17 +45,35 @@ public class MailHandler implements Runnable {
 
     private void checkLoans() throws InterruptedException {
         LoanDTO[] loans = new LoanDAO(conn).getLoans();
-        Date curDate = new Date();
+        
         try {
             for (LoanDTO loan : loans) {
-                int daysLeft = (int) (loan.getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay;
-                    if (daysLeft < 7 && loan.getDeliveryDate() == null || loan.getDeliveryDate().equals("")) {
+                    Date curDate = new Date();
+                    if ( (((int) (((loan.getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay) + 1)) < 7) && (loan.getDeliveryDate() == null || loan.getDeliveryDate().equals(""))) {
+                        if ((((int) (((loan.getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay) + 1)) <= 0)) {
                         String subject = "Komponent:" + loan.getBarcode() + "-StudieNr:" + loan.getStudentId();
-                        String body = "Dette er en automatisk påmindelse til " + loan.getStudentId() + 
-                                ".\nDu har komponenten X. Du skal indenfor de næste " + daysLeft + " dage aflevere komponenten eller henvende dig i Komponentshoppen på DTU Ballerup Campus og forlænge udlånet.\n"                          
-                                + "Afleveringsdatoen for komponenten er: " + loan.getDueDate() + "\n\nMed venlig hilsen\nKomponentshoppen på DTU Ballerup Campus\n"
-                                + "\n\n***Dette er en autogenereret e-mail. E-mails sendt til denne adresse vil ikke blive besvaret***";
-                        SendEmail(subject, body, "mailservicemis@gmail.com");
+                        
+                        String body = "Dette er en automatisk påmindelse til " + loan.getStudentId() 
+                                + ".\n\nDu har overskredet afleveringsfristen for komponenten X. Du skal hurtigst muligt aflevere den i Komponentshoppen på DTU Ballerup Campus."                          
+                                + " Afleveringsdatoen for komponenten var: " + loan.getDueDate() 
+                                + "\n\nMed venlig hilsen\nKomponentshoppen på DTU Ballerup Campus\n"
+                                + "\n\n\n***Dette er en autogenereret e-mail. E-mails sendt til denne adresse vil ikke blive besvaret***";
+                        
+                        SendEmail(subject, body, loan.getStudentId());
+                        }
+                        else {
+                        String subject = "Komponent:" + loan.getBarcode() + "-StudieNr:" + loan.getStudentId();
+                        
+                        String body = "Dette er en automatisk påmindelse til " + loan.getStudentId() 
+                                + ".\n\nDu har komponenten X. Du skal inden " 
+                                + (int) (((loan.getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay) + 1)
+                                + " dage aflevere den eller henvende dig i Komponentshoppen på DTU Ballerup Campus og forlænge udlånet."                          
+                                + " Afleveringsdatoen for komponenten er: " + loan.getDueDate() 
+                                + "\n\nMed venlig hilsen\nKomponentshoppen på DTU Ballerup Campus\n"
+                                + "\n\n\n***Dette er en autogenereret e-mail. E-mails sendt til denne adresse vil ikke blive besvaret***";
+                        
+                        SendEmail(subject, body, loan.getStudentId());                            
+                        }
                     }
             }
         } catch (NullPointerException ex) {
