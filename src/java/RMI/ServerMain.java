@@ -95,7 +95,7 @@ public class ServerMain {
             java.rmi.registry.LocateRegistry.createRegistry(1099);
             Naming.rebind("rmi://127.0.0.1/databaseRMI", databaseRMI);
             System.out.println("Server running..");
-            MailHandler mailhandler = new MailHandler();
+            MailHandler mailhandler = new MailHandler(conn);
             Thread mailThread = new Thread(mailhandler);
             mailThread.start();
             System.out.println("MailHandler running..");

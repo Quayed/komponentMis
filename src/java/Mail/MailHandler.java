@@ -5,6 +5,10 @@
  */
 package Mail;
 
+import DAL.LoanDAO;
+import DTO.LoanDTO;
+import java.sql.Connection;
+import java.util.Date;
 import java.util.Properties;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -19,9 +23,11 @@ import javax.mail.internet.MimeMessage;
  */
 public class MailHandler implements Runnable {
 
-    int msPerDay = 86400 * 1000;
+    private int msPerDay = 86400 * 1000;
+    private Connection conn;
 
-    public MailHandler() {
+    public MailHandler(Connection conn) {
+        this.conn = conn;
     }
 
     @Override
@@ -31,18 +37,29 @@ public class MailHandler implements Runnable {
                 checkLoans();
                 Thread.sleep(msPerDay);
             } catch (InterruptedException ex) {
-                System.out.println("MailHandler stopped");
+                ex.printStackTrace();
             }
         }
     }
     
-    private void checkLoans() {
-        SendEmail("TestEmne", "TestBody", "mailservicemis@gmail.com");
+    private void checkLoans() throws InterruptedException {
+        LoanDTO[] loans = new LoanDAO(conn).getLoans();
+        Date curDate = new Date();
+        for (LoanDTO loan : loans) {
+            if ((int) ((loan.getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay) < 7) {
+                String subject = loan.getBarcode() + " is due in less than 7 days!";
+                SendEmail(subject, "You have a delivery due in less than 7 days", 
+                        "mailservicemis@gmail.com");
+                Thread.sleep(20);
+            }
+        }
     }
 
-    private void SendEmail(String subject, String body, String address) {
+    private void SendEmail(String subject, String body, String user) {
 
-        String to = address;
+        String to = "mailservicemis@gmail.com";
+        
+        //String to = user + "@student.dtu.dk";
 
         String from = "mailservicemis@gmail.com";
 
@@ -75,9 +92,9 @@ public class MailHandler implements Runnable {
 
             // Send message
             Transport.send(message);
-            System.out.println("Sent message successfully");
+            System.out.println("Sent mail to " + user + " successfully");
         } catch (MessagingException mex) {
-            System.out.println("Sent message unsuccessfully " + mex.getMessage());
+            System.out.println("Sent mail to " + user + " failed\n" + mex.getMessage());
         }
     }
 }
