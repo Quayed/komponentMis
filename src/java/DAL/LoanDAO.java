@@ -171,14 +171,29 @@ public class LoanDAO implements ILoanDAO {
         try{
             ArrayList<LoanDTO> loans = new ArrayList<>();
             
-            PreparedStatement stm = CONN.prepareStatement("SELECT * FROM Loan WHERE studentId LIKE ?");
+            PreparedStatement stm = CONN.prepareStatement("SELECT * FROM Loan l "
+                            +"LEFT JOIN Component c ON l.barcode = c.barcode "
+                            +"LEFT JOIN ComponentGroup cg ON c.componentGroupId = cg.componentGroupId "
+                            +"WHERE l.studentId LIKE ?;");
+
             studentId = "%" + studentId + "%";
             
             stm.setString(1, studentId);
             ResultSet result = stm.executeQuery();
-            while(result.next())
-                loans.add(new LoanDTO(result.getInt("loanId"), result.getString("barcode"), result.getString("studentId"),
-                        result.getDate("loanDate"), result.getDate("dueDate"), result.getDate("deliveryDate"), result.getString("deliveredTo")));
+            while(result.next()){
+                LoanDTO loan = new LoanDTO();
+                loan.setLoanId(result.getInt("loanId"));
+                loan.setBarcode(result.getString("barcode"));
+                loan.getComponent().setComponentGroup(new ComponentGroupDTO());
+                loan.getComponent().getComponentGroup().setName(result.getString("name"));
+                loan.getComponent().setComponentNumber(result.getInt("componentNumber"));
+                loan.setStudentId(result.getString("studentId"));
+                loan.setLoanDateFromDate(result.getDate("loanDate"));
+                loan.setDueDateFromDate(result.getDate("dueDate"));
+                loan.setDeliveryDateFromDate(result.getDate("deliveryDate"));
+                loan.setDeliveredTo(result.getString("deliveredTo"));
+                loans.add(loan);
+            }
 
             // Check if something was actually found
             if(loans.size() == 0)
@@ -196,16 +211,30 @@ public class LoanDAO implements ILoanDAO {
     public LoanDTO[] getLoansForBarcode(String barcode) {
         try{
             ArrayList<LoanDTO> loans = new ArrayList<>();
-            
-            PreparedStatement stm = CONN.prepareStatement("SELECT * FROM Loan WHERE barcode LIKE ?");
+
+            PreparedStatement stm = CONN.prepareStatement("SELECT * FROM Loan l "
+                    +"LEFT JOIN Component c ON l.barcode = c.barcode "
+                    +"LEFT JOIN ComponentGroup cg ON c.componentGroupId = cg.componentGroupId "
+                    +"WHERE l.barcode LIKE ?;");
             barcode = "%" + barcode + "%";
             
             stm.setString(1, barcode);
             ResultSet result = stm.executeQuery();
-            while(result.next())
-                loans.add(new LoanDTO(result.getInt("loanId"), result.getString("barcode"), result.getString("studentId"),
-                        result.getDate("loanDate"), result.getDate("dueDate"), result.getDate("deliveryDate"), result.getString("deliveredTo")));
-
+            while(result.next()){
+                LoanDTO loan = new LoanDTO();
+                loan.setLoanId(result.getInt("loanId"));
+                loan.setBarcode(result.getString("barcode"));
+                loan.getComponent().setComponentGroup(new ComponentGroupDTO());
+                loan.getComponent().getComponentGroup().setName(result.getString("name"));
+                loan.getComponent().setComponentNumber(result.getInt("componentNumber"));
+                loan.setStudentId(result.getString("studentId"));
+                loan.setLoanDateFromDate(result.getDate("loanDate"));
+                loan.setDueDateFromDate(result.getDate("dueDate"));
+                loan.setDeliveryDateFromDate(result.getDate("deliveryDate"));
+                loan.setDeliveredTo(result.getString("deliveredTo"));
+                loans.add(loan);
+            }
+            
             // Check if something was actually found
             if(loans.size() == 0)
                 return null;

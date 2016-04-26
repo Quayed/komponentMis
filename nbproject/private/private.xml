@@ -3,21 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/Users/mathias/NetBeansProjects/KomponentMis/src/java/Rest/ComponentsResource.java</file>
-            <file>file:/Users/mathias/NetBeansProjects/KomponentMis/src/java/DAL/IComponentGroupDAO.java</file>
-            <file>file:/Users/mathias/NetBeansProjects/KomponentMis/src/java/Rest/LoansResource.java</file>
             <file>file:/Users/mathias/NetBeansProjects/KomponentMis/src/java/DTO/ComponentGroupDTO.java</file>
-            <file>file:/Users/mathias/NetBeansProjects/KomponentMis/src/java/DAL/DatabaseConfig.java</file>
-            <file>file:/Users/mathias/NetBeansProjects/KomponentMis/build/web/WEB-INF/glassfish-resources.xml</file>
-            <file>file:/Users/mathias/NetBeansProjects/KomponentMis/src/java/DTO/StudentDTO.java</file>
-            <file>file:/Users/mathias/NetBeansProjects/KomponentMis/src/java/DAL/ComponentDAO.java</file>
-            <file>file:/Users/mathias/NetBeansProjects/KomponentMis/test/Test.java</file>
+            <file>file:/Users/mathias/NetBeansProjects/KomponentMis/src/java/RMI/DatabaseRMI.java</file>
+            <file>file:/Users/mathias/NetBeansProjects/KomponentMis/src/java/DAL/ComponentGroupDAO.java</file>
             <file>file:/Users/mathias/NetBeansProjects/KomponentMis/src/java/DAL/IComponentDAO.java</file>
             <file>file:/Users/mathias/NetBeansProjects/KomponentMis/src/java/DAL/LoanDAO.java</file>
-            <file>file:/Users/mathias/NetBeansProjects/KomponentMis/src/java/Rest/Filters/RestResponseFilter.java</file>
-            <file>file:/Users/mathias/NetBeansProjects/KomponentMis/src/java/DTO/ComponentDTO.java</file>
-            <file>file:/Users/mathias/NetBeansProjects/KomponentMis/web/WEB-INF/glassfish-resources.xml</file>
-            <file>file:/Users/mathias/NetBeansProjects/KomponentMis/src/java/DTO/LoanDTO.java</file>
+            <file>file:/Users/mathias/NetBeansProjects/KomponentMis/src/java/Rest/ComponentGroupsResource.java</file>
         </group>
     </open-files>
 </project-private>
