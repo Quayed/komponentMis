@@ -38,13 +38,10 @@ public class MailHandler implements Runnable {
 
     private void SendEmail(String subject, String body, String address) {
 
-        // Recipient's email ID needs to be mentioned.
         String to = address;
 
-        // Sender's email ID needs to be mentioned
         String from = "mailservicemis@gmail.com";
 
-        // Assuming you are sending email from localhost
         String host = "localhost";
 
         // Get system properties
