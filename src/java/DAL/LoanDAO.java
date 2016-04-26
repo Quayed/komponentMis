@@ -31,10 +31,10 @@ public class LoanDAO implements ILoanDAO {
                 return -3;
             if (loan.getLoanDate() == null)
                 return -4;
-            
+
             return -1;
         }
-        
+
         String sql = "INSERT INTO " + DATABASE_NAME + "(barcode, studentId, loanDate, dueDate";
         String sqlValues = "?, ?, ?, ?";
 
@@ -83,7 +83,7 @@ public class LoanDAO implements ILoanDAO {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        } 
+        }
 
         return 0;
     }
@@ -123,7 +123,7 @@ public class LoanDAO implements ILoanDAO {
         }
         return null;
     }
-    
+
     @Override
     public LoanDTO[] searchLoans(String keyword) {
         String sql = "SELECT * FROM Loan l "
@@ -136,7 +136,6 @@ public class LoanDAO implements ILoanDAO {
             +"cg.name LIKE ?;";
         keyword = "%" + keyword + "%";
         try{
-            ArrayList<LoanDTO> loans = new ArrayList<>();
             PreparedStatement stm = CONN.prepareStatement(sql);
             stm.setString(1, keyword);
             stm.setString(2, keyword);
@@ -144,22 +143,8 @@ public class LoanDAO implements ILoanDAO {
             stm.setString(4, keyword);
             stm.setString(5, keyword);
             ResultSet result = stm.executeQuery();
-            
-            while(result.next()){
-                LoanDTO loan = new LoanDTO();
-                loan.setLoanId(result.getInt("loanId"));
-                loan.setBarcode(result.getString("barcode"));
-                loan.getComponent().setComponentGroup(new ComponentGroupDTO());
-                loan.getComponent().getComponentGroup().setName(result.getString("name"));
-                loan.getComponent().setComponentNumber(result.getInt("componentNumber"));
-                loan.setStudentId(result.getString("studentId"));
-                loan.setLoanDateFromDate(result.getDate("loanDate"));
-                loan.setDueDateFromDate(result.getDate("dueDate"));
-                loan.setDeliveryDateFromDate(result.getDate("deliveryDate"));
-                loan.setDeliveredTo(result.getString("deliveredTo"));
-                loans.add(loan);
-            }
-            return loans.toArray(new LoanDTO[loans.size()]); 
+
+            return addResultToLoan(result);
         } catch(SQLException e){
             e.printStackTrace();
         }
@@ -169,82 +154,69 @@ public class LoanDAO implements ILoanDAO {
     @Override
     public LoanDTO[] getLoansForStudent(String studentId) {
         try{
-            ArrayList<LoanDTO> loans = new ArrayList<>();
-            
+
             PreparedStatement stm = CONN.prepareStatement("SELECT * FROM Loan l "
                             +"LEFT JOIN Component c ON l.barcode = c.barcode "
                             +"LEFT JOIN ComponentGroup cg ON c.componentGroupId = cg.componentGroupId "
                             +"WHERE l.studentId LIKE ?;");
 
             studentId = "%" + studentId + "%";
-            
+
             stm.setString(1, studentId);
             ResultSet result = stm.executeQuery();
-            while(result.next()){
-                LoanDTO loan = new LoanDTO();
-                loan.setLoanId(result.getInt("loanId"));
-                loan.setBarcode(result.getString("barcode"));
-                loan.getComponent().setComponentGroup(new ComponentGroupDTO());
-                loan.getComponent().getComponentGroup().setName(result.getString("name"));
-                loan.getComponent().setComponentNumber(result.getInt("componentNumber"));
-                loan.setStudentId(result.getString("studentId"));
-                loan.setLoanDateFromDate(result.getDate("loanDate"));
-                loan.setDueDateFromDate(result.getDate("dueDate"));
-                loan.setDeliveryDateFromDate(result.getDate("deliveryDate"));
-                loan.setDeliveredTo(result.getString("deliveredTo"));
-                loans.add(loan);
-            }
 
-            // Check if something was actually found
-            if(loans.size() == 0)
-                return null;
-
-            return loans.toArray(new LoanDTO[loans.size()]);
+            return addResultToLoan(result);
         } catch(SQLException e){
             e.printStackTrace();
         }
-        
+
         return null;
     }
-    
+
     @Override
     public LoanDTO[] getLoansForBarcode(String barcode) {
         try{
-            ArrayList<LoanDTO> loans = new ArrayList<>();
+
 
             PreparedStatement stm = CONN.prepareStatement("SELECT * FROM Loan l "
                     +"LEFT JOIN Component c ON l.barcode = c.barcode "
                     +"LEFT JOIN ComponentGroup cg ON c.componentGroupId = cg.componentGroupId "
                     +"WHERE l.barcode LIKE ?;");
             barcode = "%" + barcode + "%";
-            
+
             stm.setString(1, barcode);
             ResultSet result = stm.executeQuery();
-            while(result.next()){
-                LoanDTO loan = new LoanDTO();
-                loan.setLoanId(result.getInt("loanId"));
-                loan.setBarcode(result.getString("barcode"));
-                loan.getComponent().setComponentGroup(new ComponentGroupDTO());
-                loan.getComponent().getComponentGroup().setName(result.getString("name"));
-                loan.getComponent().setComponentNumber(result.getInt("componentNumber"));
-                loan.setStudentId(result.getString("studentId"));
-                loan.setLoanDateFromDate(result.getDate("loanDate"));
-                loan.setDueDateFromDate(result.getDate("dueDate"));
-                loan.setDeliveryDateFromDate(result.getDate("deliveryDate"));
-                loan.setDeliveredTo(result.getString("deliveredTo"));
-                loans.add(loan);
-            }
-            
-            // Check if something was actually found
-            if(loans.size() == 0)
-                return null;
 
-            return loans.toArray(new LoanDTO[loans.size()]);
+            return addResultToLoan(result);
         } catch(SQLException e){
             e.printStackTrace();
         }
-        
+
         return null;
+    }
+
+    private LoanDTO[] addResultToLoan(ResultSet result) throws SQLException{
+        ArrayList<LoanDTO> loans = new ArrayList<>();
+        while(result.next()){
+            LoanDTO loan = new LoanDTO();
+            loan.setLoanId(result.getInt("loanId"));
+            loan.setBarcode(result.getString("barcode"));
+            loan.getComponent().setComponentGroup(new ComponentGroupDTO());
+            loan.getComponent().getComponentGroup().setName(result.getString("name"));
+            loan.getComponent().setComponentNumber(result.getInt("componentNumber"));
+            loan.setStudentId(result.getString("studentId"));
+            loan.setLoanDateFromDate(result.getDate("loanDate"));
+            loan.setDueDateFromDate(result.getDate("dueDate"));
+            loan.setDeliveryDateFromDate(result.getDate("deliveryDate"));
+            loan.setDeliveredTo(result.getString("deliveredTo"));
+            loans.add(loan);
+        }
+
+        // Check if something was actually found
+        if(loans.size() == 0)
+            return null;
+
+        return loans.toArray(new LoanDTO[loans.size()]);
     }
 
     @Override
@@ -326,8 +298,8 @@ public class LoanDAO implements ILoanDAO {
                 return 1;
         } catch (SQLException e) {
             e.printStackTrace();
-        } 
-        
+        }
+
         return 0;
     }
 
