@@ -47,7 +47,7 @@ public class MailHandler implements Runnable {
         Date curDate = new Date();
         for (LoanDTO loan : loans) {
             if ((int) ((loan.getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay) < 7 
-                    && !loan.getDeliveryDate().equals("")) {
+                   && !loan.getDeliveryDate().equals("")) {
                 String subject = loan.getBarcode() + " is due in less than 7 days!";
                 SendEmail(subject, "You have a delivery due in less than 7 days", 
                         "mailservicemis@gmail.com");
