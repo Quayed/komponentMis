@@ -10,6 +10,7 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import DAL.DatabaseConfig;
+import Mail.MailHandler;
 import brugerautorisation.data.Bruger;
 import java.io.Console;
 import java.net.URL;
@@ -94,6 +95,10 @@ public class ServerMain {
             java.rmi.registry.LocateRegistry.createRegistry(1099);
             Naming.rebind("rmi://127.0.0.1/databaseRMI", databaseRMI);
             System.out.println("Server running..");
+            MailHandler mailhandler = new MailHandler();
+            Thread mailThread = new Thread(mailhandler);
+            mailThread.start();
+            System.out.println("MailHandler running..");
         }
     }
 }

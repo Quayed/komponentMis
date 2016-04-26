@@ -51,7 +51,7 @@ public class MailHandler implements Runnable {
         Properties properties = System.getProperties();
 
         // Setup mail server
-        properties.setProperty("smtp-relay.gmail.com", host);
+        properties.setProperty("smtp.gmail.com", host);
 
         // Get the default Session object.
         Session session = Session.getDefaultInstance(properties);
