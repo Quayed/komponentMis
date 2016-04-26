@@ -1,6 +1,5 @@
 package DAL;
 
-import DTO.ComponentDTO;
 import DTO.ComponentGroupDTO;
 import DTO.LoanDTO;
 
@@ -9,10 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Created by mathias on 21/03/16.

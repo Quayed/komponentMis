@@ -10,7 +10,6 @@ import DAL.IStudentDAO;
 import DAL.StudentDAO;
 import DTO.StudentDTO;
 
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import javax.ws.rs.core.Context;
@@ -25,17 +24,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
-import javax.json.stream.JsonParser;
-
-import org.glassfish.json.JsonParserImpl;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
-import javax.ws.rs.container.ContainerRequestContext;
 
 /**
  * REST Web Service
