@@ -101,7 +101,7 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
         if (loans != null) { // first time loaned check
             boolean isLoaned = false;
             for (LoanDTO loan : loans) {
-                if (loan.getDeliveryDate().equals("") || loan.getDeliveryDate() == null) {
+                if (loan.getDeliveryDate() == null || loan.getDeliveryDate().equals(""))  {
                     isLoaned = true;
                     break;
                 }
@@ -123,7 +123,7 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
             
             for (LoanDTO loan : loans) {
 
-                if (loan.getDeliveryDate().equals("") || loan.getDeliveryDate() == null) {
+                if (loan.getDeliveryDate() == null || loan.getDeliveryDate().equals("")) {
                     return loanDAO.updateLoan(loanDTO);
                 }
             }
