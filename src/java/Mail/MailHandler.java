@@ -48,13 +48,13 @@ public class MailHandler implements Runnable {
         Date curDate = new Date();
         try {
             for (LoanDTO loan : loans) {
-              
-                    if (((int) ((loan.getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay) < 7) && 
-                            (loan.getDeliveryDate() == null || loan.getDeliveryDate().equals(""))) {
+                int daysLeft = (int) (loan.getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay;
+                    if (daysLeft < 7 && loan.getDeliveryDate() == null || loan.getDeliveryDate().equals("")) {
                         String subject = "Komponent:" + loan.getBarcode() + "-StudieNr:" + loan.getStudentId();
-                        String body = "Dette er en automatisk påmindelse til " + loan.getStudentId() + ".\nDu har komponenten "
-                                + ". Du skal inden for de næste 7 dage aflevere komponenten i Komponentshoppen på DTU Ballerup Campus.\n"
-                                + "Afleveringsdatoen for komponenten er: " + loan.getDueDate() + "\n\nMed venlig hilsen\nKomponentshoppen på DTU Ballerup Campus";
+                        String body = "Dette er en automatisk påmindelse til " + loan.getStudentId() + 
+                                ".\nDu har komponenten X. Du skal indenfor de næste " + daysLeft + " dage aflevere komponenten eller henvende dig i Komponentshoppen på DTU Ballerup Campus og forlænge udlånet.\n"                          
+                                + "Afleveringsdatoen for komponenten er: " + loan.getDueDate() + "\n\nMed venlig hilsen\nKomponentshoppen på DTU Ballerup Campus\n"
+                                + "\n\n***Dette er en autogenereret e-mail. E-mails sendt til denne adresse vil ikke blive besvaret***";
                         SendEmail(subject, body, "mailservicemis@gmail.com");
                     }
             }
