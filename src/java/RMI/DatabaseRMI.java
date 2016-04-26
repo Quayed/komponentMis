@@ -113,30 +113,22 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
         return loanDAO.createLoan(loanDTO);
     }
 
-    // 1 del == MAP
-    // 1 del == MAP
-    // 1 del == ""
     @Override
     public int updateLoan(LoanDTO loanDTO, BigInteger keyToken, int ID) throws RemoteException {
         if (!tokenhandler.checkKey(keyToken, ID)) {
             throw new RemoteException();
         }
         LoanDTO[] loans = loanDAO.getLoansForBarcode(loanDTO.getBarcode());
-        if (loans != null) { // first time loaned check
-            boolean isLoaned = false;
+        if (loans != null) {
+            
             for (LoanDTO loan : loans) {
-                // loop through all lones
-                // if no undelivered loans are found, it cannot be delivered
-                if (loan.getDeliveryDate().equals("") || loan.getDeliveryDate() == null) {
-                    isLoaned = true;
-                    break;
+
+                if (!loan.getDeliveryDate().equals("")) {
+                    return loanDAO.updateLoan(loanDTO);
                 }
             }
-            if (!isLoaned) { // check if any loan currently active
-                return -5;
-            }
         }
-        return loanDAO.updateLoan(loanDTO);
+        return -5;
     }
 
     @Override
