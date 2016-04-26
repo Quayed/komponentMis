@@ -21,7 +21,7 @@ public class ComponentDAO implements IComponentDAO {
 
     @Override
     public int createComponent(ComponentDTO component) {
-        if (component.getComponentNumber() == 0 || component.getComponentGroupId() == 0 || component.getBarcode() == null)
+        if (component.getComponentNumber() == -1 || component.getComponentGroupId() == -1 || component.getBarcode() == null)
             return -1;
 
         String sql = "INSERT INTO " + DATABASE_NAME + 
@@ -40,7 +40,10 @@ public class ComponentDAO implements IComponentDAO {
 
             stm.setString(param++, component.getBarcode());
 
-            stm.setInt(param++, component.getStatus());
+            if(component.getStatus() == -1)
+                stm.setInt(param++, 0);
+            else
+                stm.setInt(param++, component.getStatus());
     
             stm.execute();
 
