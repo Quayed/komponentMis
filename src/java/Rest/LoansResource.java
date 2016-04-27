@@ -5,15 +5,15 @@
  */
 package Rest;
 
-import DAL.*;
-import DTO.ComponentDTO;
-import DTO.ComponentGroupDTO;
+import DAL.DatabaseConfig;
+import DAL.ILoanDAO;
+import DAL.LoanDAO;
 import DTO.LoanDTO;
-import DTO.StudentDTO;
 
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -90,51 +90,31 @@ public class LoansResource {
         if (loan == null)
             throw new WebApplicationException(404);
 
-        ComponentDTO component = new ComponentDAO(conn).getComponent(loan.getBarcode());
+        System.out.println(loan.getComponent().getComponentGroup().getStatus());
 
-        ComponentGroupDTO componentGroup = new ComponentGroupDAO(conn).getComponentGroup(component.getComponentGroupId());
+        JsonObject jsonObject = Json.createObjectBuilder()
+                .add("loanId", loan.getLoanId())
+                .add("compoent", Json.createObjectBuilder()
+                    .add("barcode", loan.getComponent().getBarcode())
+                    .add("componentGroup", Json.createObjectBuilder()
+                        .add("componentGroupId", loan.getComponent().getComponentGroup().getComponentGroupId())
+                        .add("name", loan.getComponent().getComponentGroup().getName())
+                        .add("standardLoanDuration", loan.getComponent().getComponentGroup().getStandardLoanDuration())
+                        .add("status", loan.getComponent().getComponentGroup().getStatus()))
+                    .add("componentNumber", loan.getComponent().getComponentNumber())
+                    .add("status", loan.getComponent().getStatus()))
+                .add("student", Json.createObjectBuilder()
+                    .add("studentId", loan.getStudent().getStudentId())
+                    .add("name", loan.getStudent().getName())
+                    .add("status", loan.getStudent().getStatus()))
+                .add("loanDate", loan.getLoanDate())
+                .add("dueDate", loan.getDueDate())
+                .add("deliveryDate", (loan.getDeliveryDate() != null ? loan.getDeliveryDate() : ""))
+                .add("deliveredTo", (loan.getDeliveredTo() != null ? loan.getDeliveredTo() : ""))
+                .add("mailCount", loan.getMailCount())
+                .build();
 
-        StudentDTO student = new StudentDAO(conn).getStudent(loan.getStudentId());
-
-        StringBuilder output = new StringBuilder();
-        output.append("{");
-        output.append("\"loanId\": " + loan.getLoanId());
-        output.append(", \"component\": ");
-
-        // Adding the component information
-        output.append("{");
-        output.append("\"barcode\": " + component.getBarcode());
-
-        // Information about the componentGroup
-        output.append(", \"componentGroup\": { ");
-        output.append(" \"componentGroupId\": " + componentGroup.getComponentGroupId());
-        output.append(", \"name\": " + "\"" + componentGroup.getName() + "\"");
-        output.append(", \"standardLoanDuration\": " + "\"" + (componentGroup.getStandardLoanDuration() == null ? "" : componentGroup.getStandardLoanDuration()) + "\"");
-        output.append(", \"standardLoanDuration\": " + componentGroup.getStatus());
-        output.append("}");
-
-        output.append(", \"componentNumber\": " + component.getComponentNumber());
-        output.append(", \"status\":" + component.getStatus());
-        output.append("}");
-
-        output.append(", \"student\": ");
-
-        //Adding the student information
-        output.append("{");
-        output.append("\"studentId\": \"" + student.getStudentId() + "\"");
-        output.append(", \"name\": \"" + student.getName() + "\"");
-        output.append(", \"status\": " + student.getStatus());
-        output.append("}");
-
-        output.append(", \"loanDate\": \"" + loan.getLoanDate() + "\"");
-        output.append(", \"dueDate\": \"" + loan.getDueDate() + "\"");
-        output.append(", \"deliveryDate\": \"" + (loan.getDeliveryDate() != null ? loan.getDeliveryDate() : "") + "\"");
-        output.append(", \"deliveredTo\": \"" + (loan.getDeliveredTo() != null ? loan.getDeliveredTo() : "") + "\"");
-        output.append(", \"mailCount\": " + loan.getMailCount());
-        output.append("}");
-
-
-        return output.toString();
+        return new JsonHelper().jsonObjectToString(jsonObject);
     }
 
     @PUT

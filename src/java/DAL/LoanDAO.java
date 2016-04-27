@@ -118,6 +118,7 @@ public class LoanDAO implements ILoanDAO {
                 loan.getComponent().getComponentGroup().setStatus(result.getInt("componentGroupStatus"));
                 loan.getComponent().getComponentGroup().setStandardLoanDuration(result.getString("standardLoanDuration"));
                 loan.getComponent().setComponentNumber(result.getInt("componentNumber"));
+                loan.getComponent().setStatus(result.getInt("componentStatus"));
                 loan.setStudentId(result.getString("studentId"));
                 loan.getStudent().setName(result.getString("studentName"));
                 loan.getStudent().setStatus(result.getInt("studentStatus"));
