@@ -12,6 +12,8 @@ public interface IComponentDAO {
 
     ComponentDTO[] getComponents();
 
+    ComponentDTO[] getComponentsFromGroup(int componentGroupId);
+
     int updateComponent(ComponentDTO component);
 
     int updateComponent(String barcode, ComponentDTO component);

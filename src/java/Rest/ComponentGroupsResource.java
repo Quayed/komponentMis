@@ -5,19 +5,19 @@
  */
 package Rest;
 
+import DAL.ComponentDAO;
 import DAL.ComponentGroupDAO;
 import DAL.DatabaseConfig;
 import DAL.IComponentGroupDAO;
+import DTO.ComponentDTO;
 import DTO.ComponentGroupDTO;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
+import javax.json.*;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
@@ -32,13 +32,15 @@ public class ComponentGroupsResource {
     @Context
     private UriInfo context;
     private IComponentGroupDAO dao;
+    private Connection conn;
 
     /**
      * Creates a new instance of KomponentTyperResource
      */
     public ComponentGroupsResource() {
         try {
-            dao = new ComponentGroupDAO(DriverManager.getConnection(DatabaseConfig.ENDPOINT, DatabaseConfig.USERNAME, DatabaseConfig.PASSWORD));
+            conn = DriverManager.getConnection(DatabaseConfig.ENDPOINT, DatabaseConfig.USERNAME, DatabaseConfig.PASSWORD);
+            dao = new ComponentGroupDAO(conn);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -92,12 +94,29 @@ public class ComponentGroupsResource {
             throw new WebApplicationException(404);
 
 
-        JsonObject jsonObject = Json.createObjectBuilder()
+        JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder()
                 .add("componentGroupId", componentGroup.getComponentGroupId())
                 .add("name", componentGroup.getName())
                 .add("standardLoanDuration", componentGroup.getStandardLoanDuration())
-                .add("status", componentGroup.getStatus())
-                .build();
+                .add("status", componentGroup.getStatus());
+
+        // Create list of all the components with this componentGroup
+
+        ComponentDTO[] components = new ComponentDAO(conn).getComponentsFromGroup(Integer.parseInt(componentGroupId));
+
+        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+
+        for(ComponentDTO component : components){
+            jsonArrayBuilder.add(Json.createObjectBuilder()
+                    .add("barcode", component.getBarcode())
+                    .add("componentGroupId", component.getComponentGroupId()     )
+                    .add("componentNumber", component.getComponentNumber())
+                    .add("status", component.getStatus()));
+        }
+
+        jsonObjectBuilder.add("components", jsonArrayBuilder);
+
+        JsonObject jsonObject = jsonObjectBuilder.build();
 
         return new JsonHelper().jsonObjectToString(jsonObject);
     }

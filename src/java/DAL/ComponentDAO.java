@@ -2,11 +2,7 @@ package DAL;
 
 import DTO.ComponentDTO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 /**
@@ -61,7 +57,6 @@ public class ComponentDAO implements IComponentDAO {
         try {
             PreparedStatement stm = CONN.prepareStatement("SELECT *, c.status as componentStatus, cg.status as componentGroupStatus FROM Component c " +
                                                     "LEFT JOIN ComponentGroup cg ON c.componentGroupId = cg.componentGroupId WHERE c.barcode = ?;");
-            System.out.println(barcode);
             stm.setString(1, barcode);
             ResultSet result = stm.executeQuery();
             while (result.next()) {
@@ -71,6 +66,26 @@ public class ComponentDAO implements IComponentDAO {
                 component.getComponentGroup().setStatus(result.getInt("componentGroupStatus"));
                 return component;
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    public ComponentDTO[] getComponentsFromGroup(int componentGroupId) {
+        try {
+            PreparedStatement stm = CONN.prepareStatement("SELECT * FROM " + DATABASE_NAME + " WHERE componentGroupId = ?;");
+
+            stm.setInt(1, componentGroupId);
+            ResultSet result = stm.executeQuery();
+            ArrayList<ComponentDTO> components = new ArrayList<>();
+            while (result.next()) {
+                ComponentDTO component = new ComponentDTO(result.getInt("componentGroupId"), result.getInt("componentNumber"), result.getString("barcode"), result.getInt("status"));
+                components.add(component);
+            }
+            return components.toArray(new ComponentDTO[components.size()]);
         } catch (SQLException e) {
             e.printStackTrace();
         }
