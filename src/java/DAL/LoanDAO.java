@@ -46,6 +46,11 @@ public class LoanDAO implements ILoanDAO {
             sqlValues += ", ?";
         }
 
+        if (loan.getMailCount() != -1){
+            sql += ", mailCount";
+            sqlValues += ", ?";
+        }
+
         sql += ") VALUES(" + sqlValues + ")";
 
         try {
@@ -65,6 +70,9 @@ public class LoanDAO implements ILoanDAO {
 
             if (loan.getDeliveredTo() != null && !loan.getDeliveredTo().equals(""))
                 stm.setString(param++, loan.getDeliveredTo());
+
+            if (loan.getMailCount() != -1)
+                stm.setInt(param++, loan.getMailCount());
 
             stm.execute();
 
@@ -91,9 +99,12 @@ public class LoanDAO implements ILoanDAO {
             PreparedStatement stm = CONN.prepareStatement("SELECT * FROM " + DATABASE_NAME + " WHERE loanId = ?");
             stm.setInt(1, loanId);
             ResultSet result = stm.executeQuery();
-            while (result.next())
-                return new LoanDTO(result.getInt("loanId"), result.getString("barcode"), result.getString("studentId"),
+            while (result.next()) {
+                LoanDTO loan = new LoanDTO(result.getInt("loanId"), result.getString("barcode"), result.getString("studentId"),
                         result.getDate("loanDate"), result.getDate("dueDate"), result.getDate("deliveryDate"), result.getString("deliveredTo"));
+                loan.setMailCount(result.getInt("mailCount"));
+                return loan;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -104,17 +115,11 @@ public class LoanDAO implements ILoanDAO {
     @Override
     public LoanDTO[] getLoans() {
         try {
-            ResultSet result = CONN.createStatement().executeQuery("SELECT * FROM " + DATABASE_NAME);
-            ArrayList<LoanDTO> loans = new ArrayList<>();
-            while (result.next())
-                loans.add(new LoanDTO(result.getInt("loanId"), result.getString("barcode"), result.getString("studentId"),
-                        result.getDate("loanDate"), result.getDate("dueDate"), result.getDate("deliveryDate"), result.getString("deliveredTo")));
+            ResultSet result = CONN.createStatement().executeQuery("SELECT * FROM Loan l "
+                    + "LEFT JOIN Component c ON l.barcode = c.barcode "
+                    + "LEFT JOIN ComponentGroup cg ON c.componentGroupId = cg.componentGroupId ");
 
-            // Check if something was actually found
-            if (loans.size() == 0)
-                return null;
-
-            return loans.toArray(new LoanDTO[loans.size()]);
+            return addResultToLoan(result);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -206,6 +211,7 @@ public class LoanDAO implements ILoanDAO {
             loan.setDueDateFromDate(result.getDate("dueDate"));
             loan.setDeliveryDateFromDate(result.getDate("deliveryDate"));
             loan.setDeliveredTo(result.getString("deliveredTo"));
+            loan.setMailCount(result.getInt("mailCount"));
             loans.add(loan);
         }
 
@@ -219,7 +225,7 @@ public class LoanDAO implements ILoanDAO {
     @Override
     public int updateLoan(LoanDTO loan) {
         if (loan.getLoanId() == 0 || (loan.getBarcode() == null && loan.getStudentId() != null && loan.getLoanDate() == null
-                && loan.getDueDate() == null && loan.getDeliveryDate() == null && loan.getDeliveredTo() == null)) {
+                && loan.getDueDate() == null && loan.getDeliveryDate() == null && loan.getDeliveredTo() == null && loan.getMailCount() == -1)) {
             return -1;
         }
 
@@ -266,6 +272,12 @@ public class LoanDAO implements ILoanDAO {
                 sqlValues += ", deliveredTo = ?";
         }
 
+        if (loan.getMailCount() != -1){
+            if (sqlValues.equals(""))
+                sqlValues += "mailCount = ?";
+            else
+                sqlValues += ", mailCount = ?";
+        }
 
         sql += sqlValues;
         sql += " WHERE loanId = ?";
@@ -286,6 +298,8 @@ public class LoanDAO implements ILoanDAO {
                 stm.setDate(param++, new java.sql.Date(loan.getDeliveryDateAsDate().getTime()));
             if (loan.getDeliveredTo() != null)
                 stm.setString(param++, loan.getDeliveredTo());
+            if (loan.getMailCount() != -1)
+                stm.setInt(param++, loan.getMailCount());
 
             stm.setInt(param++, loan.getLoanId());
 

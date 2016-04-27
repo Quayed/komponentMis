@@ -76,6 +76,7 @@ public class LoansResource {
             output.append(", \"dueDate\": \"" + loan.getDueDate() + "\"");
             output.append(", \"deliveryDate\": \"" + (loan.getDeliveryDate() != null ? loan.getDeliveryDate() : "") + "\"");
             output.append(", \"deliveredTo\": \"" + (loan.getDeliveredTo() != null ? loan.getDeliveredTo() : "") + "\"");
+            output.append(", \"mailCount\": " + loan.getMailCount());
             output.append("},");
         }
         output.deleteCharAt(output.length() - 1);
@@ -139,6 +140,7 @@ public class LoansResource {
         output.append(", \"dueDate\": \"" + loan.getDueDate() + "\"");
         output.append(", \"deliveryDate\": \"" + (loan.getDeliveryDate() != null ? loan.getDeliveryDate() : "") + "\"");
         output.append(", \"deliveredTo\": \"" + (loan.getDeliveredTo() != null ? loan.getDeliveredTo() : "") + "\"");
+        output.append(", \"mailCount\": " + loan.getMailCount());
         output.append("}");
 
 

@@ -17,6 +17,7 @@ public class LoanDTO implements Serializable {
     private String dueDate;
     private String deliveryDate;
     private String deliveredTo;
+    private int mailCount = -1;
     private final DateFormat FORMAT = new SimpleDateFormat("dd/MM/yyyy");
 
     public LoanDTO() {
@@ -169,5 +170,13 @@ public class LoanDTO implements Serializable {
 
     public StudentDTO getStudent() {
         return this.student;
+    }
+
+    public int getMailCount() {
+        return mailCount;
+    }
+
+    public void setMailCount(int mailCount) {
+        this.mailCount = mailCount;
     }
 }
