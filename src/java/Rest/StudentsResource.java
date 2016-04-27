@@ -10,20 +10,16 @@ import DAL.IStudentDAO;
 import DAL.StudentDAO;
 import DTO.StudentDTO;
 
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.Produces;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PUT;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
 
 /**
  * REST Web Service
@@ -52,20 +48,20 @@ public class StudentsResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getOverview() {
         StudentDTO[] students = dao.getStudents();
-        StringBuilder output = new StringBuilder();
-        output.append("[");
-        for (StudentDTO student : students) {
-            output.append("{");
-            output.append("\"details\": \"/Students/" + student.getStudentId() + "\"");
-            output.append(", \"studentId\": \"" + student.getStudentId() + "\"");
-            output.append(", \"name\": \"" + student.getName() + "\"");
-            output.append(", \"status\": " + student.getStatus());
-            output.append("},");
-        }
-        output.deleteCharAt(output.length() - 1);
-        output.append("]");
 
-        return output.toString();
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+
+        for (StudentDTO student : students) {
+            arrayBuilder.add(Json.createObjectBuilder()
+                .add("details", "/Students/" + student.getStudentId())
+                .add("studentId", student.getStudentId())
+                .add("name", student.getName())
+                .add("status", student.getStatus()));
+        }
+
+        JsonArray jsonArray = arrayBuilder.build();
+
+        return new JsonHelper().jsonArrayToString(jsonArray);
     }
 
     @GET
@@ -78,14 +74,14 @@ public class StudentsResource {
 
         StudentDTO student = dao.getStudent(studentId);
 
-        StringBuilder output = new StringBuilder();
-        output.append("{");
-        output.append("\"studentId\": \"" + student.getStudentId() + "\"");
-        output.append(", \"name\": \"" + student.getName() + "\"");
-        output.append(", \"status\": " + student.getStatus());
-        output.append("}");
+        JsonObject jsonObject = Json.createObjectBuilder()
+                .add("details", "/Students/" + student.getStudentId())
+                .add("studentId", student.getStudentId())
+                .add("name", student.getName())
+                .add("status", student.getStatus())
+                .build();
 
-        return output.toString();
+        return new JsonHelper().jsonObjectToString(jsonObject);
     }
 
     @PUT

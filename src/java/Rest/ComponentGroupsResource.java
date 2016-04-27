@@ -5,27 +5,21 @@
  */
 package Rest;
 
+import DAL.ComponentDAO;
 import DAL.ComponentGroupDAO;
-import DTO.ComponentGroupDTO;
 import DAL.DatabaseConfig;
 import DAL.IComponentGroupDAO;
+import DTO.ComponentDTO;
+import DTO.ComponentGroupDTO;
 
+import javax.json.*;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.Produces;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-
-
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PUT;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
 
 /**
  * REST Web Service
@@ -38,13 +32,15 @@ public class ComponentGroupsResource {
     @Context
     private UriInfo context;
     private IComponentGroupDAO dao;
+    private Connection conn;
 
     /**
      * Creates a new instance of KomponentTyperResource
      */
     public ComponentGroupsResource() {
         try {
-            dao = new ComponentGroupDAO(DriverManager.getConnection(DatabaseConfig.ENDPOINT, DatabaseConfig.USERNAME, DatabaseConfig.PASSWORD));
+            conn = DriverManager.getConnection(DatabaseConfig.ENDPOINT, DatabaseConfig.USERNAME, DatabaseConfig.PASSWORD);
+            dao = new ComponentGroupDAO(conn);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -62,20 +58,21 @@ public class ComponentGroupsResource {
         if (componentGroups == null)
             throw new WebApplicationException(500);
 
-        StringBuilder output = new StringBuilder();
-        output.append("[");
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+
         for (ComponentGroupDTO componentGroup : componentGroups) {
-            output.append("{");
-            output.append("\"details\": \"/ComponentGroups/" + componentGroup.getComponentGroupId() + "\"");
-            output.append(", \"componentGroupId\": " + componentGroup.getComponentGroupId());
-            output.append(", \"name\": \"" + componentGroup.getName() + "\"");
-            output.append(", \"standardLoanDuration\": \"" + componentGroup.getStandardLoanDuration() + "\"");
-            output.append(", \"status\": " + componentGroup.getStatus());
-            output.append("},");
+            arrayBuilder.add(Json.createObjectBuilder()
+                .add("details", "ComponentGroups/" + componentGroup.getComponentGroupId())
+                .add("componentGroupId", componentGroup.getComponentGroupId())
+                .add("name", componentGroup.getName())
+                .add("standardLoanDuration", componentGroup.getStandardLoanDuration())
+                .add("status", componentGroup.getStatus()));
+
         }
-        output.deleteCharAt(output.length() - 1);
-        output.append("]");
-        return output.toString();
+        JsonArray jsonArray = arrayBuilder.build();
+
+
+        return new JsonHelper().jsonArrayToString(jsonArray);
     }
 
     /**
@@ -96,15 +93,32 @@ public class ComponentGroupsResource {
         if (componentGroup == null)
             throw new WebApplicationException(404);
 
-        StringBuilder output = new StringBuilder();
-        output.append("{");
-        output.append("\"componentGroupId\": " + componentGroup.getComponentGroupId());
-        output.append(", \"name\": \"" + componentGroup.getName() + "\"");
-        output.append(", \"standardLoanDuration\": \"" + (componentGroup.getStandardLoanDuration() == null ? "" : componentGroup.getStandardLoanDuration()) + "\"");
-        output.append(", \"status\" : " + componentGroup.getStatus());
-        output.append("}");
 
-        return output.toString();
+        JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder()
+                .add("componentGroupId", componentGroup.getComponentGroupId())
+                .add("name", componentGroup.getName())
+                .add("standardLoanDuration", componentGroup.getStandardLoanDuration())
+                .add("status", componentGroup.getStatus());
+
+        // Create list of all the components with this componentGroup
+
+        ComponentDTO[] components = new ComponentDAO(conn).getComponentsFromGroup(Integer.parseInt(componentGroupId));
+
+        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+
+        for(ComponentDTO component : components){
+            jsonArrayBuilder.add(Json.createObjectBuilder()
+                    .add("barcode", component.getBarcode())
+                    .add("componentGroupId", component.getComponentGroupId()     )
+                    .add("componentNumber", component.getComponentNumber())
+                    .add("status", component.getStatus()));
+        }
+
+        jsonObjectBuilder.add("components", jsonArrayBuilder);
+
+        JsonObject jsonObject = jsonObjectBuilder.build();
+
+        return new JsonHelper().jsonObjectToString(jsonObject);
     }
 
     @PUT

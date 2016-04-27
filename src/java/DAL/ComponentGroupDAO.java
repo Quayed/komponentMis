@@ -91,6 +91,22 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
         return null;
     }
 
+    public ComponentGroupDTO[] getComponentGroups(String param, String value){
+        ResultSet result = null;
+        ArrayList<ComponentGroupDTO> componentGroups = new ArrayList();
+        try {
+            PreparedStatement stm = CONN.prepareStatement("SELECT * FROM " +  DATABASE_NAME + " WHERE " + param + " = " + value);
+            result = stm.executeQuery();
+            while (result.next()) {
+                componentGroups.add(new ComponentGroupDTO(result.getInt("componentGroupId"), result.getString("name"), result.getString("standardLoanDuration"), result.getInt("status")));
+            }
+            return componentGroups.toArray(new ComponentGroupDTO[componentGroups.size()]);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     @Override
     public int updateComponentGroups(ComponentGroupDTO componentGroup) {
         String sql = "UPDATE " + DATABASE_NAME + " set ";
