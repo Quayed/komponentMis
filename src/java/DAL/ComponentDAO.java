@@ -59,11 +59,18 @@ public class ComponentDAO implements IComponentDAO {
     @Override
     public ComponentDTO getComponent(String barcode) {
         try {
-            PreparedStatement stm = CONN.prepareStatement("SELECT * FROM " + DATABASE_NAME + " WHERE barcode = ?");
+            PreparedStatement stm = CONN.prepareStatement("SELECT *, c.status as componentStatus, cg.status as componentGroupStatus FROM Component c " +
+                                                    "LEFT JOIN ComponentGroup cg ON c.componentGroupId = cg.componentGroupId WHERE c.barcode = ?;");
+            System.out.println(barcode);
             stm.setString(1, barcode);
             ResultSet result = stm.executeQuery();
-            while (result.next())
-                return new ComponentDTO(result.getInt("componentGroupId"), result.getInt("componentNumber"), result.getString("barcode"), result.getInt("status"));
+            while (result.next()) {
+                ComponentDTO component = new ComponentDTO(result.getInt("componentGroupId"), result.getInt("componentNumber"), result.getString("barcode"), result.getInt("componentStatus"));
+                component.getComponentGroup().setName(result.getString("name"));
+                component.getComponentGroup().setStandardLoanDuration("standardLoanDuration");
+                component.getComponentGroup().setStatus(result.getInt("componentGroupStatus"));
+                return component;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -74,11 +81,11 @@ public class ComponentDAO implements IComponentDAO {
     @Override
     public ComponentDTO[] getComponents() {
         try {
-            ResultSet result = CONN.createStatement().executeQuery("SELECT * FROM " + DATABASE_NAME + " c "
-                    + "LEFT JOIN ComponentGroup cg ON c.componentGroupId = cg.componentGroupId;");
+            ResultSet result = CONN.createStatement().executeQuery("SELECT *, c.status as componentStatus, cg.status as componentGroupStatus FROM Component c " +
+                                                        "LEFT JOIN ComponentGroup cg ON c.componentGroupId = cg.componentGroupId;");
             ArrayList<ComponentDTO> components = new ArrayList<>();
             while (result.next()) {
-                ComponentDTO component = new ComponentDTO(result.getInt("componentGroupId"), result.getInt("componentNumber"), result.getString("barcode"), result.getInt("status"));
+                ComponentDTO component = new ComponentDTO(result.getInt("componentGroupId"), result.getInt("componentNumber"), result.getString("barcode"), result.getInt("componentStatus"));
                 component.getComponentGroup().setName(result.getString("name"));
                 components.add(component);
 

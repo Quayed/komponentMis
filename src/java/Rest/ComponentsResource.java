@@ -5,10 +5,16 @@
  */
 package Rest;
 
-import DAL.*;
+import DAL.ComponentDAO;
+import DAL.DatabaseConfig;
+import DAL.IComponentDAO;
+import DAL.LoanDAO;
 import DTO.ComponentDTO;
-import DTO.ComponentGroupDTO;
 
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -53,27 +59,26 @@ public class ComponentsResource {
     public String getOverview() {
         ComponentDTO[] components = dao.getComponents();
 
-        StringBuilder output = new StringBuilder();
-
         LoanDAO loanDAO = new LoanDAO(conn);
 
-        output.append("[");
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+
         for (ComponentDTO component : components) {
             String studentId = loanDAO.getStudentIdForActiveLoan(component.getBarcode());
 
-            output.append("{");
-            output.append("\"details\": \"/Components/" + component.getBarcode() + "\"");
-            output.append(", \"barcode\": " + component.getBarcode());
-            output.append(", \"componentGroupId\": " + component.getComponentGroupId());
-            output.append(", \"name\" : \"" + component.getComponentGroup().getName() + "\"");
-            output.append(", \"componentNumber\": " + component.getComponentNumber());
-            output.append(", \"status\":" + component.getStatus());
-            output.append(", \"studentId\" : \"" + ((studentId == null) ? "" : studentId) + "\"");
-            output.append("},");
+            arrayBuilder.add(Json.createObjectBuilder()
+            .add("details", "/Components/" + component.getBarcode())
+            .add("barcode", component.getBarcode())
+            .add("componentGroupId", component.getComponentGroupId())
+            .add("name", component.getComponentGroup().getName())
+            .add("componentNumber", component.getComponentNumber())
+            .add("status", component.getStatus())
+            .add("studentId", (studentId == null ? "" : studentId)));
         }
-        output.deleteCharAt(output.length() - 1);
-        output.append("]");
-        return output.toString();
+
+        JsonArray jsonArray = arrayBuilder.build();
+
+        return new JsonHelper().jsonArrayToString(jsonArray);
     }
 
     @GET
@@ -85,28 +90,19 @@ public class ComponentsResource {
         if (component == null)
             throw new WebApplicationException(404);
 
-        ComponentGroupDTO componentGroup = componentGroup = new ComponentGroupDAO(conn).getComponentGroup(component.getComponentGroupId());
-        if (componentGroup == null)
-            throw new WebApplicationException(500);
+        JsonObject jsonObject = Json.createObjectBuilder()
+                .add("barcode", component.getBarcode())
+                .add("componentGroup", Json.createObjectBuilder()
+                    .add("componentGroupId", component.getComponentGroup().getComponentGroupId())
+                    .add("name", component.getComponentGroup().getName())
+                    .add("standardLoanDuration", component.getComponentGroup().getStandardLoanDuration())
+                    .add("status", component.getComponentGroup().getStatus()))
+                .add("componentNumber", component.getComponentNumber())
+                .add("status", component.getStatus())
+                .build();
 
 
-        StringBuilder output = new StringBuilder();
-        output.append("{");
-        output.append("\"barcode\": " + component.getBarcode());
-
-        // Information about the componentGroup
-        output.append(", \"componentGroup\": { ");
-        output.append("\"componentGroupId\": " + componentGroup.getComponentGroupId());
-        output.append(", \"name\": " + "\"" + componentGroup.getName() + "\"");
-        output.append(", \"standardLoanDuration\": " + "\"" + (componentGroup.getStandardLoanDuration() == null ? "" : componentGroup.getStandardLoanDuration()) + "\"");
-        output.append(", \"standardLoanDuration\": " + componentGroup.getStatus());
-        output.append("}");
-
-        output.append(", \"componentNumber\": " + component.getComponentNumber());
-        output.append(", \"status\":" + component.getStatus());
-        output.append("}");
-
-        return output.toString();
+        return new JsonHelper().jsonObjectToString(jsonObject);
     }
 
     @PUT

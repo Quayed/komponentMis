@@ -5,34 +5,24 @@
  */
 package Rest;
 
-import DAL.ComponentDAO;
+import DAL.*;
 import DTO.ComponentDTO;
-import DAL.ComponentGroupDAO;
 import DTO.ComponentGroupDTO;
-import DAL.DatabaseConfig;
-import DAL.ILoanDAO;
-import DAL.LoanDAO;
 import DTO.LoanDTO;
-import DAL.StudentDAO;
 import DTO.StudentDTO;
 
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.Produces;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PUT;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
 
 /**
  * REST Web Service
@@ -64,25 +54,25 @@ public class LoansResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getOverview() {
         LoanDTO[] loans = dao.getLoans();
-        StringBuilder output = new StringBuilder();
-        output.append("[");
-        for (LoanDTO loan : loans) {
-            output.append("{");
-            output.append("\"details\": \"/Loans/" + loan.getLoanId() + "\"");
-            output.append(", \"loanId\": " + loan.getLoanId());
-            output.append(", \"barcode\": " + loan.getBarcode());
-            output.append(", \"studentId\": \"" + loan.getStudentId() + "\"");
-            output.append(", \"loanDate\": \"" + loan.getLoanDate() + "\"");
-            output.append(", \"dueDate\": \"" + loan.getDueDate() + "\"");
-            output.append(", \"deliveryDate\": \"" + (loan.getDeliveryDate() != null ? loan.getDeliveryDate() : "") + "\"");
-            output.append(", \"deliveredTo\": \"" + (loan.getDeliveredTo() != null ? loan.getDeliveredTo() : "") + "\"");
-            output.append(", \"mailCount\": " + loan.getMailCount());
-            output.append("},");
-        }
-        output.deleteCharAt(output.length() - 1);
-        output.append("]");
 
-        return output.toString();
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+
+        for (LoanDTO loan : loans) {
+            arrayBuilder.add(Json.createObjectBuilder()
+                .add("details", "/loans/" + loan.getLoanId())
+                .add("loanId", loan.getLoanId())
+                .add("barcode", loan.getBarcode())
+            .add("studentId", loan.getStudentId())
+            .add("loanDate", loan.getLoanDate())
+            .add("dueDate", loan.getDueDate())
+            .add("deliveryDate", (loan.getDeliveryDate() != null ? loan.getDeliveryDate() : ""))
+            .add("deliveredTo", (loan.getDeliveredTo() != null ? loan.getDeliveredTo() : ""))
+            .add("mailCount", loan.getMailCount()));
+        }
+
+        JsonArray jsonArray = arrayBuilder.build();
+
+        return new JsonHelper().jsonArrayToString(jsonArray);
     }
 
 
