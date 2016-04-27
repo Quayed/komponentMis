@@ -68,7 +68,7 @@ public class MailHandler implements Runnable {
                         String body = "Dette er en automatisk påmindelse til " + loan.getStudentId() 
                                 + ".\n\nDu har komponenten " + loan.getComponent().getComponentGroup().getName() + ". Du skal inden " 
                                 + (int) (((loan.getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay))
-                                + " dage aflevere den eller henvende dig i Komponentshoppen på DTU Ballerup Campus og forlænge udlånet."                          
+                                + " dag(e) aflevere den eller henvende dig i Komponentshoppen på DTU Ballerup Campus og forlænge udlånet."                          
                                 + " Afleveringsdatoen for komponenten er: " + loan.getDueDate() 
                                 + "\n\nMed venlig hilsen\nKomponentshoppen på DTU Ballerup Campus\n"
                                 + "\n\n\n***Dette er en autogenereret e-mail. E-mails sendt til denne adresse vil ikke blive besvaret***";
