@@ -53,8 +53,12 @@ public class MailHandler implements Runnable {
                         if ((((int) (((loan.getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay) + 1)) <= 0)) {
                         String subject = "Komponent:" + loan.getBarcode() + "-StudieNr:" + loan.getStudentId();
                         
+                        
+                        
+                        
+                        
                         String body = "Dette er en automatisk påmindelse til " + loan.getStudentId() 
-                                + ".\n\nDu har overskredet afleveringsfristen for komponenten X. Du skal hurtigst muligt aflevere den i Komponentshoppen på DTU Ballerup Campus."                          
+                                + ".\n\nDu har overskredet afleveringsfristen for komponenten " + loan.getComponent().getComponentGroup().getName() + ". Du skal hurtigst muligt aflevere den i Komponentshoppen på DTU Ballerup Campus."                          
                                 + " Afleveringsdatoen for komponenten var: " + loan.getDueDate() 
                                 + "\n\nMed venlig hilsen\nKomponentshoppen på DTU Ballerup Campus\n"
                                 + "\n\n\n***Dette er en autogenereret e-mail. E-mails sendt til denne adresse vil ikke blive besvaret***";
@@ -62,10 +66,11 @@ public class MailHandler implements Runnable {
                         SendEmail(subject, body, loan.getStudentId());
                         }
                         else {
+                                                        
                         String subject = "Komponent:" + loan.getBarcode() + "-StudieNr:" + loan.getStudentId();
                         
                         String body = "Dette er en automatisk påmindelse til " + loan.getStudentId() 
-                                + ".\n\nDu har komponenten X. Du skal inden " 
+                                + ".\n\nDu har komponenten " + loan.getComponent().getComponentGroup().getName() + ". Du skal inden " 
                                 + (int) (((loan.getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay) + 1)
                                 + " dage aflevere den eller henvende dig i Komponentshoppen på DTU Ballerup Campus og forlænge udlånet."                          
                                 + " Afleveringsdatoen for komponenten er: " + loan.getDueDate() 
@@ -82,7 +87,7 @@ public class MailHandler implements Runnable {
         }
     }
 
-    private void SendEmail(String subject, String body, String user) {
+    private void SendEmail(String subject, String body, String user) throws InterruptedException {
 
         String to = "mailservicemis@gmail.com";
 
@@ -118,6 +123,7 @@ public class MailHandler implements Runnable {
 
             // Send message
             Transport.send(message);
+            
             System.out.println("Sent mail to " + user + " successfully");
         } catch (MessagingException mex) {
             System.out.println("Sent mail to " + user + " failed\n" + mex.getMessage());
