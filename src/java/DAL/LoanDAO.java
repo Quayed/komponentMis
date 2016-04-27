@@ -197,6 +197,29 @@ public class LoanDAO implements ILoanDAO {
         return null;
     }
 
+    @Override
+    public String getStudentIdForActiveLoan(String barcode){
+        try {
+
+            PreparedStatement stm = CONN.prepareStatement("SELECT * FROM Loan l "
+                    + "LEFT JOIN Component c ON l.barcode = c.barcode "
+                    + "LEFT JOIN ComponentGroup cg ON c.componentGroupId = cg.componentGroupId "
+                    + "WHERE l.barcode = ? AND l.deliveryDate IS NULL;");
+
+            stm.setString(1, barcode);
+            ResultSet result = stm.executeQuery();
+
+            if(result.next()) {
+                System.out.println(result.getString("studentId"));
+                return result.getString("studentId");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     private LoanDTO[] addResultToLoan(ResultSet result) throws SQLException {
         ArrayList<LoanDTO> loans = new ArrayList<>();
         while (result.next()) {

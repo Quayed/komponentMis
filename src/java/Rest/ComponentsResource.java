@@ -5,28 +5,17 @@
  */
 package Rest;
 
-import DAL.ComponentDAO;
+import DAL.*;
 import DTO.ComponentDTO;
-import DAL.ComponentGroupDAO;
 import DTO.ComponentGroupDTO;
-import DAL.DatabaseConfig;
-import DAL.IComponentDAO;
 
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.Produces;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PUT;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
 
 
 /**
@@ -63,9 +52,15 @@ public class ComponentsResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getOverview() {
         ComponentDTO[] components = dao.getComponents();
+
         StringBuilder output = new StringBuilder();
+
+        LoanDAO loanDAO = new LoanDAO(conn);
+
         output.append("[");
         for (ComponentDTO component : components) {
+            String studentId = loanDAO.getStudentIdForActiveLoan(component.getBarcode());
+
             output.append("{");
             output.append("\"details\": \"/Components/" + component.getBarcode() + "\"");
             output.append(", \"barcode\": " + component.getBarcode());
@@ -73,6 +68,7 @@ public class ComponentsResource {
             output.append(", \"name\" : \"" + component.getComponentGroup().getName() + "\"");
             output.append(", \"componentNumber\": " + component.getComponentNumber());
             output.append(", \"status\":" + component.getStatus());
+            output.append(", \"studentId\" : \"" + ((studentId == null) ? "" : studentId) + "\"");
             output.append("},");
         }
         output.deleteCharAt(output.length() - 1);
