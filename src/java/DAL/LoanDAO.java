@@ -159,7 +159,7 @@ public class LoanDAO implements ILoanDAO {
     public LoanDTO[] searchLoans(String keyword) {
         String sql = "SELECT l.loanID, c.barcode, cg.componentGroupID, cg.name as componentGroupName, " +
                 "cg.standardLoanDuration, cg.status as componentGroupStatus, c.componentNumber, " +
-                "c.status as componentStatus, s.studentId, s.name as studentName, s.status as studentStatus, " +
+                "c.status as componentStatus, l.studentId, " +
                 "l.loanDate, l.dueDate, l.deliveryDate, l.deliveredTo, l.mailCount " +
                 "FROM Loan l " +
                 "LEFT JOIN Component c ON l.barcode = c.barcode " +
