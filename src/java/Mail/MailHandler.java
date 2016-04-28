@@ -5,6 +5,7 @@
  */
 package Mail;
 
+import DAL.DatabaseConfig;
 import DAL.LoanDAO;
 import DTO.LoanDTO;
 import java.sql.Connection;
@@ -105,7 +106,7 @@ public class MailHandler implements Runnable {
 
                 @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication("mailservicemis@gmail.com", "passwordmis");
+                    return new PasswordAuthentication(DatabaseConfig.MAILUSER, DatabaseConfig.MAILPASSWORD);
                 }
 
             });
