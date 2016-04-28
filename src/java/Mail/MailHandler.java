@@ -10,8 +10,6 @@ import DTO.LoanDTO;
 import java.sql.Connection;
 import java.util.Date;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -102,16 +100,16 @@ public class MailHandler implements Runnable {
             mailProperties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
             mailProperties.put("mail.smtp.socketFactory.fallback", "false");
             mailProperties.put("mail.smtp.starttls.enable", "true");
-            
+
             Session mailSession = Session.getDefaultInstance(mailProperties, new Authenticator() {
-                
+
                 @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
                     return new PasswordAuthentication("mailservicemis@gmail.com", "passwordmis");
                 }
-                
+
             });
-            
+
             MimeMessage message = new MimeMessage(mailSession);
             message.setFrom(new InternetAddress(from));
             String[] emails = {to};
@@ -124,10 +122,10 @@ public class MailHandler implements Runnable {
             message.setText(body, "UTF-8");
             message.setSubject(subject, "UTF-8");
             message.setSentDate(new java.util.Date());
-            
+
             Transport.send(message);
             System.out.println("Mail sent to " + user + " successfully");
-            
+
         } catch (MessagingException ex) {
             System.out.println("Mail to " + user + " unsuccessful");
         }
