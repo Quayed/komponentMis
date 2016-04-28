@@ -5,14 +5,17 @@
  */
 package Mail;
 
-import DAL.ComponentDAO;
 import DAL.LoanDAO;
 import DTO.LoanDTO;
 import java.sql.Connection;
 import java.util.Date;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -36,7 +39,7 @@ public class MailHandler implements Runnable {
         while (true) {
             try {
                 checkLoans();
-                Thread.sleep(msPerDay/4);
+                Thread.sleep(msPerDay / 4);
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
@@ -45,37 +48,38 @@ public class MailHandler implements Runnable {
 
     private void checkLoans() throws InterruptedException {
         LoanDTO[] loans = new LoanDAO(conn).getLoans();
-        
+
         try {
             for (LoanDTO loan : loans) {
-                    Date curDate = new Date();
-                    if ( (((int) (((loan.getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay))) < 7) && (loan.getDeliveryDate() == null || loan.getDeliveryDate().equals(""))) {
-                        if ((((int) (((loan.getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay))) <= 0) && loan.getMailCount() == 1) {
+                Date curDate = new Date();
+                if ((((int) (((loan.getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay))) < 7) && (loan.getDeliveryDate() == null || loan.getDeliveryDate().equals(""))) {
+                    if ((((int) (((loan.getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay))) <= 0) && loan.getMailCount() == 1) {
                         String subject = "Komponent:" + loan.getBarcode() + "-StudieNr:" + loan.getStudentId();
-      
-                        String body = "Dette er en automatisk påmindelse til " + loan.getStudentId() 
-                                + ".\n\nDu har overskredet afleveringsfristen for komponenten " + loan.getComponent().getComponentGroup().getName() + ". Du skal hurtigst muligt aflevere den i Komponentshoppen på DTU Ballerup Campus."                          
-                                + " Afleveringsdatoen for komponenten var: " + loan.getDueDate() 
+
+                        String body = "Dette er en automatisk påmindelse til " + loan.getStudentId()
+                                + ".\n\nDu har overskredet afleveringsfristen for komponenten " + loan.getComponent().getComponentGroup().getName() + ". Du skal hurtigst muligt aflevere den i Komponentshoppen på DTU Ballerup Campus."
+                                + " Afleveringsdatoen for komponenten var: " + loan.getDueDate()
                                 + "\n\nMed venlig hilsen\nKomponentshoppen på DTU Ballerup Campus\n"
                                 + "\n\n\n***Dette er en autogenereret e-mail. E-mails sendt til denne adresse vil ikke blive besvaret***";
-                        
+
                         SendEmail(subject, body, loan.getStudentId());
-                        }
-                        else if (loan.getMailCount() == 0){
-                                                        
+                        loan.setMailCount(1);
+                    } else if (loan.getMailCount() == 0) {
+
                         String subject = "Komponent:" + loan.getBarcode() + "-StudieNr:" + loan.getStudentId();
-                        
-                        String body = "Dette er en automatisk påmindelse til " + loan.getStudentId() 
-                                + ".\n\nDu har komponenten " + loan.getComponent().getComponentGroup().getName() + ". Du skal inden " 
-                                + (int) (((loan.getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay))
-                                + " dag(e) aflevere den eller henvende dig i Komponentshoppen på DTU Ballerup Campus og forlænge udlånet."                          
-                                + " Afleveringsdatoen for komponenten er: " + loan.getDueDate() 
+
+                        String body = "Dette er en automatisk påmindelse til " + loan.getStudentId()
+                                + ".\n\nDu har komponenten " + loan.getComponent().getComponentGroup().getName() + ". Du skal inden "
+                                + (int) (((loan.getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay) + 1)
+                                + " dag(e) aflevere den eller henvende dig i Komponentshoppen på DTU Ballerup Campus og forlænge udlånet."
+                                + " Afleveringsdatoen for komponenten er: " + loan.getDueDate()
                                 + "\n\nMed venlig hilsen\nKomponentshoppen på DTU Ballerup Campus\n"
                                 + "\n\n\n***Dette er en autogenereret e-mail. E-mails sendt til denne adresse vil ikke blive besvaret***";
-                        
-                        SendEmail(subject, body, loan.getStudentId());                            
-                        }
+
+                        SendEmail(subject, body, loan.getStudentId());
+                        loan.setMailCount(1);
                     }
+                }
             }
         } catch (NullPointerException ex) {
             System.out.println("No due loans found");
@@ -83,46 +87,49 @@ public class MailHandler implements Runnable {
         }
     }
 
-    private void SendEmail(String subject, String body, String user) throws InterruptedException {
-
-        String to = "mailservicemis@gmail.com";
-
-        //String to = user + "@student.dtu.dk";
-        String from = "mailservicemis@gmail.com";
-
-        String host = "localhost";
-
-        // Get system properties
-        Properties properties = System.getProperties();
-
-        // Setup mail server
-        properties.setProperty("smtp.gmail.com", host);
-
-        // Get the default Session object.
-        Session session = Session.getDefaultInstance(properties);
+    private void SendEmail(String subject, String body, String user) {
 
         try {
-            // Create a default MimeMessage object.
-            MimeMessage message = new MimeMessage(session);
-
-            // Set From: header field of the header.
-            message.setFrom(new InternetAddress(from));
-
-            // Set To: header field of the header.
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-
-            // Set Subject: header field
-            message.setSubject(subject);
-
-            // Now set the actual message
-            message.setText(body);
-
-            // Send message
-            Transport.send(message);
+            String to = "mailservicemis@gmail.com";
+            //String to = user + "@student.dtu.dk";
+            String from = "mailservicemis@gmail.com";
+            Properties mailProperties = new Properties();
+            mailProperties.put("mail.smtp.from", from);
+            mailProperties.put("mail.smtp.host", "smtp.gmail.com");
+            mailProperties.put("mail.smtp.port", 465);
+            mailProperties.put("mail.smtp.auth", true);
+            mailProperties.put("mail.smtp.socketFactory.port", 465);
+            mailProperties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+            mailProperties.put("mail.smtp.socketFactory.fallback", "false");
+            mailProperties.put("mail.smtp.starttls.enable", "true");
             
-            System.out.println("Sent mail to " + user + " successfully");
-        } catch (MessagingException mex) {
-            System.out.println("Sent mail to " + user + " failed\n" + mex.getMessage());
+            Session mailSession = Session.getDefaultInstance(mailProperties, new Authenticator() {
+                
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication("mailservicemis@gmail.com", "passwordmis");
+                }
+                
+            });
+            
+            MimeMessage message = new MimeMessage(mailSession);
+            message.setFrom(new InternetAddress(from));
+            String[] emails = {to};
+            InternetAddress dests[] = new InternetAddress[emails.length];
+            for (int i = 0; i < emails.length; i++) {
+                dests[i] = new InternetAddress(emails[i].trim().toLowerCase());
+            }
+            message.setRecipients(Message.RecipientType.TO, dests);
+            message.setSubject(subject, "UTF-8");
+            message.setText(body, "UTF-8");
+            message.setSubject(subject, "UTF-8");
+            message.setSentDate(new java.util.Date());
+            
+            Transport.send(message);
+            System.out.println("Mail sent to " + user + " successfully");
+            
+        } catch (MessagingException ex) {
+            System.out.println("Mail to " + user + " unsuccessful");
         }
     }
 }
