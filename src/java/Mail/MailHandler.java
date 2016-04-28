@@ -106,7 +106,7 @@ public class MailHandler implements Runnable {
 
                 @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(DatabaseConfig.MAILUSER, DatabaseConfig.MAILPASSWORD);
+                    return new PasswordAuthentication(DatabaseConfig.MAILUSER, DatabaseConfig.PASSWORD);
                 }
 
             });
