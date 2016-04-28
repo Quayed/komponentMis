@@ -77,7 +77,7 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
     @Override
     public ComponentGroupDTO[] getComponentGroups() {
         ResultSet result = null;
-        ArrayList<ComponentGroupDTO> componentGroups = new ArrayList();
+        ArrayList<ComponentGroupDTO> componentGroups = new ArrayList<ComponentGroupDTO>();
         try {
             result = CONN.createStatement().executeQuery("SELECT * FROM " + DATABASE_NAME);
             while (result.next()) {
@@ -93,7 +93,7 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
 
     public ComponentGroupDTO[] getComponentGroups(String param, String value){
         ResultSet result = null;
-        ArrayList<ComponentGroupDTO> componentGroups = new ArrayList();
+        ArrayList<ComponentGroupDTO> componentGroups = new ArrayList<ComponentGroupDTO>();
         try {
             PreparedStatement stm = CONN.prepareStatement("SELECT * FROM " +  DATABASE_NAME + " WHERE " + param + " = " + value);
             result = stm.executeQuery();
