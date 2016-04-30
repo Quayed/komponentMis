@@ -54,6 +54,7 @@ public class ComponentGroupsResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getOverview() {
         ComponentGroupDTO[] componentGroups = dao.getComponentGroups();
+        closeConn();
 
         if (componentGroups == null)
             throw new WebApplicationException(500);
@@ -118,6 +119,7 @@ public class ComponentGroupsResource {
 
         JsonObject jsonObject = jsonObjectBuilder.build();
 
+        closeConn();
         return new JsonHelper().jsonObjectToString(jsonObject);
     }
 
@@ -127,6 +129,8 @@ public class ComponentGroupsResource {
     public String createComponentGroup(ComponentGroupDTO componentGroup) {
 
         int returnStatus = dao.createComponentGroup(componentGroup);
+        closeConn();
+
         if (returnStatus > 0)
             return "{\"componentGroupId\": " + returnStatus + " }";
         else
@@ -145,7 +149,10 @@ public class ComponentGroupsResource {
         }
 
         componentGroup.setComponentGroupId(Integer.parseInt(id));
+
         int returnStatus = dao.updateComponentGroups(componentGroup);
+        closeConn();
+
         if (returnStatus == 1)
             return "All Ok";
         else
@@ -160,12 +167,25 @@ public class ComponentGroupsResource {
         if (!id.matches("^\\d+$")) {
             throw new WebApplicationException(405);
         }
+
         int returnValue = dao.deleteComponentGroup(Integer.parseInt(id));
+        closeConn();
+
         if (returnValue == 1) {
             return "All ok";
         } else if (returnValue == -2)
             throw new WebApplicationException(404);
         else
             throw new WebApplicationException(500);
+    }
+
+    private void closeConn(){
+        // This method is used to close the connection to the database
+
+        try {
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

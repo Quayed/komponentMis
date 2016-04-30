@@ -18,6 +18,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
@@ -32,13 +33,15 @@ public class StudentsResource {
     @Context
     private UriInfo context;
     private IStudentDAO dao;
+    private Connection conn;
 
     /**
      * Creates a new instance of StudentsResource
      */
     public StudentsResource() {
         try {
-            dao = new StudentDAO(DriverManager.getConnection(DatabaseConfig.ENDPOINT, DatabaseConfig.USERNAME, DatabaseConfig.PASSWORD));
+            conn = DriverManager.getConnection(DatabaseConfig.ENDPOINT, DatabaseConfig.USERNAME, DatabaseConfig.PASSWORD);
+            dao = new StudentDAO(conn);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -48,6 +51,7 @@ public class StudentsResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getOverview() {
         StudentDTO[] students = dao.getStudents();
+        closeConn();
 
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
 
@@ -73,6 +77,7 @@ public class StudentsResource {
             throw new WebApplicationException(405);
 
         StudentDTO student = dao.getStudent(studentId);
+        closeConn();
 
         JsonObject jsonObject = Json.createObjectBuilder()
                 .add("details", "/Students/" + student.getStudentId())
@@ -89,6 +94,8 @@ public class StudentsResource {
     @Produces(MediaType.TEXT_PLAIN)
     public String createStudent(StudentDTO student) {
         int returnStatus = dao.createStudent(student);
+        closeConn();
+
         if (returnStatus == 1)
             return "All Ok";
         else
@@ -106,6 +113,8 @@ public class StudentsResource {
 
         student.setStudentId(studentId);
         int returnStatus = dao.updateStudent(student);
+        closeConn();
+
         if (returnStatus == 1)
             return "All Ok";
         else
@@ -121,6 +130,7 @@ public class StudentsResource {
             throw new WebApplicationException(405);
 
         int returnValue = dao.deleteStudent(studentId);
+        closeConn();
 
         if (returnValue == 1)
             return "All ok";
@@ -128,5 +138,15 @@ public class StudentsResource {
             throw new WebApplicationException(404);
         else
             throw new WebApplicationException(500);
+    }
+
+    private void closeConn(){
+        // This method is used to close the connection to the database
+
+        try {
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

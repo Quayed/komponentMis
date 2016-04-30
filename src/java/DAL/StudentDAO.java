@@ -34,8 +34,9 @@ public class StudentDAO implements IStudentDAO {
                 + " VALUES (?, ?, ?)";
         String sqlValues = "";
 
+        PreparedStatement stm = null;
         try {
-            PreparedStatement stm = CONN.prepareStatement(sql);
+            stm = CONN.prepareStatement(sql);
             int param = 1;
 
             stm.setString(param++, student.getStudentId());
@@ -53,6 +54,9 @@ public class StudentDAO implements IStudentDAO {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if(stm != null)
+                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
         }
 
         return -3;
@@ -60,14 +64,21 @@ public class StudentDAO implements IStudentDAO {
 
     @Override
     public StudentDTO getStudent(String studentId) {
+        PreparedStatement stm = null;
+        ResultSet result = null;
         try {
-            PreparedStatement stm = CONN.prepareStatement("SELECT * FROM " + DATABASE_NAME + " WHERE studentId = ?");
+            stm = CONN.prepareStatement("SELECT * FROM " + DATABASE_NAME + " WHERE studentId = ?");
             stm.setString(1, studentId);
-            ResultSet result = stm.executeQuery();
+            result = stm.executeQuery();
             while (result.next())
                 return new StudentDTO(result.getString("studentId"), result.getString("name"), result.getInt("status"));
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if(result != null)
+                try{ result.close(); } catch(SQLException e ){e.printStackTrace();}
+            if(stm != null)
+                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
         }
 
         return null;
@@ -75,16 +86,23 @@ public class StudentDAO implements IStudentDAO {
 
     @Override
     public StudentDTO[] getStudents() {
+        PreparedStatement stm = null;
+        ResultSet result = null;
         try {
-            PreparedStatement stm = CONN.prepareStatement("SELECT * FROM " + DATABASE_NAME);
+            stm = CONN.prepareStatement("SELECT * FROM " + DATABASE_NAME);
             ArrayList<StudentDTO> students = new ArrayList<>();
-            ResultSet result = stm.executeQuery();
+            result = stm.executeQuery();
             while (result.next())
                 students.add(new StudentDTO(result.getString("studentId"), result.getString("name"), result.getInt("status")));
 
             return students.toArray(new StudentDTO[students.size()]);
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if(result != null)
+                try{ result.close(); } catch(SQLException e ){e.printStackTrace();}
+            if(stm != null)
+                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
         }
 
         return null;
@@ -112,8 +130,9 @@ public class StudentDAO implements IStudentDAO {
 
         sql += sqlValues + " WHERE studentId = ?";
 
+        PreparedStatement stm = null;
         try {
-            PreparedStatement stm = CONN.prepareStatement(sql);
+            stm = CONN.prepareStatement(sql);
             int param = 1;
 
             if (student.getName() != null)
@@ -133,6 +152,9 @@ public class StudentDAO implements IStudentDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if(stm != null)
+                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
         }
 
         return -3;
@@ -143,8 +165,9 @@ public class StudentDAO implements IStudentDAO {
         if (studentId == null || studentId.equals(""))
             return -1;
 
+        PreparedStatement stm = null;
         try {
-            PreparedStatement stm = CONN.prepareStatement("DELETE FROM " + DATABASE_NAME + "WHERE studentId = ?");
+            stm = CONN.prepareStatement("DELETE FROM " + DATABASE_NAME + "WHERE studentId = ?");
             stm.setString(1, studentId);
             stm.execute();
 
@@ -155,6 +178,9 @@ public class StudentDAO implements IStudentDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if(stm != null)
+                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
         }
 
         return -3;

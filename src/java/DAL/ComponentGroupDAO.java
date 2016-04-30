@@ -61,15 +61,24 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
 
     @Override
     public ComponentGroupDTO getComponentGroup(int componentGroupId) {
+        ResultSet result = null;
+        PreparedStatement stm = null;
         try {
-            PreparedStatement stm = CONN.prepareStatement("SELECT * FROM " + DATABASE_NAME + " WHERE componentGroupId = ?");
+            stm = CONN.prepareStatement("SELECT * FROM " + DATABASE_NAME + " WHERE componentGroupId = ?");
             stm.setInt(1, componentGroupId);
-            ResultSet result = stm.executeQuery();
+            result = stm.executeQuery();
+
             while (result.next()) {
                 return new ComponentGroupDTO(result.getInt("componentGroupId"), result.getString("name"), result.getString("standardLoanDuration"), result.getInt("status"));
             }
+            result.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if(result != null)
+                try{ result.close(); } catch(SQLException e ){e.printStackTrace();}
+            if(stm != null)
+                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
         }
         return null;
     }
@@ -77,15 +86,23 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
     @Override
     public ComponentGroupDTO[] getComponentGroups() {
         ResultSet result = null;
+        Statement stm = null;
+
         ArrayList<ComponentGroupDTO> componentGroups = new ArrayList<ComponentGroupDTO>();
         try {
-            result = CONN.createStatement().executeQuery("SELECT * FROM " + DATABASE_NAME);
+            stm = CONN.createStatement();
+            result = stm.executeQuery("SELECT * FROM " + DATABASE_NAME);
             while (result.next()) {
                 componentGroups.add(new ComponentGroupDTO(result.getInt("componentGroupId"), result.getString("name"), result.getString("standardLoanDuration"), result.getInt("status")));
             }
             return componentGroups.toArray(new ComponentGroupDTO[componentGroups.size()]);
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if(result != null)
+                try{ result.close(); } catch(SQLException e ){e.printStackTrace();}
+            if(stm != null)
+                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
         }
 
         return null;
@@ -93,9 +110,10 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
 
     public ComponentGroupDTO[] getComponentGroups(String param, String value){
         ResultSet result = null;
+        PreparedStatement stm = null;
         ArrayList<ComponentGroupDTO> componentGroups = new ArrayList<ComponentGroupDTO>();
         try {
-            PreparedStatement stm = CONN.prepareStatement("SELECT * FROM " +  DATABASE_NAME + " WHERE " + param + " = " + value);
+            stm = CONN.prepareStatement("SELECT * FROM " + DATABASE_NAME + " WHERE " + param + " = " + value);
             result = stm.executeQuery();
             while (result.next()) {
                 componentGroups.add(new ComponentGroupDTO(result.getInt("componentGroupId"), result.getString("name"), result.getString("standardLoanDuration"), result.getInt("status")));
@@ -103,6 +121,11 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
             return componentGroups.toArray(new ComponentGroupDTO[componentGroups.size()]);
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if(result != null)
+                try{ result.close(); } catch(SQLException e ){e.printStackTrace();}
+            if(stm != null)
+                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
         }
         return null;
     }
@@ -134,8 +157,9 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
         sql += sqlValues;
         sql += " WHERE componentGroupId = ?";
 
+        PreparedStatement stm = null;
         try {
-            PreparedStatement stm = CONN.prepareStatement(sql);
+            stm = CONN.prepareStatement(sql);
             int param = 1;
             if (componentGroup.getName() != null)
                 stm.setString(param++, componentGroup.getName());
@@ -155,15 +179,19 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if(stm != null)
+                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
         }
         return 0;
     }
 
     @Override
     public int deleteComponentGroup(int componentGroupId) {
+        PreparedStatement stm = null;
         try {
             String sql = "DELETE FROM " + DATABASE_NAME + " WHERE componentGroupId = ?";
-            PreparedStatement stm = CONN.prepareStatement(sql);
+            stm = CONN.prepareStatement(sql);
             stm.setInt(1, componentGroupId);
             stm.execute();
             if (stm.getUpdateCount() == 1) {
@@ -173,6 +201,9 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if(stm != null)
+                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
         }
         return -1;
     }

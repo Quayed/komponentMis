@@ -3,6 +3,7 @@ package DAL;
 import DTO.ComponentGroupDTO;
 import DTO.LoanDTO;
 
+import javax.xml.transform.Result;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -53,9 +54,11 @@ public class LoanDAO implements ILoanDAO {
 
         sql += ") VALUES(" + sqlValues + ")";
 
+        PreparedStatement stm = null;
+        ResultSet generatedKeys = null;
         try {
             int param = 1;
-            PreparedStatement stm = CONN.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            stm = CONN.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             stm.setString(param++, loan.getBarcode());
 
@@ -79,7 +82,7 @@ public class LoanDAO implements ILoanDAO {
             if (stm.getUpdateCount() != 1) {
                 return -2;
             } else {
-                ResultSet generatedKeys = stm.getGeneratedKeys();
+                generatedKeys = stm.getGeneratedKeys();
                 if (generatedKeys.next())
                     return generatedKeys.getInt(1);
                 else
@@ -88,6 +91,11 @@ public class LoanDAO implements ILoanDAO {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if(generatedKeys != null)
+                try{ generatedKeys.close(); } catch(SQLException e ){e.printStackTrace();}
+            if(stm != null)
+                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
         }
 
         return 0;
@@ -95,6 +103,8 @@ public class LoanDAO implements ILoanDAO {
 
     @Override
     public LoanDTO getLoan(int loanId) {
+        PreparedStatement stm = null;
+        ResultSet result = null;
         try {
             String sql = "SELECT l.loanID, c.barcode, cg.componentGroupID, cg.name as componentGroupName, " +
                     "cg.standardLoanDuration, cg.status as componentGroupStatus, c.componentNumber, " +
@@ -105,9 +115,9 @@ public class LoanDAO implements ILoanDAO {
                     "LEFT JOIN ComponentGroup cg ON c.componentGroupId = cg.componentGroupId " +
                     "LEFT JOIN Student s ON l.studentId = s.studentId " +
                     "WHERE l.loanId = ?";
-            PreparedStatement stm = CONN.prepareStatement(sql);
+            stm = CONN.prepareStatement(sql);
             stm.setInt(1, loanId);
-            ResultSet result = stm.executeQuery();
+            result = stm.executeQuery();
             while (result.next()) {
                 LoanDTO loan = new LoanDTO();
                 loan.setLoanId(result.getInt("loanId"));
@@ -131,6 +141,11 @@ public class LoanDAO implements ILoanDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if(result != null)
+                try{ result.close(); } catch(SQLException e ){e.printStackTrace();}
+            if(stm != null)
+                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
         }
 
         return null;
@@ -138,6 +153,8 @@ public class LoanDAO implements ILoanDAO {
 
     @Override
     public LoanDTO[] getLoans() {
+        Statement stm = null;
+        ResultSet result = null;
         try {
             String sql = "SELECT l.loanID, c.barcode, cg.componentGroupID, cg.name as componentGroupName, " +
                     "cg.standardLoanDuration, cg.status as componentGroupStatus, c.componentNumber, " +
@@ -146,11 +163,17 @@ public class LoanDAO implements ILoanDAO {
                     "FROM Loan l " +
                     "LEFT JOIN Component c ON l.barcode = c.barcode " +
                     "LEFT JOIN ComponentGroup cg ON c.componentGroupId = cg.componentGroupId;";
-            ResultSet result = CONN.createStatement().executeQuery(sql);
+            stm = CONN.createStatement();
+            result = stm.executeQuery(sql);
 
             return addResultToLoan(result);
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if(result != null)
+                try{ result.close(); } catch(SQLException e ){e.printStackTrace();}
+            if(stm != null)
+                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
         }
         return null;
     }
@@ -170,27 +193,36 @@ public class LoanDAO implements ILoanDAO {
                 + "c.barcode LIKE ? OR "
                 + "cg.name LIKE ?;";
         keyword = "%" + keyword + "%";
+        PreparedStatement stm = null;
+        ResultSet result = null;
         try {
-            PreparedStatement stm = CONN.prepareStatement(sql);
+            stm = CONN.prepareStatement(sql);
             stm.setString(1, keyword);
             stm.setString(2, keyword);
             stm.setString(3, keyword);
             stm.setString(4, keyword);
             stm.setString(5, keyword);
-            ResultSet result = stm.executeQuery();
+            result = stm.executeQuery();
 
             return addResultToLoan(result);
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if(result != null)
+                try{ result.close(); } catch(SQLException e ){e.printStackTrace();}
+            if(stm != null)
+                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
         }
+
         return null;
     }
 
     @Override
     public LoanDTO[] getLoansForStudent(String studentId) {
+        PreparedStatement stm = null;
+        ResultSet result = null;
         try {
-
-            PreparedStatement stm = CONN.prepareStatement("SELECT l.loanID, c.barcode, cg.componentGroupID, cg.name as componentGroupName, " +
+            stm = CONN.prepareStatement("SELECT l.loanID, c.barcode, cg.componentGroupID, cg.name as componentGroupName, " +
                     "cg.standardLoanDuration, cg.status as componentGroupStatus, c.componentNumber, " +
                     "c.status as componentStatus, l.studentId, " +
                     "l.loanDate, l.dueDate, l.deliveryDate, l.deliveredTo, l.mailCount " +
@@ -202,11 +234,16 @@ public class LoanDAO implements ILoanDAO {
             studentId = "%" + studentId + "%";
 
             stm.setString(1, studentId);
-            ResultSet result = stm.executeQuery();
+            result = stm.executeQuery();
 
             return addResultToLoan(result);
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if(result != null)
+                try{ result.close(); } catch(SQLException e ){e.printStackTrace();}
+            if(stm != null)
+                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
         }
 
         return null;
@@ -214,8 +251,10 @@ public class LoanDAO implements ILoanDAO {
 
     @Override
     public LoanDTO[] getLoansForBarcode(String barcode) {
+        PreparedStatement stm = null;
+        ResultSet result = null;
         try {
-            PreparedStatement stm = CONN.prepareStatement("SELECT l.loanID, c.barcode, cg.componentGroupID, cg.name as componentGroupName, " +
+            stm = CONN.prepareStatement("SELECT l.loanID, c.barcode, cg.componentGroupID, cg.name as componentGroupName, " +
                     "cg.standardLoanDuration, cg.status as componentGroupStatus, c.componentNumber, " +
                     "c.status as componentStatus, l.studentId, " +
                     "l.loanDate, l.dueDate, l.deliveryDate, l.deliveredTo, l.mailCount " +
@@ -226,11 +265,16 @@ public class LoanDAO implements ILoanDAO {
             barcode = "%" + barcode + "%";
 
             stm.setString(1, barcode);
-            ResultSet result = stm.executeQuery();
+            result = stm.executeQuery();
 
             return addResultToLoan(result);
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if(result != null)
+                try{ result.close(); } catch(SQLException e ){e.printStackTrace();}
+            if(stm != null)
+                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
         }
 
         return null;
@@ -238,15 +282,16 @@ public class LoanDAO implements ILoanDAO {
 
     @Override
     public String getStudentIdForActiveLoan(String barcode){
+        PreparedStatement stm = null;
+        ResultSet result = null;
         try {
-
-            PreparedStatement stm = CONN.prepareStatement("SELECT * FROM Loan l "
+            stm = CONN.prepareStatement("SELECT * FROM Loan l "
                     + "LEFT JOIN Component c ON l.barcode = c.barcode "
                     + "LEFT JOIN ComponentGroup cg ON c.componentGroupId = cg.componentGroupId "
                     + "WHERE l.barcode = ? AND l.deliveryDate IS NULL;");
 
             stm.setString(1, barcode);
-            ResultSet result = stm.executeQuery();
+            result = stm.executeQuery();
 
             if(result.next()) {
                 System.out.println(result.getString("studentId"));
@@ -254,6 +299,11 @@ public class LoanDAO implements ILoanDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if(result != null)
+                try{ result.close(); } catch(SQLException e ){e.printStackTrace();}
+            if(stm != null)
+                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
         }
 
         return null;
@@ -348,8 +398,9 @@ public class LoanDAO implements ILoanDAO {
         sql += sqlValues;
         sql += " WHERE loanId = ?";
 
+        PreparedStatement stm = null;
         try {
-            PreparedStatement stm = CONN.prepareStatement(sql);
+            stm = CONN.prepareStatement(sql);
             int param = 1;
 
             if (loan.getBarcode() != null)
@@ -375,6 +426,9 @@ public class LoanDAO implements ILoanDAO {
                 return 1;
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if(stm != null)
+                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
         }
 
         return 0;
@@ -382,9 +436,10 @@ public class LoanDAO implements ILoanDAO {
 
     @Override
     public int deleteLoan(int loanId) {
+        PreparedStatement stm = null;
         try {
             String sql = "DELETE FROM " + DATABASE_NAME + "WHERE loanId = ?";
-            PreparedStatement stm = CONN.prepareStatement(sql);
+            stm = CONN.prepareStatement(sql);
             stm.setInt(1, loanId);
             if (stm.getUpdateCount() == 1) {
                 return 1;
@@ -393,6 +448,9 @@ public class LoanDAO implements ILoanDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if(stm != null)
+                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
         }
 
         return -1;

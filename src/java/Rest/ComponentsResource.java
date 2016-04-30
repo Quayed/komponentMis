@@ -78,6 +78,7 @@ public class ComponentsResource {
 
         JsonArray jsonArray = arrayBuilder.build();
 
+        closeConn();
         return new JsonHelper().jsonArrayToString(jsonArray);
     }
 
@@ -86,6 +87,7 @@ public class ComponentsResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getSpecific(@PathParam("barcode") String barcode) {
         ComponentDTO component = dao.getComponent(barcode);
+        closeConn();
 
         if (component == null)
             throw new WebApplicationException(404);
@@ -110,6 +112,8 @@ public class ComponentsResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String createComponent(ComponentDTO component) {
         int returnStatus = dao.createComponent(component);
+        closeConn();
+
         if (returnStatus > 99999999)
             return "{\"barcode\": " + returnStatus + " }";
         else
@@ -122,8 +126,9 @@ public class ComponentsResource {
     @Produces(MediaType.TEXT_PLAIN)
     public String updateComponent(@PathParam("barcode") String barcode, ComponentDTO component) {
 
-
         int returnStatus = dao.updateComponent(barcode, component);
+        closeConn();
+
         if (returnStatus == 1)
             return "All Ok";
         else
@@ -136,6 +141,7 @@ public class ComponentsResource {
     public String deleteKomponentType(@PathParam("id") String id) {
 
         int returnValue = dao.deleteComponent(id);
+        closeConn();
 
         System.out.println(id);
         if (returnValue == 1)
@@ -144,6 +150,16 @@ public class ComponentsResource {
             throw new WebApplicationException(404);
         else
             throw new WebApplicationException(500);
+    }
+
+    private void closeConn(){
+        // This method is used to close the connection to the database
+
+        try {
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

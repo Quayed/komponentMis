@@ -26,11 +26,11 @@ public class ComponentDAO implements IComponentDAO {
                 " (componentGroupId, componentNumber, barcode, status) "
                 + "VALUES(?, ?, ?, ?);";
 
-        System.out.println(sql);
+        PreparedStatement stm = null;
 
         try {
             int param = 1;
-            PreparedStatement stm = CONN.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            stm = CONN.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             stm.setInt(param++, component.getComponentGroupId());
 
@@ -55,6 +55,9 @@ public class ComponentDAO implements IComponentDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             return -1;
+        }finally {
+            if(stm != null)
+                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
         }
     }
 
@@ -64,7 +67,6 @@ public class ComponentDAO implements IComponentDAO {
         do  {
             int barcodeInt = new Random().nextInt(999999999 - 100000000) + 100000000;
             barcode = Integer.toString(barcodeInt);
-            System.out.println("barcode : " + barcode);
             component = getComponent(barcode);
         } while(component != null);
 
@@ -73,11 +75,13 @@ public class ComponentDAO implements IComponentDAO {
 
     @Override
     public ComponentDTO getComponent(String barcode) {
+        PreparedStatement stm = null;
+        ResultSet result = null;
         try {
-            PreparedStatement stm = CONN.prepareStatement("SELECT *, c.status as componentStatus, cg.status as componentGroupStatus FROM Component c " +
+            stm = CONN.prepareStatement("SELECT *, c.status as componentStatus, cg.status as componentGroupStatus FROM Component c " +
                                                     "LEFT JOIN ComponentGroup cg ON c.componentGroupId = cg.componentGroupId WHERE c.barcode = ?;");
             stm.setString(1, barcode);
-            ResultSet result = stm.executeQuery();
+            result = stm.executeQuery();
             while (result.next()) {
                 ComponentDTO component = new ComponentDTO(result.getInt("componentGroupId"), result.getInt("componentNumber"), result.getString("barcode"), result.getInt("componentStatus"));
                 component.getComponentGroup().setName(result.getString("name"));
@@ -85,8 +89,14 @@ public class ComponentDAO implements IComponentDAO {
                 component.getComponentGroup().setStatus(result.getInt("componentGroupStatus"));
                 return component;
             }
+            result.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if(result != null)
+                try{ result.close(); } catch(SQLException e ){e.printStackTrace();}
+            if(stm != null)
+                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
         }
 
         return null;
@@ -94,19 +104,27 @@ public class ComponentDAO implements IComponentDAO {
 
     @Override
     public ComponentDTO[] getComponentsFromGroup(int componentGroupId) {
+        PreparedStatement stm = null;
+        ResultSet result = null;
         try {
-            PreparedStatement stm = CONN.prepareStatement("SELECT * FROM " + DATABASE_NAME + " WHERE componentGroupId = ?;");
+            stm = CONN.prepareStatement("SELECT * FROM " + DATABASE_NAME + " WHERE componentGroupId = ?;");
 
             stm.setInt(1, componentGroupId);
-            ResultSet result = stm.executeQuery();
+            result = stm.executeQuery();
             ArrayList<ComponentDTO> components = new ArrayList<>();
             while (result.next()) {
                 ComponentDTO component = new ComponentDTO(result.getInt("componentGroupId"), result.getInt("componentNumber"), result.getString("barcode"), result.getInt("status"));
                 components.add(component);
             }
+            result.close();
             return components.toArray(new ComponentDTO[components.size()]);
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if(result != null)
+                try{ result.close(); } catch(SQLException e ){e.printStackTrace();}
+            if(stm != null)
+                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
         }
 
         return null;
@@ -114,8 +132,11 @@ public class ComponentDAO implements IComponentDAO {
 
     @Override
     public ComponentDTO[] getComponents() {
+        Statement stm = null;
+        ResultSet result = null;
         try {
-            ResultSet result = CONN.createStatement().executeQuery("SELECT *, c.status as componentStatus, cg.status as componentGroupStatus FROM Component c " +
+            stm = CONN.createStatement();
+            result = stm.executeQuery("SELECT *, c.status as componentStatus, cg.status as componentGroupStatus FROM Component c " +
                                                         "LEFT JOIN ComponentGroup cg ON c.componentGroupId = cg.componentGroupId;");
             ArrayList<ComponentDTO> components = new ArrayList<>();
             while (result.next()) {
@@ -124,9 +145,15 @@ public class ComponentDAO implements IComponentDAO {
                 components.add(component);
 
             }
+            result.close();
             return components.toArray(new ComponentDTO[components.size()]);
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if(result != null)
+                try{ result.close(); } catch(SQLException e ){e.printStackTrace();}
+            if(stm != null)
+                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
         }
         return null;
     }
@@ -176,8 +203,9 @@ public class ComponentDAO implements IComponentDAO {
 
         sql += sqlValues + " WHERE barcode = ?";
 
+        PreparedStatement stm = null;
         try {
-            PreparedStatement stm = CONN.prepareStatement(sql);
+            stm = CONN.prepareStatement(sql);
             int param = 1;
             if (component.getComponentNumber() != -1)
                 stm.setInt(param++, component.getComponentNumber());
@@ -196,6 +224,9 @@ public class ComponentDAO implements IComponentDAO {
                 return 1;
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if(stm != null)
+                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
         }
 
         return -1;
@@ -204,9 +235,10 @@ public class ComponentDAO implements IComponentDAO {
     @Override
     public int deleteComponent(String barcode) {
 
+        PreparedStatement stm = null;
         try {
             String sql = "DELETE FROM " + DATABASE_NAME + " WHERE barcode = ?";
-            PreparedStatement stm = CONN.prepareStatement(sql);
+            stm = CONN.prepareStatement(sql);
             stm.setString(1, barcode);
             stm.execute();
             if (stm.getUpdateCount() == 1) {
@@ -216,6 +248,9 @@ public class ComponentDAO implements IComponentDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if(stm != null)
+                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
         }
 
         return -1;

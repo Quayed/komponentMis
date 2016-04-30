@@ -54,6 +54,7 @@ public class LoansResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getOverview() {
         LoanDTO[] loans = dao.getLoans();
+        closeConn();
 
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
 
@@ -86,15 +87,14 @@ public class LoansResource {
         }
 
         LoanDTO loan = dao.getLoan(Integer.parseInt(loanId));
+        closeConn();
 
         if (loan == null)
             throw new WebApplicationException(404);
 
-        System.out.println(loan.getComponent().getComponentGroup().getStatus());
-
         JsonObject jsonObject = Json.createObjectBuilder()
                 .add("loanId", loan.getLoanId())
-                .add("compoent", Json.createObjectBuilder()
+                .add("component", Json.createObjectBuilder()
                     .add("barcode", loan.getComponent().getBarcode())
                     .add("componentGroup", Json.createObjectBuilder()
                         .add("componentGroupId", loan.getComponent().getComponentGroup().getComponentGroupId())
@@ -114,6 +114,7 @@ public class LoansResource {
                 .add("mailCount", loan.getMailCount())
                 .build();
 
+
         return new JsonHelper().jsonObjectToString(jsonObject);
     }
 
@@ -122,6 +123,8 @@ public class LoansResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String createComponentGroup(LoanDTO loan) {
         int returnStatus = dao.createLoan(loan);
+        closeConn();
+
         if (returnStatus > 0)
             return "{\"loanId\": " + returnStatus + " }";
         else
@@ -141,7 +144,10 @@ public class LoansResource {
         }
 
         loan.setLoanId(Integer.parseInt(loanId));
+
         int returnStatus = dao.updateLoan(loan);
+        closeConn();
+
         if (returnStatus == 1)
             return "All Ok";
         else
@@ -156,7 +162,9 @@ public class LoansResource {
         if (!loanId.matches("^\\d+$")) {
             throw new WebApplicationException(405);
         }
+
         int returnValue = dao.deleteLoan(Integer.parseInt(loanId));
+        closeConn();
 
         if (returnValue == 1) {
             return "All ok";
@@ -164,6 +172,16 @@ public class LoansResource {
             throw new WebApplicationException(404);
         else
             throw new WebApplicationException(500);
+    }
+
+    private void closeConn(){
+        // This method is used to close the connection to the database
+
+        try {
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }
