@@ -107,11 +107,11 @@ public class ComponentsResource {
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public String createComponent(ComponentDTO component) {
         int returnStatus = dao.createComponent(component);
-        if (returnStatus == 1)
-            return "All Ok";
+        if (returnStatus > 99999999)
+            return "{\"barcode\": " + returnStatus + " }";
         else
             throw new WebApplicationException(500);
     }

@@ -36,10 +36,13 @@ public class ComponentDAO implements IComponentDAO {
 
             stm.setInt(param++, component.getComponentNumber());
 
+            String barcode;
             if (component.getBarcode() != null && component.getBarcode().equals("") && component.getBarcode().matches("^\\d+$") )
-                stm.setString(param++, component.getBarcode());
+                barcode = component.getBarcode();
             else
-                stm.setString(param++, generateBarcode());
+                barcode = generateBarcode();
+
+            stm.setString(param++, barcode);
 
             if (component.getStatus() == -1)
                 stm.setInt(param++, 0);
@@ -48,12 +51,11 @@ public class ComponentDAO implements IComponentDAO {
 
             stm.execute();
 
-
+            return Integer.parseInt(barcode);
         } catch (SQLException e) {
             e.printStackTrace();
             return -1;
         }
-        return 1;
     }
 
     private String generateBarcode(){

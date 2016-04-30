@@ -123,7 +123,7 @@ public class ComponentGroupsResource {
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public String createComponentGroup(ComponentGroupDTO componentGroup) {
 
         int returnStatus = dao.createComponentGroup(componentGroup);

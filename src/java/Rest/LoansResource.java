@@ -119,7 +119,7 @@ public class LoansResource {
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public String createComponentGroup(LoanDTO loan) {
         int returnStatus = dao.createLoan(loan);
         if (returnStatus > 0)
