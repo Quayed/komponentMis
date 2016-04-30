@@ -63,11 +63,11 @@ public class ComponentGroupsResource {
 
         for (ComponentGroupDTO componentGroup : componentGroups) {
             arrayBuilder.add(Json.createObjectBuilder()
-                .add("details", "ComponentGroups/" + componentGroup.getComponentGroupId())
-                .add("componentGroupId", componentGroup.getComponentGroupId())
-                .add("name", componentGroup.getName())
-                .add("standardLoanDuration", componentGroup.getStandardLoanDuration())
-                .add("status", componentGroup.getStatus()));
+                    .add("details", "ComponentGroups/" + componentGroup.getComponentGroupId())
+                    .add("componentGroupId", componentGroup.getComponentGroupId())
+                    .add("name", componentGroup.getName())
+                    .add("standardLoanDuration", componentGroup.getStandardLoanDuration())
+                    .add("status", componentGroup.getStatus()));
 
         }
         JsonArray jsonArray = arrayBuilder.build();
@@ -107,10 +107,10 @@ public class ComponentGroupsResource {
 
         JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
 
-        for(ComponentDTO component : components){
+        for (ComponentDTO component : components) {
             jsonArrayBuilder.add(Json.createObjectBuilder()
                     .add("barcode", component.getBarcode())
-                    .add("componentGroupId", component.getComponentGroupId()     )
+                    .add("componentGroupId", component.getComponentGroupId())
                     .add("componentNumber", component.getComponentNumber())
                     .add("status", component.getStatus()));
         }
@@ -179,7 +179,7 @@ public class ComponentGroupsResource {
             throw new WebApplicationException(500);
     }
 
-    private void closeConn(){
+    private void closeConn() {
         // This method is used to close the connection to the database
 
         try {

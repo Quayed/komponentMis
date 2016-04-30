@@ -75,10 +75,18 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if(result != null)
-                try{ result.close(); } catch(SQLException e ){e.printStackTrace();}
-            if(stm != null)
-                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
+            if (result != null)
+                try {
+                    result.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            if (stm != null)
+                try {
+                    stm.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
         }
         return null;
     }
@@ -99,16 +107,24 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if(result != null)
-                try{ result.close(); } catch(SQLException e ){e.printStackTrace();}
-            if(stm != null)
-                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
+            if (result != null)
+                try {
+                    result.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            if (stm != null)
+                try {
+                    stm.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
         }
 
         return null;
     }
 
-    public ComponentGroupDTO[] getComponentGroups(String param, String value){
+    public ComponentGroupDTO[] getComponentGroups(String param, String value) {
         ResultSet result = null;
         PreparedStatement stm = null;
         ArrayList<ComponentGroupDTO> componentGroups = new ArrayList<ComponentGroupDTO>();
@@ -122,10 +138,18 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if(result != null)
-                try{ result.close(); } catch(SQLException e ){e.printStackTrace();}
-            if(stm != null)
-                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
+            if (result != null)
+                try {
+                    result.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            if (stm != null)
+                try {
+                    stm.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
         }
         return null;
     }
@@ -180,8 +204,12 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if(stm != null)
-                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
+            if (stm != null)
+                try {
+                    stm.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
         }
         return 0;
     }
@@ -202,8 +230,12 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if(stm != null)
-                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
+            if (stm != null)
+                try {
+                    stm.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
         }
         return -1;
     }

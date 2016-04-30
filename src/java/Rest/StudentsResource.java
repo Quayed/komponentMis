@@ -57,10 +57,10 @@ public class StudentsResource {
 
         for (StudentDTO student : students) {
             arrayBuilder.add(Json.createObjectBuilder()
-                .add("details", "/Students/" + student.getStudentId())
-                .add("studentId", student.getStudentId())
-                .add("name", student.getName())
-                .add("status", student.getStatus()));
+                    .add("details", "/Students/" + student.getStudentId())
+                    .add("studentId", student.getStudentId())
+                    .add("name", student.getName())
+                    .add("status", student.getStatus()));
         }
 
         JsonArray jsonArray = arrayBuilder.build();
@@ -140,7 +140,7 @@ public class StudentsResource {
             throw new WebApplicationException(500);
     }
 
-    private void closeConn(){
+    private void closeConn() {
         // This method is used to close the connection to the database
 
         try {

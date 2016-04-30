@@ -67,13 +67,13 @@ public class ComponentsResource {
             String studentId = loanDAO.getStudentIdForActiveLoan(component.getBarcode());
 
             arrayBuilder.add(Json.createObjectBuilder()
-            .add("details", "/Components/" + component.getBarcode())
-            .add("barcode", component.getBarcode())
-            .add("componentGroupId", component.getComponentGroupId())
-            .add("name", component.getComponentGroup().getName())
-            .add("componentNumber", component.getComponentNumber())
-            .add("status", component.getStatus())
-            .add("studentId", (studentId == null ? "" : studentId)));
+                    .add("details", "/Components/" + component.getBarcode())
+                    .add("barcode", component.getBarcode())
+                    .add("componentGroupId", component.getComponentGroupId())
+                    .add("name", component.getComponentGroup().getName())
+                    .add("componentNumber", component.getComponentNumber())
+                    .add("status", component.getStatus())
+                    .add("studentId", (studentId == null ? "" : studentId)));
         }
 
         JsonArray jsonArray = arrayBuilder.build();
@@ -95,10 +95,10 @@ public class ComponentsResource {
         JsonObject jsonObject = Json.createObjectBuilder()
                 .add("barcode", component.getBarcode())
                 .add("componentGroup", Json.createObjectBuilder()
-                    .add("componentGroupId", component.getComponentGroup().getComponentGroupId())
-                    .add("name", component.getComponentGroup().getName())
-                    .add("standardLoanDuration", component.getComponentGroup().getStandardLoanDuration())
-                    .add("status", component.getComponentGroup().getStatus()))
+                        .add("componentGroupId", component.getComponentGroup().getComponentGroupId())
+                        .add("name", component.getComponentGroup().getName())
+                        .add("standardLoanDuration", component.getComponentGroup().getStandardLoanDuration())
+                        .add("status", component.getComponentGroup().getStatus()))
                 .add("componentNumber", component.getComponentNumber())
                 .add("status", component.getStatus())
                 .build();
@@ -152,7 +152,7 @@ public class ComponentsResource {
             throw new WebApplicationException(500);
     }
 
-    private void closeConn(){
+    private void closeConn() {
         // This method is used to close the connection to the database
 
         try {

@@ -60,15 +60,15 @@ public class LoansResource {
 
         for (LoanDTO loan : loans) {
             arrayBuilder.add(Json.createObjectBuilder()
-                .add("details", "/loans/" + loan.getLoanId())
-                .add("loanId", loan.getLoanId())
-                .add("barcode", loan.getBarcode())
-            .add("studentId", loan.getStudentId())
-            .add("loanDate", loan.getLoanDate())
-            .add("dueDate", loan.getDueDate())
-            .add("deliveryDate", (loan.getDeliveryDate() != null ? loan.getDeliveryDate() : ""))
-            .add("deliveredTo", (loan.getDeliveredTo() != null ? loan.getDeliveredTo() : ""))
-            .add("mailCount", loan.getMailCount()));
+                    .add("details", "/loans/" + loan.getLoanId())
+                    .add("loanId", loan.getLoanId())
+                    .add("barcode", loan.getBarcode())
+                    .add("studentId", loan.getStudentId())
+                    .add("loanDate", loan.getLoanDate())
+                    .add("dueDate", loan.getDueDate())
+                    .add("deliveryDate", (loan.getDeliveryDate() != null ? loan.getDeliveryDate() : ""))
+                    .add("deliveredTo", (loan.getDeliveredTo() != null ? loan.getDeliveredTo() : ""))
+                    .add("mailCount", loan.getMailCount()));
         }
 
         JsonArray jsonArray = arrayBuilder.build();
@@ -95,18 +95,18 @@ public class LoansResource {
         JsonObject jsonObject = Json.createObjectBuilder()
                 .add("loanId", loan.getLoanId())
                 .add("component", Json.createObjectBuilder()
-                    .add("barcode", loan.getComponent().getBarcode())
-                    .add("componentGroup", Json.createObjectBuilder()
-                        .add("componentGroupId", loan.getComponent().getComponentGroup().getComponentGroupId())
-                        .add("name", loan.getComponent().getComponentGroup().getName())
-                        .add("standardLoanDuration", loan.getComponent().getComponentGroup().getStandardLoanDuration())
-                        .add("status", loan.getComponent().getComponentGroup().getStatus()))
-                    .add("componentNumber", loan.getComponent().getComponentNumber())
-                    .add("status", loan.getComponent().getStatus()))
+                        .add("barcode", loan.getComponent().getBarcode())
+                        .add("componentGroup", Json.createObjectBuilder()
+                                .add("componentGroupId", loan.getComponent().getComponentGroup().getComponentGroupId())
+                                .add("name", loan.getComponent().getComponentGroup().getName())
+                                .add("standardLoanDuration", loan.getComponent().getComponentGroup().getStandardLoanDuration())
+                                .add("status", loan.getComponent().getComponentGroup().getStatus()))
+                        .add("componentNumber", loan.getComponent().getComponentNumber())
+                        .add("status", loan.getComponent().getStatus()))
                 .add("student", Json.createObjectBuilder()
-                    .add("studentId", loan.getStudent().getStudentId())
-                    .add("name", loan.getStudent().getName())
-                    .add("status", loan.getStudent().getStatus()))
+                        .add("studentId", loan.getStudent().getStudentId())
+                        .add("name", loan.getStudent().getName())
+                        .add("status", loan.getStudent().getStatus()))
                 .add("loanDate", loan.getLoanDate())
                 .add("dueDate", loan.getDueDate())
                 .add("deliveryDate", (loan.getDeliveryDate() != null ? loan.getDeliveryDate() : ""))
@@ -174,7 +174,7 @@ public class LoansResource {
             throw new WebApplicationException(500);
     }
 
-    private void closeConn(){
+    private void closeConn() {
         // This method is used to close the connection to the database
 
         try {

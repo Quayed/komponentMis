@@ -37,7 +37,7 @@ public class ComponentDAO implements IComponentDAO {
             stm.setInt(param++, component.getComponentNumber());
 
             String barcode;
-            if (component.getBarcode() != null && component.getBarcode().equals("") && component.getBarcode().matches("^\\d+$") )
+            if (component.getBarcode() != null && component.getBarcode().equals("") && component.getBarcode().matches("^\\d+$"))
                 barcode = component.getBarcode();
             else
                 barcode = generateBarcode();
@@ -55,20 +55,24 @@ public class ComponentDAO implements IComponentDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             return -1;
-        }finally {
-            if(stm != null)
-                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
+        } finally {
+            if (stm != null)
+                try {
+                    stm.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
         }
     }
 
-    private String generateBarcode(){
+    private String generateBarcode() {
         ComponentDTO component = null;
         String barcode = "";
-        do  {
+        do {
             int barcodeInt = new Random().nextInt(999999999 - 100000000) + 100000000;
             barcode = Integer.toString(barcodeInt);
             component = getComponent(barcode);
-        } while(component != null);
+        } while (component != null);
 
         return barcode;
     }
@@ -79,7 +83,7 @@ public class ComponentDAO implements IComponentDAO {
         ResultSet result = null;
         try {
             stm = CONN.prepareStatement("SELECT *, c.status as componentStatus, cg.status as componentGroupStatus FROM Component c " +
-                                                    "LEFT JOIN ComponentGroup cg ON c.componentGroupId = cg.componentGroupId WHERE c.barcode = ?;");
+                    "LEFT JOIN ComponentGroup cg ON c.componentGroupId = cg.componentGroupId WHERE c.barcode = ?;");
             stm.setString(1, barcode);
             result = stm.executeQuery();
             while (result.next()) {
@@ -93,10 +97,18 @@ public class ComponentDAO implements IComponentDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if(result != null)
-                try{ result.close(); } catch(SQLException e ){e.printStackTrace();}
-            if(stm != null)
-                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
+            if (result != null)
+                try {
+                    result.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            if (stm != null)
+                try {
+                    stm.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
         }
 
         return null;
@@ -121,10 +133,18 @@ public class ComponentDAO implements IComponentDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if(result != null)
-                try{ result.close(); } catch(SQLException e ){e.printStackTrace();}
-            if(stm != null)
-                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
+            if (result != null)
+                try {
+                    result.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            if (stm != null)
+                try {
+                    stm.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
         }
 
         return null;
@@ -137,7 +157,7 @@ public class ComponentDAO implements IComponentDAO {
         try {
             stm = CONN.createStatement();
             result = stm.executeQuery("SELECT *, c.status as componentStatus, cg.status as componentGroupStatus FROM Component c " +
-                                                        "LEFT JOIN ComponentGroup cg ON c.componentGroupId = cg.componentGroupId;");
+                    "LEFT JOIN ComponentGroup cg ON c.componentGroupId = cg.componentGroupId;");
             ArrayList<ComponentDTO> components = new ArrayList<>();
             while (result.next()) {
                 ComponentDTO component = new ComponentDTO(result.getInt("componentGroupId"), result.getInt("componentNumber"), result.getString("barcode"), result.getInt("componentStatus"));
@@ -150,10 +170,18 @@ public class ComponentDAO implements IComponentDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if(result != null)
-                try{ result.close(); } catch(SQLException e ){e.printStackTrace();}
-            if(stm != null)
-                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
+            if (result != null)
+                try {
+                    result.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            if (stm != null)
+                try {
+                    stm.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
         }
         return null;
     }
@@ -225,8 +253,12 @@ public class ComponentDAO implements IComponentDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if(stm != null)
-                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
+            if (stm != null)
+                try {
+                    stm.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
         }
 
         return -1;
@@ -249,8 +281,12 @@ public class ComponentDAO implements IComponentDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if(stm != null)
-                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
+            if (stm != null)
+                try {
+                    stm.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
         }
 
         return -1;

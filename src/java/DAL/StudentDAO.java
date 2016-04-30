@@ -55,8 +55,12 @@ public class StudentDAO implements IStudentDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if(stm != null)
-                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
+            if (stm != null)
+                try {
+                    stm.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
         }
 
         return -3;
@@ -75,10 +79,18 @@ public class StudentDAO implements IStudentDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if(result != null)
-                try{ result.close(); } catch(SQLException e ){e.printStackTrace();}
-            if(stm != null)
-                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
+            if (result != null)
+                try {
+                    result.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            if (stm != null)
+                try {
+                    stm.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
         }
 
         return null;
@@ -99,10 +111,18 @@ public class StudentDAO implements IStudentDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if(result != null)
-                try{ result.close(); } catch(SQLException e ){e.printStackTrace();}
-            if(stm != null)
-                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
+            if (result != null)
+                try {
+                    result.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            if (stm != null)
+                try {
+                    stm.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
         }
 
         return null;
@@ -153,8 +173,12 @@ public class StudentDAO implements IStudentDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if(stm != null)
-                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
+            if (stm != null)
+                try {
+                    stm.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
         }
 
         return -3;
@@ -179,8 +203,12 @@ public class StudentDAO implements IStudentDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if(stm != null)
-                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
+            if (stm != null)
+                try {
+                    stm.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
         }
 
         return -3;

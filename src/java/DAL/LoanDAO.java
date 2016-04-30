@@ -3,12 +3,7 @@ package DAL;
 import DTO.ComponentGroupDTO;
 import DTO.LoanDTO;
 
-import javax.xml.transform.Result;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 /**
@@ -47,7 +42,7 @@ public class LoanDAO implements ILoanDAO {
             sqlValues += ", ?";
         }
 
-        if (loan.getMailCount() != -1){
+        if (loan.getMailCount() != -1) {
             sql += ", mailCount";
             sqlValues += ", ?";
         }
@@ -92,10 +87,18 @@ public class LoanDAO implements ILoanDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if(generatedKeys != null)
-                try{ generatedKeys.close(); } catch(SQLException e ){e.printStackTrace();}
-            if(stm != null)
-                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
+            if (generatedKeys != null)
+                try {
+                    generatedKeys.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            if (stm != null)
+                try {
+                    stm.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
         }
 
         return 0;
@@ -142,10 +145,18 @@ public class LoanDAO implements ILoanDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if(result != null)
-                try{ result.close(); } catch(SQLException e ){e.printStackTrace();}
-            if(stm != null)
-                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
+            if (result != null)
+                try {
+                    result.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            if (stm != null)
+                try {
+                    stm.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
         }
 
         return null;
@@ -170,10 +181,18 @@ public class LoanDAO implements ILoanDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if(result != null)
-                try{ result.close(); } catch(SQLException e ){e.printStackTrace();}
-            if(stm != null)
-                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
+            if (result != null)
+                try {
+                    result.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            if (stm != null)
+                try {
+                    stm.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
         }
         return null;
     }
@@ -208,10 +227,18 @@ public class LoanDAO implements ILoanDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if(result != null)
-                try{ result.close(); } catch(SQLException e ){e.printStackTrace();}
-            if(stm != null)
-                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
+            if (result != null)
+                try {
+                    result.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            if (stm != null)
+                try {
+                    stm.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
         }
 
         return null;
@@ -240,10 +267,18 @@ public class LoanDAO implements ILoanDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if(result != null)
-                try{ result.close(); } catch(SQLException e ){e.printStackTrace();}
-            if(stm != null)
-                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
+            if (result != null)
+                try {
+                    result.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            if (stm != null)
+                try {
+                    stm.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
         }
 
         return null;
@@ -271,17 +306,25 @@ public class LoanDAO implements ILoanDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if(result != null)
-                try{ result.close(); } catch(SQLException e ){e.printStackTrace();}
-            if(stm != null)
-                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
+            if (result != null)
+                try {
+                    result.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            if (stm != null)
+                try {
+                    stm.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
         }
 
         return null;
     }
 
     @Override
-    public String getStudentIdForActiveLoan(String barcode){
+    public String getStudentIdForActiveLoan(String barcode) {
         PreparedStatement stm = null;
         ResultSet result = null;
         try {
@@ -293,17 +336,25 @@ public class LoanDAO implements ILoanDAO {
             stm.setString(1, barcode);
             result = stm.executeQuery();
 
-            if(result.next()) {
+            if (result.next()) {
                 System.out.println(result.getString("studentId"));
                 return result.getString("studentId");
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if(result != null)
-                try{ result.close(); } catch(SQLException e ){e.printStackTrace();}
-            if(stm != null)
-                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
+            if (result != null)
+                try {
+                    result.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            if (stm != null)
+                try {
+                    stm.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
         }
 
         return null;
@@ -388,7 +439,7 @@ public class LoanDAO implements ILoanDAO {
                 sqlValues += ", deliveredTo = ?";
         }
 
-        if (loan.getMailCount() != -1){
+        if (loan.getMailCount() != -1) {
             if (sqlValues.equals(""))
                 sqlValues += "mailCount = ?";
             else
@@ -427,8 +478,12 @@ public class LoanDAO implements ILoanDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if(stm != null)
-                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
+            if (stm != null)
+                try {
+                    stm.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
         }
 
         return 0;
@@ -449,8 +504,12 @@ public class LoanDAO implements ILoanDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if(stm != null)
-                try{ stm.close(); } catch(SQLException e ){e.printStackTrace();}
+            if (stm != null)
+                try {
+                    stm.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
         }
 
         return -1;
