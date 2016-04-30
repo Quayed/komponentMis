@@ -4,6 +4,7 @@ import DTO.ComponentDTO;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by mathias on 21/03/16.
@@ -18,7 +19,7 @@ public class ComponentDAO implements IComponentDAO {
 
     @Override
     public int createComponent(ComponentDTO component) {
-        if (component.getComponentNumber() == -1 || component.getComponentGroupId() == -1 || component.getBarcode() == null)
+        if (component.getComponentNumber() == -1 || component.getComponentGroupId() == -1)
             return -1;
 
         String sql = "INSERT INTO " + DATABASE_NAME +
@@ -35,7 +36,10 @@ public class ComponentDAO implements IComponentDAO {
 
             stm.setInt(param++, component.getComponentNumber());
 
-            stm.setString(param++, component.getBarcode());
+            if (component.getBarcode() != null && component.getBarcode().equals("") && component.getBarcode().matches("^\\d+$") )
+                stm.setString(param++, component.getBarcode());
+            else
+                stm.setString(param++, generateBarcode());
 
             if (component.getStatus() == -1)
                 stm.setInt(param++, 0);
@@ -50,6 +54,19 @@ public class ComponentDAO implements IComponentDAO {
             return -1;
         }
         return 1;
+    }
+
+    private String generateBarcode(){
+        ComponentDTO component = null;
+        String barcode = "";
+        do  {
+            int barcodeInt = new Random().nextInt(999999999 - 100000000) + 100000000;
+            barcode = Integer.toString(barcodeInt);
+            System.out.println("barcode : " + barcode);
+            component = getComponent(barcode);
+        } while(component != null);
+
+        return barcode;
     }
 
     @Override
