@@ -13,6 +13,7 @@ public class DatabaseConfig {
     public static final String ENDPOINT = "";
     public static final String USERNAME = "";
     public static final String PASSWORD = "";
+    public static final String MAILUSER = "";
     
     private DatabaseConfig(){
         
