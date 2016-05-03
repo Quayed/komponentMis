@@ -5,12 +5,18 @@
  */
 package Rest.Filters;
 
-import java.io.IOException;
+import DAL.DatabaseConfig;
+import DAL.TokenDAO;
+
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.PreMatching;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 /**
  *
@@ -22,9 +28,24 @@ public class RestRequestFilter implements ContainerRequestFilter{
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
+
+        if (!requestContext.getUriInfo().getPath().equals("Login")){
+            Connection conn = null;
+            try {
+                conn = DriverManager.getConnection(DatabaseConfig.ENDPOINT, DatabaseConfig.USERNAME, DatabaseConfig.PASSWORD);
+
+                if (!new TokenDAO(conn).isValidToken(requestContext.getHeaderString("Access-token")))
+                    requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                if (conn != null) try{ conn.close(); } catch(SQLException e){ e.printStackTrace();}
+            }
+        }
+
         // When HttpMethod comes as OPTIONS, just acknowledge that it accepts...
         if ( requestContext.getRequest().getMethod().equals( "OPTIONS" ) ) {
-            System.out.println("Running");
             // Just send a OK signal back to the browser
             requestContext.abortWith( Response.status( Response.Status.OK ).build() );
         }

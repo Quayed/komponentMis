@@ -55,7 +55,7 @@ public class LoginResource {
             dto.setToken(tokenHandler.getPublicToken().toString());
 
             if(dao.createToken(dto) == 1){
-                return "{\"token\" : \"" + tokenHandler.getPublicToken().toString() + "\"}";
+                return "{\"Access-token\" : \"" + tokenHandler.getPublicToken().toString() + "\"}";
             } else{
                 throw new WebApplicationException(500);
             }
