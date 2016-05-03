@@ -52,9 +52,9 @@ public class MailHandler implements Runnable {
             for (LoanDTO loan : loans) {
                 Date curDate = new Date();
                 if ((((int) (((loan.getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay))) < 7) && (loan.getDeliveryDate() == null || loan.getDeliveryDate().equals(""))) {
-                    if ((((int) (((loan.getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay))) <= 0) && loan.getMailCount() == 1) {
+                    if ((((int) (((loan.getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay))) + 1 <= 0) && loan.getMailCount() == 1) {
                         String subject = "Komponent:" + loan.getBarcode() + "-StudieNr:" + loan.getStudentId();
-
+                        
                         String body = "Dette er en automatisk påmindelse til " + loan.getStudentId()
                                 + ".\n\nDu har overskredet afleveringsfristen for komponenten " + loan.getComponent().getComponentGroup().getName() + ". Du skal hurtigst muligt aflevere den i Komponentshoppen på DTU Ballerup Campus."
                                 + " Afleveringsdatoen for komponenten var: " + loan.getDueDate()
@@ -63,6 +63,7 @@ public class MailHandler implements Runnable {
 
                         SendEmail(subject, body, loan.getStudentId());
                         loan.setMailCount(1);
+                        new LoanDAO(conn).updateLoan(loan);
                     } else if (loan.getMailCount() == 0) {
 
                         String subject = "Komponent:" + loan.getBarcode() + "-StudieNr:" + loan.getStudentId();
@@ -77,6 +78,7 @@ public class MailHandler implements Runnable {
 
                         SendEmail(subject, body, loan.getStudentId());
                         loan.setMailCount(1);
+                        new LoanDAO(conn).updateLoan(loan);
                     }
                 }
             }

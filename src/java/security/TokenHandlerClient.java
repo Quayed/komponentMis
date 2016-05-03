@@ -22,7 +22,11 @@ public class TokenHandlerClient {
     // Hash credentials, reduce and generate random prime and token
     public TokenHandlerClient(String user, String pass) {
         generateRandom();
-        generateToken(new BigInteger(Integer.toString((user.hashCode() + pass.hashCode())/10000000-1)));
+        BigInteger creds = new BigInteger(Integer.toString((user.hashCode() + pass.hashCode())/10000000-8));
+        if (creds.signum() < 1)
+            generateToken(creds.negate());
+        else
+            generateToken(creds);
     }
 
     // Generate random 7-bit prime number
@@ -48,7 +52,7 @@ public class TokenHandlerClient {
     
     // Check key with own key (should be equal)
     public boolean checkKey(BigInteger key) {
-        if (key.equals(keyToken)) {
+        if (key.toString().equals(keyToken.toString())) {
             return true;
         }
         System.out.println("Key invalid");
