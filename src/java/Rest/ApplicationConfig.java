@@ -33,6 +33,7 @@ public class ApplicationConfig extends Application {
         resources.add(Rest.Filters.RestRequestFilter.class);
         resources.add(Rest.Filters.RestResponseFilter.class);
         resources.add(Rest.LoansResource.class);
+        resources.add(Rest.LoginResource.class);
         resources.add(Rest.StudentsResource.class);
     }
 
