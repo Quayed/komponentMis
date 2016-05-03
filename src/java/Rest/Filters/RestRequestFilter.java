@@ -29,6 +29,7 @@ public class RestRequestFilter implements ContainerRequestFilter{
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
 
+        // Check that the token supplied by the user is valid, else abort with 401
         if (!requestContext.getUriInfo().getPath().equals("Login")){
             Connection conn = null;
             try {
