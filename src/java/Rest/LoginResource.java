@@ -6,6 +6,7 @@
 package Rest;
 
 import DAL.DatabaseConfig;
+import DAL.ITokenDAO;
 import DAL.TokenDAO;
 import DTO.TokenDTO;
 import security.TokenHandlerServer;
@@ -39,16 +40,21 @@ public class LoginResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String login(TokenDTO credentials){
-        TokenHandlerServer tokenHandler = new TokenHandlerServer(credentials.getUsername(), credentials.getPassword());
         Connection conn = null;
+        TokenHandlerServer tokenHandler = null;
 
         try {
             conn = DriverManager.getConnection(DatabaseConfig.ENDPOINT, DatabaseConfig.USERNAME, DatabaseConfig.PASSWORD);
+            ITokenDAO dao = new TokenDAO(conn);
+
+            do{
+                tokenHandler = new TokenHandlerServer(credentials.getUsername(), credentials.getPassword());
+            }while(dao.getToken(tokenHandler.getPublicToken().toString()) != null);
 
             TokenDTO dto = new TokenDTO();
             dto.setToken(tokenHandler.getPublicToken().toString());
-            if(new TokenDAO(conn).createToken(dto) == 1){
-                System.out.println(tokenHandler.getPublicToken().toString());
+
+            if(dao.createToken(dto) == 1){
                 return "{\"token\" : \"" + tokenHandler.getPublicToken().toString() + "\"}";
             } else{
                 throw new WebApplicationException(500);

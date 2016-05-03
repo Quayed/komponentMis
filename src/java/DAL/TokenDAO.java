@@ -81,6 +81,32 @@ public class TokenDAO implements ITokenDAO {
 
     @Override
     public TokenDTO getToken(String token) {
+        String sql = "SELECT * FROM " + DATABASE_NAME + " WHERE token = ?";
+
+        PreparedStatement stm = null;
+        ResultSet result = null;
+        try{
+            stm = CONN.prepareStatement(sql);
+
+            stm.setString(1, token);
+
+            result = stm.executeQuery();
+
+            if(result.next()){
+                TokenDTO tokenDTO = new TokenDTO();
+                tokenDTO.setToken(result.getString("token"));
+                tokenDTO.setCreationTime(result.getLong("creationTime"));
+                tokenDTO.setExpirationTime(result.getLong("expirationTime"));
+                return tokenDTO;
+            } else{
+                return null;
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        } finally{
+            try { stm.close(); } catch (SQLException e) { e.printStackTrace(); }
+            try { result.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
         return null;
     }
 
