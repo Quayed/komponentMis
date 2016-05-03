@@ -19,12 +19,16 @@ public class TokenHandlerServer {
     private BigInteger randomToken;
     private BigInteger publicToken;
     private int clientCount = 0;
-    private ArrayList<BigInteger> keyList = new ArrayList<>();
+    private final ArrayList<BigInteger> keyList = new ArrayList<>();
 
     // Hash credentials, reduce and generate random prime and token
     public TokenHandlerServer(String user, String pass) {
         generateRandom();
-        generateToken(new BigInteger(Integer.toString((user.hashCode() + pass.hashCode()) / 10000000 - 1)));
+        BigInteger creds = new BigInteger(Integer.toString((user.hashCode() + pass.hashCode())/10000000-8));
+        if (creds.signum() < 1)
+            generateToken(creds.negate());
+        else
+            generateToken(creds);
     }
 
     // Generate random 7-bit prime number

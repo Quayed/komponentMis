@@ -22,20 +22,24 @@ public class TokenHandlerClient {
     // Hash credentials, reduce and generate random prime and token
     public TokenHandlerClient(String user, String pass) {
         generateRandom();
-        generateToken(new BigInteger(Integer.toString((user.hashCode() + pass.hashCode())/10000000-1)));
+        BigInteger creds = new BigInteger(Integer.toString((user.hashCode() + pass.hashCode())/10000000-8));
+        if (creds.signum() < 1)
+            generateToken(creds.negate());
+        else
+            generateToken(creds);
     }
 
     // Generate random 7-bit prime number
     private BigInteger generateRandom() {
         randomToken = BigInteger.probablePrime(7, new SecureRandom());
-        System.out.println("Random prime generated");
+        System.out.println("Random prime generated " + randomToken.toString());
         return randomToken;
     }
 
     // Generate token from random prime and hashed credentials: hashedCredentials^randomPrime (power)
     private BigInteger generateToken(BigInteger credentials) {
         publicToken = credentials.pow(Integer.parseInt(randomToken.toString()));
-        System.out.println("Token generated");
+        System.out.println("Token generated " + publicToken.toString());
         return publicToken;
     }
 
