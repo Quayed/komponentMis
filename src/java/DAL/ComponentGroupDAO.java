@@ -21,6 +21,10 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
         if (componentGroup.getName() == null)
             return -1;
 
+        // check that status is valid
+        if(componentGroup.getStatus() != -1 && componentGroup.getStatus() != 0 && componentGroup.getStatus() != 1)
+            return -4;
+
         String sql = "INSERT INTO " + DATABASE_NAME + "(name, status";
         String sqlValues = "?, ?";
 
@@ -173,6 +177,10 @@ public class ComponentGroupDAO implements IComponentGroupDAO {
         }
 
         if (componentGroup.getStatus() != -1) {
+            // Check that status is valid
+            if (componentGroup.getStatus() != 0 && componentGroup.getStatus() != 1)
+                return -4;
+
             if (!sqlValues.equals(""))
                 sqlValues += ", status = ?";
             else

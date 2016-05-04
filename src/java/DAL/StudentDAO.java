@@ -30,9 +30,12 @@ public class StudentDAO implements IStudentDAO {
         if (student.getStudentId() == null || student.getName() == null)
             return -1;
 
+        // check that the status is actually valid
+        if (student.getStatus() != 0 && student.getStatus() != 1 && student.getStatus() != -1)
+            return -4;
+
         String sql = "INSERT INTO " + DATABASE_NAME + "(studentId, name, status)"
                 + " VALUES (?, ?, ?)";
-        String sqlValues = "";
 
         PreparedStatement stm = null;
         try {
@@ -144,6 +147,10 @@ public class StudentDAO implements IStudentDAO {
         }
 
         if (student.getStatus() != -1) {
+            // check that status is valid
+            if (student.getStatus() != 0 && student.getStatus() != 1)
+                return -4;
+
             if (sqlValues.equals("")) {
                 sqlValues += "status = ?";
             } else {

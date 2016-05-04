@@ -12,6 +12,8 @@ import java.util.Random;
 public class ComponentDAO implements IComponentDAO {
     private final Connection CONN;
     private final String DATABASE_NAME = "Component";
+    private final int MIN_BARCODE = 100000000;
+    private final int MAX_BARCODE = 999999999;
 
     public ComponentDAO(Connection conn) {
         this.CONN = conn;
@@ -21,6 +23,10 @@ public class ComponentDAO implements IComponentDAO {
     public int createComponent(ComponentDTO component) {
         if (component.getComponentNumber() == -1 || component.getComponentGroupId() == -1)
             return -1;
+
+        // Check that status is valid
+        if (component.getStatus() != -1 && component.getStatus() != 0 && component.getStatus() != 1)
+            return -4;
 
         String sql = "INSERT INTO " + DATABASE_NAME +
                 " (componentGroupId, componentNumber, barcode, status) "
@@ -69,7 +75,7 @@ public class ComponentDAO implements IComponentDAO {
         ComponentDTO component = null;
         String barcode = "";
         do {
-            int barcodeInt = new Random().nextInt(999999999 - 100000000) + 100000000;
+            int barcodeInt = new Random().nextInt(MAX_BARCODE - MIN_BARCODE) + MIN_BARCODE;
             barcode = Integer.toString(barcodeInt);
             component = getComponent(barcode);
         } while (component != null);
@@ -201,6 +207,10 @@ public class ComponentDAO implements IComponentDAO {
     public int updateComponent(String barcode, ComponentDTO component) {
         if (barcode == null || (component.getComponentNumber() == -1 && component.getComponentGroupId() == -1 && component.getStatus() == -1 && component.getBarcode() == null))
             return -1;
+
+        // Check that status is valid
+        if (component.getStatus() != -1 && component.getStatus() != 0 && component.getStatus() != 1)
+            return -4;
 
         String sql = "UPDATE " + DATABASE_NAME + " set ";
         String sqlValues = "";
