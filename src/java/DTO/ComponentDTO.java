@@ -7,16 +7,13 @@ import java.io.Serializable;
  */
 public class ComponentDTO implements Serializable {
     private ComponentGroupDTO componentGroup;
-    private int componentGroupId;
-    private int componentNumber;
+    private int componentGroupId = -1;
+    private int componentNumber = -1;
     private String barcode;
-    private int status;
+    private int status = -1;
     private String studentId;
 
     public ComponentDTO() {
-        componentGroupId = -1;
-        componentNumber = -1;
-        status = -1;
     }
 
     public ComponentDTO(int componentGroupId, int componentNumber, String barcode, int status) {

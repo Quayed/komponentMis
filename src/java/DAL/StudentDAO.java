@@ -43,7 +43,10 @@ public class StudentDAO implements IStudentDAO {
 
             stm.setString(param++, student.getName());
 
-            stm.setInt(param++, student.getStatus());
+            if (student.getStatus() == -1)
+                stm.setInt(param++, 0);
+            else
+                stm.setInt(param++, student.getStatus());
 
             stm.execute();
 
@@ -130,7 +133,7 @@ public class StudentDAO implements IStudentDAO {
 
     @Override
     public int updateStudent(StudentDTO student) {
-        if (student.getStudentId() == null || (student.getName() == null && student.getStatus() == 0))
+        if (student.getStudentId() == null || (student.getName() == null && student.getStatus() == -1))
             return -1;
 
         String sql = "UPDATE " + DATABASE_NAME + " SET ";
@@ -140,7 +143,7 @@ public class StudentDAO implements IStudentDAO {
             sqlValues += "name = ?";
         }
 
-        if (student.getStatus() != 0) {
+        if (student.getStatus() != -1) {
             if (sqlValues.equals("")) {
                 sqlValues += "status = ?";
             } else {
@@ -158,7 +161,7 @@ public class StudentDAO implements IStudentDAO {
             if (student.getName() != null)
                 stm.setString(param++, student.getName());
 
-            if (student.getStatus() != 0)
+            if (student.getStatus() != -1)
                 stm.setInt(param++, student.getStatus());
 
             stm.setString(param++, student.getStudentId());

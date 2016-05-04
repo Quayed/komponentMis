@@ -13,7 +13,7 @@ import java.io.Serializable;
 public class StudentDTO implements Serializable {
     private String studentId;
     private String name;
-    private int status;
+    private int status = -1;
 
     public StudentDTO() {
 
