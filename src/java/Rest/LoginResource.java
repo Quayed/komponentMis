@@ -84,7 +84,11 @@ public class LoginResource {
         } catch (MalformedURLException ex){
             ex.printStackTrace();
             throw new WebApplicationException(500);
-        } finally{
+        } catch (com.sun.xml.ws.fault.ServerSOAPFaultException exception){
+            exception.printStackTrace();
+            throw new WebApplicationException(401);
+        }
+        finally{
             if (conn != null)
                 try{
                     conn.close();
