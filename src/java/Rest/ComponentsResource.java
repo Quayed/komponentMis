@@ -16,9 +16,7 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -56,7 +54,7 @@ public class ComponentsResource {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getOverview() {
+    public Response getOverview(@Context Request request) {
         ComponentDTO[] components = dao.getComponents();
 
         LoanDAO loanDAO = new LoanDAO(conn);
@@ -79,13 +77,28 @@ public class ComponentsResource {
         JsonArray jsonArray = arrayBuilder.build();
 
         closeConn();
-        return new JsonHelper().jsonArrayToString(jsonArray);
+
+        String returnString = new JsonHelper().jsonArrayToString(jsonArray);
+
+        CacheControl cc  = new CacheControl();
+        cc.setMaxAge(60*60);
+        EntityTag etag = new EntityTag(Integer.toString(returnString.hashCode()));
+        Response.ResponseBuilder responseBuilder = request.evaluatePreconditions(etag);
+
+        if (responseBuilder == null){
+            responseBuilder = Response.ok(returnString);
+            responseBuilder.tag(etag);
+        }
+
+        responseBuilder.cacheControl(cc);
+
+        return responseBuilder.build();
     }
 
     @GET
     @Path("{barcode}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getSpecific(@PathParam("barcode") String barcode) {
+    public Response getSpecific(@PathParam("barcode") String barcode, @Context Request request) {
         ComponentDTO component = dao.getComponent(barcode);
         closeConn();
 
@@ -103,8 +116,21 @@ public class ComponentsResource {
                 .add("status", component.getStatus())
                 .build();
 
+        String returnString = new JsonHelper().jsonObjectToString(jsonObject);
 
-        return new JsonHelper().jsonObjectToString(jsonObject);
+        CacheControl cc  = new CacheControl();
+        cc.setMaxAge(60*60);
+        EntityTag etag = new EntityTag(Integer.toString(returnString.hashCode()));
+        Response.ResponseBuilder responseBuilder = request.evaluatePreconditions(etag);
+
+        if (responseBuilder == null){
+            responseBuilder = Response.ok(returnString);
+            responseBuilder.tag(etag);
+        }
+
+        responseBuilder.cacheControl(cc);
+
+        return responseBuilder.build();
     }
 
     @PUT

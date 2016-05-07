@@ -15,9 +15,7 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -49,7 +47,7 @@ public class StudentsResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getOverview() {
+    public Response getOverview(@Context Request request) {
         StudentDTO[] students = dao.getStudents();
         closeConn();
 
@@ -65,13 +63,27 @@ public class StudentsResource {
 
         JsonArray jsonArray = arrayBuilder.build();
 
-        return new JsonHelper().jsonArrayToString(jsonArray);
+        String returnString = new JsonHelper().jsonArrayToString(jsonArray);
+
+        CacheControl cc  = new CacheControl();
+        cc.setMaxAge(60*60);
+        EntityTag etag = new EntityTag(Integer.toString(returnString.hashCode()));
+        Response.ResponseBuilder responseBuilder = request.evaluatePreconditions(etag);
+
+        if (responseBuilder == null){
+            responseBuilder = Response.ok(returnString);
+            responseBuilder.tag(etag);
+        }
+
+        responseBuilder.cacheControl(cc);
+
+        return responseBuilder.build();
     }
 
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getSpecific(@PathParam("id") String studentId) {
+    public Response getSpecific(@PathParam("id") String studentId, @Context Request request) {
 
         if (studentId.length() != 7)
             throw new WebApplicationException(405);
@@ -86,7 +98,21 @@ public class StudentsResource {
                 .add("status", student.getStatus())
                 .build();
 
-        return new JsonHelper().jsonObjectToString(jsonObject);
+        String returnString =  new JsonHelper().jsonObjectToString(jsonObject);
+
+        CacheControl cc  = new CacheControl();
+        cc.setMaxAge(60*60);
+        EntityTag etag = new EntityTag(Integer.toString(returnString.hashCode()));
+        Response.ResponseBuilder responseBuilder = request.evaluatePreconditions(etag);
+
+        if (responseBuilder == null){
+            responseBuilder = Response.ok(returnString);
+            responseBuilder.tag(etag);
+        }
+
+        responseBuilder.cacheControl(cc);
+
+        return responseBuilder.build();
     }
 
     @PUT

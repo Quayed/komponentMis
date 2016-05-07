@@ -1,6 +1,7 @@
 package DTO;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 /**
  * Created by mathias on 21/03/16.

@@ -14,9 +14,7 @@ import DTO.ComponentGroupDTO;
 
 import javax.json.*;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -52,7 +50,7 @@ public class ComponentGroupsResource {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getOverview() {
+    public Response getOverview(@Context Request request) {
         ComponentGroupDTO[] componentGroups = dao.getComponentGroups();
         closeConn();
 
@@ -73,7 +71,21 @@ public class ComponentGroupsResource {
         JsonArray jsonArray = arrayBuilder.build();
 
 
-        return new JsonHelper().jsonArrayToString(jsonArray);
+        String returnString = new JsonHelper().jsonArrayToString(jsonArray);
+
+        CacheControl cc  = new CacheControl();
+        cc.setMaxAge(60*60);
+        EntityTag etag = new EntityTag(Integer.toString(returnString.hashCode()));
+        Response.ResponseBuilder responseBuilder = request.evaluatePreconditions(etag);
+
+        if (responseBuilder == null){
+            responseBuilder = Response.ok(returnString);
+            responseBuilder.tag(etag);
+        }
+
+        responseBuilder.cacheControl(cc);
+
+        return responseBuilder.build();
     }
 
     /**
@@ -84,7 +96,7 @@ public class ComponentGroupsResource {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getSpecific(@PathParam("id") String componentGroupId) {
+    public Response getSpecific(@PathParam("id") String componentGroupId, @Context Request request) {
         //Check that ID is actually a number
         if (!componentGroupId.matches("^\\d+$")) {
             throw new WebApplicationException(405);
@@ -120,7 +132,21 @@ public class ComponentGroupsResource {
         JsonObject jsonObject = jsonObjectBuilder.build();
 
         closeConn();
-        return new JsonHelper().jsonObjectToString(jsonObject);
+        String returnString = new JsonHelper().jsonObjectToString(jsonObject);
+
+        CacheControl cc  = new CacheControl();
+        cc.setMaxAge(60*60);
+        EntityTag etag = new EntityTag(Integer.toString(returnString.hashCode()));
+        Response.ResponseBuilder responseBuilder = request.evaluatePreconditions(etag);
+
+        if (responseBuilder == null){
+            responseBuilder = Response.ok(returnString);
+            responseBuilder.tag(etag);
+        }
+
+        responseBuilder.cacheControl(cc);
+
+        return responseBuilder.build();
     }
 
     @PUT

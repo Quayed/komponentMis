@@ -5,12 +5,12 @@
  */
 package Rest.Filters;
 
-import java.io.IOException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
 import javax.ws.rs.container.PreMatching;
 import javax.ws.rs.ext.Provider;
+import java.io.IOException;
 
 /**
  *
@@ -31,6 +31,11 @@ public class RestResponseFilter implements ContainerResponseFilter{
             responseContext.getHeaders().add( "Access-Control-Allow-Origin", "*" );
             responseContext.getHeaders().add( "Access-Control-Allow-Credentials", "true" );
             responseContext.getHeaders().add( "Access-Control-Allow-Methods", "GET, POST, DELETE, PUT" );
+            if (!requestContext.getRequest().getMethod().equals("GET")){
+                responseContext.getHeaders().add("Cache-Control", "no-cache, no-store, must-revalidate");
+                responseContext.getHeaders().add("Pragma", "no-cache");
+                responseContext.getHeaders().add("Expires", "0");
+            }
         }
     }
     
