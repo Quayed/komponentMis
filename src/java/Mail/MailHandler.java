@@ -73,7 +73,7 @@ public class MailHandler implements Runnable {
                         // Send e-mail to student
                         SendEmail(subject, body, loan.getStudentId());
                         
-                        // Set mail count - this is currently 1 for debugging purposes
+                        // Set mail count
                         loan.setMailCount(2);
                         
                         // Update loan
