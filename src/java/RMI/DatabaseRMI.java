@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package RMI;
 
 import DAL.ComponentDAO;
@@ -21,7 +17,7 @@ import security.TokenHandlerServer;
 
 /**
  *
- * @author hippomormor
+ * @author Christian Genter
  */
 public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
 
@@ -37,10 +33,14 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
 
     public DatabaseRMI(int port, Connection conn, String user, String pass) throws RemoteException {
         super(port);
+        
+        // Make data acces objects
         componentDAO = new ComponentDAO(conn);
         componentGroupDAO = new ComponentGroupDAO(conn);
         loanDAO = new LoanDAO(conn);
         studentDAO = new StudentDAO(conn);
+        
+        // Make Token-handler
         tokenhandler = new TokenHandlerServer(user, pass);
     }
 
@@ -97,8 +97,10 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
         if (!tokenhandler.checkKey(keyToken, ID)) {
             throw new RemoteException();
         }
+        
+        // First time loaned check
         LoanDTO[] loans = loanDAO.getLoansForBarcode(loanDTO.getBarcode());
-        if (loans != null) { // first time loaned check
+        if (loans != null) { 
             boolean isLoaned = false;
             for (LoanDTO loan : loans) {
                 if (loan.getDeliveryDate() == null || loan.getDeliveryDate().equals(""))  {
@@ -106,7 +108,9 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
                     break;
                 }
             }
-            if (isLoaned) { // check if any loan currently active
+            
+            // Check if any loan currently active
+            if (isLoaned) { 
                 return -5;
             }
         }
@@ -118,6 +122,8 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
         if (!tokenhandler.checkKey(keyToken, ID)) {
             throw new RemoteException();
         }
+        
+        // Check if loan is allready delivered
         LoanDTO[] loans = loanDAO.getLoansForBarcode(loanDTO.getBarcode());
         if (loans != null) {
             
@@ -179,12 +185,14 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
         return studentDAO.getStudents();
     }
 
+    // Method to do the Diffie-Hellman key-exchange algorithm over RMI
     @Override
     public BigInteger exchangeTokens(BigInteger publicToken, int ID) throws RemoteException {
         tokenhandler.generateKey(publicToken, ID);
         return tokenhandler.getPublicToken();
     }
 
+    // Method to check key integrity between client & host over RMI
     @Override
     public BigInteger exchangeKeys(BigInteger keyToken, int ID) throws RemoteException {
         if (!tokenhandler.checkKey(keyToken, ID)) {
@@ -193,6 +201,7 @@ public class DatabaseRMI extends UnicastRemoteObject implements IDatabaseRMI {
         return tokenhandler.getKeyToken(ID);
     }
 
+    // Method to get a new client ID - used when a client connects/reconnects. ID is then asociated with the unique key in an array in TokenHandler 
     @Override
     public int getNewID() throws RemoteException {
         return tokenhandler.getNewID();

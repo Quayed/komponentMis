@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package RMI;
 
 import java.net.MalformedURLException;
@@ -22,7 +18,7 @@ import javax.xml.ws.Service;
 
 /**
  *
- * @author hippomormor
+ * @author Christian Genter
  */
 public class ServerMain {
 
@@ -45,20 +41,25 @@ public class ServerMain {
         // Log-in
         boolean granted = false;
         
+        // Connect to brugerautorisation at javabog (SOAP)
         URL url = new URL("http://javabog.dk:9901/brugeradmin?wsdl");
         QName qname = new QName("http://soap.transport.brugerautorisation/", "BrugeradminImplService");
         Service service = Service.create(url, qname);
         brugerautorisation.transport.soap.Brugeradmin brugerAdmin = service.getPort(brugerautorisation.transport.soap.Brugeradmin.class);
 
+        
         Console console;
         String user;
         char[] pass;
 
+        // Get credentials 
         while (true) {
             try {
                 console = System.console();
                 if (console != null) {
                     user = console.readLine("Name: ");
+                    
+                    // Hide password
                     pass = console.readPassword("Password: ");
                     try {
                         Bruger bruger = brugerAdmin.hentBruger(user, new String(pass));
@@ -95,6 +96,8 @@ public class ServerMain {
             java.rmi.registry.LocateRegistry.createRegistry(1099);
             Naming.rebind("rmi://127.0.0.1/databaseRMI", databaseRMI);
             System.out.println("Server running..");
+            
+            // Mail
             MailHandler mailhandler = new MailHandler(conn);
             Thread mailThread = new Thread(mailhandler);
             mailThread.start();
