@@ -62,6 +62,7 @@ public class ServerMain {
                     // Hide password
                     pass = console.readPassword("Password: ");
                     try {
+                        // Check user with brugerautorisation at javabog
                         Bruger bruger = brugerAdmin.hentBruger(user, new String(pass));
                         if (bruger != null) {
                             granted = true;
