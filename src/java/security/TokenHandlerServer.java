@@ -25,6 +25,7 @@ public class TokenHandlerServer {
         if (creds.signum() < 0)
             creds = creds.negate();
         
+        // Reduce to max 16
         creds = creds.mod(new BigInteger("16"));
         
         generateToken(creds);
