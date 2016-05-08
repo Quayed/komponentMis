@@ -34,7 +34,7 @@ public class TokenHandlerServer {
     // Generate random prime number
     private BigInteger generateRandom() {
         randomToken = BigInteger.probablePrime(512, new SecureRandom());
-        randomToken = BigInteger.probablePrime(9, new SecureRandom());
+        randomToken = BigInteger.probablePrime(9,  new SecureRandom());
         System.out.println("Random prime generated " + randomToken.toString());
         return randomToken;
     }
