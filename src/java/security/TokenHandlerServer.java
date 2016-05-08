@@ -16,20 +16,25 @@ public class TokenHandlerServer {
     private int clientCount = 0;
     private final ArrayList<BigInteger> keyList = new ArrayList<>();
 
-    // Hash credentials, reduce and generate random prime and token
+    // Hash credentials, reduce with modulo and generate random prime and token
     public TokenHandlerServer(String user, String pass) {
+        
         generateRandom();
-        BigInteger creds = new BigInteger(Integer.toString((user.hashCode() + pass.hashCode())/10000000-8));
-        if (creds.signum() < 1)
-            generateToken(creds.negate());
-        else
-            generateToken(creds);
+        
+        BigInteger creds = new BigInteger(Integer.toString((user.hashCode() + pass.hashCode()) - 8));
+        if (creds.signum() < 0)
+            creds = creds.negate();
+        
+        creds = creds.mod(new BigInteger("16"));
+        
+        generateToken(creds);
     }
 
-    // Generate random 7-bit prime number
+    // Generate random prime number
     private BigInteger generateRandom() {
-        randomToken = BigInteger.probablePrime(7, new SecureRandom());
-        System.out.println("Random prime generated");
+        randomToken = BigInteger.probablePrime(512, new SecureRandom());
+        randomToken = BigInteger.probablePrime(9, new SecureRandom());
+        System.out.println("Random prime generated " + randomToken.toString());
         return randomToken;
     }
 
@@ -40,10 +45,9 @@ public class TokenHandlerServer {
         return publicToken;
     }
 
-    // Generate key from recieved token and random prime: recievedToken^randomPrime (power)
+    // Generate key from recieved token and random prime: recievedToken^randomPrime (power). Reduce with modulo
     public BigInteger generateKey(BigInteger token, int ID) {
-        BigInteger keyToken;
-        keyToken = token.pow(Integer.parseInt(randomToken.toString()));
+        BigInteger keyToken = token.modPow(randomToken, new BigInteger("1000000000000000000000000000000000000000000000000000"));
         keyList.set(ID, keyToken);
         System.out.println("Key generated");
         return keyList.get(ID);
