@@ -65,10 +65,12 @@ public class LoginResource {
 
             conn = DriverManager.getConnection(DatabaseConfig.ENDPOINT, DatabaseConfig.USERNAME, DatabaseConfig.PASSWORD);
             ITokenDAO dao = new TokenDAO(conn);
-
-            do{
-                tokenHandler = new TokenHandlerServer(credentials.getUsername(), credentials.getPassword());
-            }while(dao.getToken(tokenHandler.getPublicToken().toString()) != null);
+            
+            TokenDTO currentToken = new TokenDTO();
+            
+            tokenHandler = new TokenHandlerServer(credentials.getUsername(), credentials.getPassword());
+            //currentToken = dao.getToken(tokenHandler.getPublicToken().toString());
+            
 
             TokenDTO dto = new TokenDTO();
             dto.setToken(tokenHandler.getPublicToken().toString());
@@ -84,8 +86,7 @@ public class LoginResource {
         }  catch (com.sun.xml.ws.fault.ServerSOAPFaultException ex){
             ex.printStackTrace();
             throw new WebApplicationException(401);
-        }
-        finally{
+        } finally{
             if (conn != null)
                 try{
                     conn.close();

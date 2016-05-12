@@ -81,7 +81,8 @@ public class ComponentsResource {
         String returnString = new JsonHelper().jsonArrayToString(jsonArray);
 
         CacheControl cc  = new CacheControl();
-        cc.setMaxAge(60*60);
+        cc.setMaxAge(1);
+        cc.setMustRevalidate(true);
         EntityTag etag = new EntityTag(Integer.toString(returnString.hashCode()));
         Response.ResponseBuilder responseBuilder = request.evaluatePreconditions(etag);
 
@@ -119,7 +120,8 @@ public class ComponentsResource {
         String returnString = new JsonHelper().jsonObjectToString(jsonObject);
 
         CacheControl cc  = new CacheControl();
-        cc.setMaxAge(60*60);
+        cc.setMaxAge(1);
+        cc.setMustRevalidate(true);
         EntityTag etag = new EntityTag(Integer.toString(returnString.hashCode()));
         Response.ResponseBuilder responseBuilder = request.evaluatePreconditions(etag);
 

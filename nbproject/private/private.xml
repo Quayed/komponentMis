@@ -9,6 +9,7 @@
             <file>file:/Users/mathias/NetBeansProjects/KomponentMis/src/java/DAL/DatabaseConfig.java</file>
             <file>file:/Users/mathias/NetBeansProjects/KomponentMis/src/java/Rest/LoginResource.java</file>
             <file>file:/Users/mathias/NetBeansProjects/KomponentMis/src/java/Rest/Filters/RestRequestFilter.java</file>
+            <file>file:/Users/mathias/NetBeansProjects/KomponentMis/src/java/security/TokenHandlerServer.java</file>
             <file>file:/Users/mathias/NetBeansProjects/KomponentMis/src/java/Rest/ApplicationConfig.java</file>
         </group>
     </open-files>
