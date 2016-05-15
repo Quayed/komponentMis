@@ -14,7 +14,9 @@ public class JsonHelper {
     private StringWriter stringWriter = new StringWriter();
     private JsonWriter jsonWriter = null;
 
-
+    /**
+     * Constructor sets up the json writer with parameters
+     */
     public JsonHelper(){
         Map<String, Object> properties = new HashMap<>(1);
         properties.put(JsonGenerator.PRETTY_PRINTING, true);
@@ -23,6 +25,11 @@ public class JsonHelper {
         jsonWriter = factory.createWriter(stringWriter);
     }
 
+    /**
+     *
+     * @param jsonArray to be converted to a String
+     * @return String formatted as a json array
+     */
     public String jsonArrayToString(JsonArray jsonArray) {
         jsonWriter.writeArray(jsonArray);
 
@@ -31,6 +38,11 @@ public class JsonHelper {
         return output;
     }
 
+    /**
+     *
+     * @param jsonObject to be converted to a String
+     * @return String formatted as a json object
+     */
     public String jsonObjectToString(JsonObject jsonObject){
         jsonWriter.writeObject(jsonObject);
 
