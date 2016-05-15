@@ -32,6 +32,7 @@ public class RestResponseFilter implements ContainerResponseFilter{
             responseContext.getHeaders().add( "Access-Control-Allow-Credentials", "true" );
             responseContext.getHeaders().add( "Access-Control-Allow-Methods", "GET, POST, DELETE, PUT" );
             if (!requestContext.getRequest().getMethod().equals("GET")){
+                // Explicitly turn of caching on all other methods than GET
                 responseContext.getHeaders().add("Cache-Control", "no-cache, no-store, must-revalidate");
                 responseContext.getHeaders().add("Pragma", "no-cache");
                 responseContext.getHeaders().add("Expires", "0");

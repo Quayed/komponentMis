@@ -171,7 +171,6 @@ public class ComponentsResource {
         int returnValue = dao.deleteComponent(id);
         closeConn();
 
-        System.out.println(id);
         if (returnValue == 1)
             return "All ok";
         else if (returnValue == -2)

@@ -161,8 +161,7 @@ public class ComponentGroupsResource {
 
         if (returnStatus > 0)
             return "{\"componentGroupId\": " + returnStatus + " }";
-        else
-            System.out.println("Error");
+
         throw new WebApplicationException(500);
     }
 
