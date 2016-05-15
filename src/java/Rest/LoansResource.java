@@ -36,10 +36,8 @@ public class LoansResource {
     private Connection conn;
     private Format formatter = new SimpleDateFormat("dd/MM/yyyy");
 
-    /**
-     * Creates a new instance of LoansResource
-     */
     public LoansResource() {
+        // Setup the connection and dao as soon as the resource is created.
         try {
             conn = DriverManager.getConnection(DatabaseConfig.ENDPOINT, DatabaseConfig.USERNAME, DatabaseConfig.PASSWORD);
             dao = new LoanDAO(conn);
@@ -51,11 +49,12 @@ public class LoansResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getOverview(@Context Request request) {
+        // Gets all loans from the database, using the DAO
         LoanDTO[] loans = dao.getLoans();
         closeConn();
 
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-
+        // Builds a JSON array of all the loans
         for (LoanDTO loan : loans) {
             arrayBuilder.add(Json.createObjectBuilder()
                     .add("details", "/loans/" + loan.getLoanId())
@@ -71,8 +70,10 @@ public class LoansResource {
 
         JsonArray jsonArray = arrayBuilder.build();
 
+        // Converts json array to string using help class
         String returnString = new JsonHelper().jsonArrayToString(jsonArray);
 
+        // Sets up cache to validate every time
         CacheControl cc  = new CacheControl();
         cc.setMaxAge(1);
         cc.setMustRevalidate(true);
@@ -88,7 +89,6 @@ public class LoansResource {
 
         return responseBuilder.build();
     }
-
 
     @GET
     @Path("{id}")
