@@ -30,7 +30,7 @@ public class ServerMain {
         if (args.length == 1)
             System.setProperty("java.rmi.server.hostname", args[0]);
         else
-            System.setProperty("java.rmi.server.hostname", "54.93.171.44");
+            System.setProperty("java.rmi.server.hostname", "54.93.99.67");
         
         System.out.println(">> Remember to run in terminal <<");
 
