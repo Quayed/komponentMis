@@ -10,10 +10,10 @@ package DAL;
  * @author mathias
  */
 public class DatabaseConfig {
-    public static final String ENDPOINT = "";
+    public static final String ENDPOINT = "jdbc:mysql://54.93.99.67:3306/komponentMis";
     public static final String USERNAME = "";
     public static final String PASSWORD = "";
-    public static final String MAILUSER = "";
+    public static final String MAILUSER = "mailservicemis@gmail.com";
 
     private DatabaseConfig(){
         
