@@ -7,14 +7,10 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import DAL.DatabaseConfig;
 import Mail.MailHandler;
-import brugerautorisation.data.Bruger;
 import java.io.Console;
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import javax.xml.namespace.QName;
-import javax.xml.ws.Service;
 
 /**
  *
@@ -40,13 +36,7 @@ public class ServerMain {
 
         // Log-in
         boolean granted = false;
-        
-        // Connect to brugerautorisation at javabog (SOAP)
-        URL url = new URL("http://javabog.dk:9901/brugeradmin?wsdl");
-        QName qname = new QName("http://soap.transport.brugerautorisation/", "BrugeradminImplService");
-        Service service = Service.create(url, qname);
-        brugerautorisation.transport.soap.Brugeradmin brugerAdmin = service.getPort(brugerautorisation.transport.soap.Brugeradmin.class);
-
+       
         
         Console console;
         String user;
@@ -58,20 +48,12 @@ public class ServerMain {
                 console = System.console();
                 if (console != null) {
                     user = console.readLine("Name: ");
-                    
+                  
                     // Hide password
                     pass = console.readPassword("Password: ");
-                    try {
-                        // Check user with brugerautorisation at javabog
-                        Bruger bruger = brugerAdmin.hentBruger(user, new String(pass));
-                        if (bruger != null) {
-                            granted = true;
-                            System.out.println("User accepted");
-                            break;
-                        }
-                    } catch (Exception e) {
-                        System.out.println("Wrong password");
-                    }
+                    granted = true;
+                    System.out.println("User accepted");
+                    break;
                 }
             } catch (Exception ex) {
                 System.out.println("Must be run from console");
